@@ -1,4 +1,5 @@
 import { ShieldCheck } from "lucide-react";
+import Image from "next/image";
 import QRCode from "qrcode";
 import { buildTagUrl, type TagPayload } from "@/lib/tag";
 import { Generator } from "./generator";
@@ -58,12 +59,28 @@ export default async function Home() {
       <Generator />
 
       <section className="how-it-works no-print" id="how">
-        <div className="section-kicker">ONE SETUP. REPEATED USE.</div>
-        <h2>A tiny physical loop.</h2>
-        <div className="steps">
-          <article><b>01</b><h3>Create</h3><p>Name the item, add its search phrase and replacement interval.</p></article>
-          <article><b>02</b><h3>Stick</h3><p>Print the QR label and place it where the consumable lives.</p></article>
-          <article><b>03</b><h3>Scan</h3><p>When it runs out, scan once and reorder from the live marketplace.</p></article>
+        <div className="loop-heading">
+          <div>
+            <div className="section-kicker">ONE SETUP. REPEATED USE.</div>
+            <h2>Make it once.<br />Scan it forever.</h2>
+          </div>
+          <p>The label stays with the object, so the exact replacement is always one scan away.</p>
+        </div>
+        <figure className="loop-visual">
+          <Image
+            src="/images/cycletag-loop-v2.webp"
+            alt="A CycleTag label is printed, attached to a coffee machine, scanned with a phone and used to reorder a replacement filter"
+            width={1672}
+            height={620}
+            sizes="(max-width: 650px) 100vw, 84vw"
+          />
+          <figcaption>From empty shelf to replacement — without remembering a model number.</figcaption>
+        </figure>
+        <div className="steps" aria-label="How CycleTag works">
+          <article><b>01</b><h3>Create</h3><p>Add the exact item once.</p></article>
+          <article><b>02</b><h3>Stick</h3><p>Put the label where it lives.</p></article>
+          <article><b>03</b><h3>Scan</h3><p>Use any phone camera.</p></article>
+          <article><b>04</b><h3>Reorder</h3><p>Open the live marketplace search.</p></article>
         </div>
       </section>
 

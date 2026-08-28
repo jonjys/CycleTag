@@ -1,6 +1,4 @@
-# Design QA — CycleTag hero product label
-
-final result: passed
+# Design QA — CycleTag product presentation
 
 ## Compared surfaces
 
@@ -33,3 +31,43 @@ The supplied image was an intentionally rough layout idea rather than an exact v
 - P1: none.
 - P2: none after the development CSP correction.
 - P3: physical scanning across multiple phone camera models was not part of browser QA; the QR itself is generated with medium error correction and a valid quiet zone.
+
+## QA addition — product-use illustration
+
+- Source visual truth: `/workspace/scratch/179213e3371f/public/images/cycletag-loop-v2.webp`
+- Browser-rendered implementation: `/home/oai/share/cycletag-loop-final-1787915044565.jpg` (synchronized as `/workspace/scratch/cycletag-loop-final-1787915044565.jpg`)
+- Source pixels: 1672 × 620.
+- Implementation screenshot: 1348 × 926 px at a 1363 × 936 CSS viewport, DPR 1.
+- Route and state: `/`, `#how` section at scroll position 1890, default state, no hover.
+
+The generated illustration is the selected visual source for this section. A single combined comparison input contained both the source asset and the rendered browser screenshot.
+
+### Required fidelity surfaces
+
+- Fonts and typography: existing Arial/Helvetica hierarchy is preserved; the large headline and compact green kicker match CycleTag's established visual language and wrap cleanly.
+- Spacing and layout rhythm: the headline, supporting sentence, illustration, caption, and four-step rail form one clear vertical story without nested cards.
+- Colors and tokens: paper, ink, lime, orange, and deep green in the artwork align with the existing CSS tokens.
+- Image quality: the final WebP is sharply rendered, correctly cropped to the useful content, responsive, and 97 KB after metadata stripping and compression.
+- Copy and content: “Make it once. Scan it forever.” expresses the persistent physical/digital loop; the four labels accurately explain Create → Stick → Scan → Reorder.
+
+### Comparison history
+
+- Initial implementation showed excessive blank space above and below the illustration because the uncropped 1672 × 941 source canvas was used. Classified P2 for vertical-density drift.
+- Fixed by cropping the selected source to 1672 × 620 and versioning the asset path to invalidate the image optimizer cache.
+- Post-fix browser evidence shows the complete four-moment illustration at the intended scale with no clipping, stretching, or compression artifacts.
+
+### Browser and interaction evidence
+
+- The responsive image loaded through Next Image with the expected 1672:620 intrinsic ratio.
+- Illustration alternative text and the four-step `aria-label` are present in the accessibility tree.
+- Page console contains no application errors or warnings; observed errors originate only from the browser's own extension URL.
+- The focused section comparison was sufficient because this change is isolated below the generator; the hero and generator layout were unchanged.
+
+### Findings after final comparison
+
+- P0: none.
+- P1: none.
+- P2: none.
+- P3: physical mobile-device rendering remains to be checked after production deployment.
+
+final result: passed
