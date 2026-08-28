@@ -5,7 +5,7 @@ import "./globals.css";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
-  "https://invisible-money-engine.vercel.app";
+  "https://cycletag.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

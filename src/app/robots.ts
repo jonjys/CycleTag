@@ -3,6 +3,6 @@ import type { MetadataRoute } from "next";
 export default function robots(): MetadataRoute.Robots {
   const base =
     process.env.NEXT_PUBLIC_SITE_URL ||
-    "https://invisible-money-engine.vercel.app";
+    "https://cycletag.vercel.app";
   return { rules: [{ userAgent: "*", allow: "/", disallow: ["/tag", "/api/"] }], sitemap: `${base}/sitemap.xml` };
 }
