@@ -2,12 +2,13 @@
 
 import QRCode from "qrcode";
 import { ArrowRight, CheckCircle2, Coffee, Droplets, PawPrint, Printer, Wrench, Wind, type LucideIcon } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { marketConfig } from "@/lib/affiliate";
 import { copyText } from "@/lib/clipboard";
 import { triggerDownload } from "@/lib/download";
 import { createIcs } from "@/lib/ics";
 import { presets, type Preset } from "@/lib/presets";
+import { siteUrl } from "@/lib/site";
 import { buildTagUrl, categories, markets, type Market, type TagCategory, type TagPayload } from "@/lib/tag";
 
 function today(): string {
@@ -27,18 +28,34 @@ const presetIcons: Record<Preset["icon"], LucideIcon> = {
   workshop: Wrench
 };
 
-export function Generator() {
-  const [name, setName] = useState("");
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<TagCategory>("home");
-  const [interval, setInterval] = useState(90);
-  const [start, setStart] = useState(today);
-  const [market, setMarket] = useState<Market>("DE");
+type GeneratorProps = {
+  initialPreset?: Preset;
+  initialTag?: TagPayload;
+  initialMessage?: string;
+  showPresets?: boolean;
+  title?: string;
+  description?: string;
+};
+
+export function Generator({
+  initialPreset,
+  initialTag,
+  initialMessage = "",
+  showPresets = true,
+  title: builderTitle = "What keeps running out?",
+  description = "Start with a common replacement or make your own."
+}: GeneratorProps = {}) {
+  const [name, setName] = useState(initialTag?.n ?? initialPreset?.name ?? "");
+  const [query, setQuery] = useState(initialTag?.q ?? initialPreset?.query ?? "");
+  const [category, setCategory] = useState<TagCategory>(initialTag?.c ?? initialPreset?.category ?? "home");
+  const [interval, setInterval] = useState(initialTag?.i ?? initialPreset?.interval ?? 90);
+  const [start, setStart] = useState(initialTag?.s ?? today);
+  const [market, setMarket] = useState<Market>(initialTag?.m ?? "DE");
   const [generated, setGenerated] = useState<Generated | null>(null);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(initialMessage);
   const resultRef = useRef<HTMLDivElement>(null);
 
-  const canGenerate = useMemo(() => name.trim().length > 0 && query.trim().length > 0 && interval >= 1 && interval <= 730 && start.length > 0, [name, query, interval, start]);
+  const canGenerate = name.trim().length > 0 && query.trim().length > 0 && interval >= 1 && interval <= 730 && start.length > 0;
 
   useEffect(() => {
     if (generated) {
@@ -67,7 +84,7 @@ export function Generator() {
     if (!canGenerate) return;
     const tag: TagPayload = { v: 1, n: name.trim(), q: query.trim(), c: category, i: interval, s: start, m: market };
     try {
-      const url = buildTagUrl(window.location.origin, tag);
+      const url = buildTagUrl(siteUrl, tag);
       const qr = await QRCode.toDataURL(url, { errorCorrectionLevel: "M", width: 720, margin: 2, color: { dark: "#171713", light: "#ffffff" } });
       setGenerated({ tag, url, qr });
     } catch {
@@ -101,23 +118,27 @@ export function Generator() {
   return (
     <section className="builder" aria-labelledby="builder-title">
       <div className="builder-intro">
-        <div className="section-kicker">BUILD YOUR TAG</div>
-        <h2 id="builder-title">What keeps running out?</h2>
-        <p>Start with a common replacement or make your own.</p>
+        <div>
+          <div className="section-kicker">BUILD YOUR TAG</div>
+          <h2 id="builder-title">{builderTitle}</h2>
+        </div>
+        <p>{description}</p>
       </div>
 
-      <div className="preset-grid">
-        {presets.map((preset) => {
-          const Icon = presetIcons[preset.icon];
-          return (
-            <button type="button" className="preset" key={preset.name} onClick={() => choosePreset(preset)}>
-              <Icon aria-hidden="true" />
-              <strong>{preset.name}</strong>
-              <small>every {preset.interval} days</small>
-            </button>
-          );
-        })}
-      </div>
+      {showPresets && (
+        <div className="preset-grid">
+          {presets.map((preset) => {
+            const Icon = presetIcons[preset.icon];
+            return (
+              <button type="button" className="preset" key={preset.name} onClick={() => choosePreset(preset)}>
+                <Icon aria-hidden="true" />
+                <strong>{preset.name}</strong>
+                <small>every {preset.interval} days</small>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       <form onSubmit={generate} className="tag-form">
         <div className="field wide">
@@ -160,7 +181,7 @@ export function Generator() {
           <div className="label-preview printable">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={generated.qr} alt={`QR code for ${generated.tag.n}`} />
-            <div><span>SCAN TO REORDER</span><strong>{generated.tag.n}</strong><small>Every {generated.tag.i} days · cycletag</small></div>
+            <div><span>SCAN TO REORDER</span><strong>{generated.tag.n}</strong><small>Every {generated.tag.i} days · free label at cycletag.eu</small></div>
           </div>
           <div className="result-actions">
             <div><div className="section-kicker">YOUR TAG IS READY</div><h3>Print it. Stick it. Forget it.</h3><p>The QR contains the instructions. It stays useful even without an account.</p></div>

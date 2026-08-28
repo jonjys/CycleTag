@@ -109,6 +109,8 @@ export function TagView() {
         <button type="button" onClick={share}>
           {shareStatus === "copied" ? "Link copied" : shareStatus === "failed" ? "Copy failed" : "Share this tag"}
         </button>
+        <Link href={encoded ? `/#clone=${encoded}` : "/"}>Clone this tag</Link>
+        <Link href="/">Create a different tag</Link>
       </div>
 
       <div className="tag-privacy"><ShieldCheck aria-hidden="true" size={18} /><p><strong>No tag database.</strong> This page was rebuilt from the QR itself. Anyone with the QR or link can read the information encoded in it.</p></div>

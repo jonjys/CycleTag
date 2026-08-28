@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Terms" };
+export const metadata: Metadata = { title: "Terms", alternates: { canonical: "/terms" }, openGraph: { url: "/terms" } };
 
 export default function TermsPage() {
   return <main className="legal-page"><article><div className="section-kicker">CYCLETAG</div><h1>Terms of use</h1><p className="updated">Last updated 27 August 2026</p>

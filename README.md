@@ -13,7 +13,7 @@ CycleTag turns a replacement item, interval and marketplace search into a printa
 5. The user deliberately clicks a disclosed eBay marketplace link.
 6. If a public EPN campaign ID is configured, a qualifying purchase can earn commission.
 
-The physical label and calendar event are the distribution loop: an output from the first visit creates future visits at the moment of recurring purchase intent.
+The physical label and calendar event are the repeat-use loop: an output from the first visit creates future visits at the moment of recurring purchase intent. Every printed label also names `cycletag.eu`, and the scan page can clone the current tag or create another one.
 
 ## Money flow
 
@@ -50,15 +50,10 @@ The tag payload is visible to anyone who has the URL or QR, but new tags keep it
 
 ## Configuration
 
-Copy the example file:
-
-```bash
-cp .env.example .env.local
-```
+No environment variable is required. The production origin is the owned `https://cycletag.eu` domain and the public EPN campaign ID ships in the repository.
 
 | Variable | Required | Secret | Purpose |
 | --- | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Optional override | No | Canonical origin and sitemap; defaults to the live Vercel URL |
 | `NEXT_PUBLIC_EBAY_CAMPAIGN_ID` | Optional override | No | Public EPN campaign ID; defaults to CycleTag campaign `5339198614` |
 
 CycleTag ships with its public EPN campaign ID `5339198614`. An invalid override falls back to an ordinary marketplace search and clearly reports that affiliate tracking is inactive.
@@ -88,11 +83,20 @@ Expected response:
 | Route | Purpose |
 | --- | --- |
 | `/` | Generator, presets, printable label and calendar download |
+| `/reorder-label/[slug]` | Twelve indexable, prefilled QR tools for high-intent replacement searches |
 | `/tag#d=…` | Stateless scan/reorder page; legacy `/tag?d=…` links remain readable |
 | `/privacy` | Privacy policy |
 | `/terms` | Terms of use |
 | `/affiliate` | Affiliate disclosure |
 | `/api/health` | Cacheable health response |
+
+## Automatic discovery
+
+- The homepage links to all twelve focused tools.
+- `/sitemap.xml` lists every public generator on the canonical domain.
+- `/robots.txt` advertises the sitemap while excluding private tag payload and API routes.
+- A secret-free GitHub Action reads the live sitemap after each production push and submits its URLs to IndexNow.
+- Google Search Console only needs the sitemap submitted once; Google can then recrawl it automatically.
 
 ## Safety and failure behaviour
 

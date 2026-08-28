@@ -1,8 +1,22 @@
-import { ShieldCheck } from "lucide-react";
+import type { Metadata } from "next";
+import { ArrowUpRight, ShieldCheck } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import QRCode from "qrcode";
+import { reorderToolPath, reorderTools } from "@/lib/reorder-tools";
+import { siteUrl } from "@/lib/site";
 import { buildTagUrl, type TagPayload } from "@/lib/tag";
-import { Generator } from "./generator";
+import { HomeGenerator } from "./home-generator";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    title: "CycleTag — Scan. Reorder. Repeat.",
+    description: "A permanent QR label for every thing you replace."
+  }
+};
 
 const sampleTag: TagPayload = {
   v: 1,
@@ -15,7 +29,7 @@ const sampleTag: TagPayload = {
 };
 
 export default async function Home() {
-  const sampleUrl = buildTagUrl("https://cycletag.vercel.app", sampleTag);
+  const sampleUrl = buildTagUrl(siteUrl, sampleTag);
   const sampleQr = await QRCode.toDataURL(sampleUrl, {
     errorCorrectionLevel: "M",
     width: 560,
@@ -56,7 +70,26 @@ export default async function Home() {
         </div>
       </section>
 
-      <Generator />
+      <HomeGenerator />
+
+      <section className="tool-directory no-print" aria-labelledby="tool-directory-title">
+        <div className="directory-heading">
+          <div>
+            <div className="section-kicker">START WITH THE RIGHT REPLACEMENT</div>
+            <h2 id="tool-directory-title">Free QR reorder label makers.</h2>
+          </div>
+          <p>Each tool opens with a useful starting interval. Add your exact model or part number before printing.</p>
+        </div>
+        <div className="tool-link-grid">
+          {reorderTools.map((tool, index) => (
+            <Link href={reorderToolPath(tool)} key={tool.slug}>
+              <small>{String(index + 1).padStart(2, "0")}</small>
+              <strong>{tool.preset.name}</strong>
+              <ArrowUpRight aria-hidden="true" size={18} />
+            </Link>
+          ))}
+        </div>
+      </section>
 
       <section className="how-it-works no-print" id="how">
         <div className="loop-heading">

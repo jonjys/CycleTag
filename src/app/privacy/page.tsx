@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Privacy" };
+export const metadata: Metadata = { title: "Privacy", alternates: { canonical: "/privacy" }, openGraph: { url: "/privacy" } };
 
 export default function PrivacyPage() {
   return <Legal title="Privacy policy" updated="27 August 2026">

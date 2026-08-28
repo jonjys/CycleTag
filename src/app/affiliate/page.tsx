@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Affiliate disclosure" };
+export const metadata: Metadata = { title: "Affiliate disclosure", alternates: { canonical: "/affiliate" }, openGraph: { url: "/affiliate" } };
 
 export default function AffiliatePage() {
   return <main className="legal-page"><article><div className="section-kicker">TRANSPARENT MONETIZATION</div><h1>Affiliate disclosure</h1><p className="updated">Last updated 27 August 2026</p>

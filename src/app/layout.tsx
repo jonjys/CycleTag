@@ -1,11 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { RefreshCcw } from "lucide-react";
 import Link from "next/link";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
-
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  "https://cycletag.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -17,7 +14,6 @@ export const metadata: Metadata = {
     type: "website",
     title: "CycleTag — Scan. Reorder. Repeat.",
     description: "A permanent QR label for every thing you replace.",
-    url: siteUrl,
     siteName: "CycleTag"
   },
   twitter: { card: "summary", title: "CycleTag", description: "Scan. Reorder. Repeat." }
