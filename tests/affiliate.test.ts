@@ -1,0 +1,24 @@
+import { describe, expect, it } from "vitest";
+import { buildEbayLink, validCampaignId } from "@/lib/affiliate";
+import type { TagPayload } from "@/lib/tag";
+
+const tag: TagPayload = { v: 1, n: "Filter", q: "Bosch filter 123 & XL", c: "water", i: 180, s: "2026-08-27", m: "DE" };
+
+describe("eBay affiliate links", () => {
+  it("creates an official parameterized tracking link", () => {
+    const url = new URL(buildEbayLink(tag, "1234567890"));
+    expect(url.hostname).toBe("www.ebay.de");
+    expect(url.searchParams.get("_nkw")).toBe(tag.q);
+    expect(url.searchParams.get("campid")).toBe("1234567890");
+    expect(url.searchParams.get("mkrid")).toBe("707-53477-19255-0");
+    expect(url.searchParams.get("customid")).toBe("cycletag-water");
+  });
+
+  it("falls back to a clean marketplace search without a valid campaign", () => {
+    const url = new URL(buildEbayLink(tag, "bad<script>"));
+    expect(url.searchParams.get("_nkw")).toBe(tag.q);
+    expect(url.searchParams.has("campid")).toBe(false);
+    expect(validCampaignId("123456")).toBe(true);
+    expect(validCampaignId("123")).toBe(false);
+  });
+});
