@@ -2,6 +2,8 @@ import type { Market, TagCategory, TagPayload } from "./tag";
 
 type MarketConfig = { host: string; rotationId: string; label: string };
 
+export const defaultCampaignId = "5339198614";
+
 export const marketConfig: Record<Market, MarketConfig> = {
   US: { host: "www.ebay.com", rotationId: "711-53200-19255-0", label: "United States" },
   UK: { host: "www.ebay.co.uk", rotationId: "710-53481-19255-0", label: "United Kingdom" },

@@ -59,9 +59,9 @@ cp .env.example .env.local
 | Variable | Required | Secret | Purpose |
 | --- | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Optional override | No | Canonical origin and sitemap; defaults to the live Vercel URL |
-| `NEXT_PUBLIC_EBAY_CAMPAIGN_ID` | Only for monetization | No | Public EPN campaign ID |
+| `NEXT_PUBLIC_EBAY_CAMPAIGN_ID` | Optional override | No | Public EPN campaign ID; defaults to CycleTag campaign `5339198614` |
 
-If the campaign ID is missing or invalid, CycleTag generates a normal marketplace search and clearly reports that affiliate tracking is inactive. No fake ID is shipped.
+CycleTag ships with its public EPN campaign ID `5339198614`. An invalid override falls back to an ordinary marketplace search and clearly reports that affiliate tracking is inactive.
 
 ## Run and verify
 

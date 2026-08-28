@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { CircleAlert, ExternalLink, RefreshCcw, ShieldCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { buildEbayLink, validCampaignId } from "@/lib/affiliate";
+import { buildEbayLink, defaultCampaignId, validCampaignId } from "@/lib/affiliate";
 import { calculateCycle, formatDate } from "@/lib/cycle";
 import { copyText } from "@/lib/clipboard";
 import { triggerDownload } from "@/lib/download";
 import { createIcs } from "@/lib/ics";
 import { decodeTag } from "@/lib/tag";
 
-const campaignId = process.env.NEXT_PUBLIC_EBAY_CAMPAIGN_ID;
+const campaignId = process.env.NEXT_PUBLIC_EBAY_CAMPAIGN_ID || defaultCampaignId;
 
 export function TagView() {
   const [encoded, setEncoded] = useState<string | null | undefined>(undefined);
