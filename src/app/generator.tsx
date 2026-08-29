@@ -3,7 +3,7 @@
 import QRCode from "qrcode";
 import { ArrowRight, CheckCircle2, Coffee, Droplets, PawPrint, Printer, Wrench, Wind, type LucideIcon } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { marketConfig } from "@/lib/affiliate";
+import { buildEbayLink, defaultCampaignId, marketConfig } from "@/lib/affiliate";
 import { copyText } from "@/lib/clipboard";
 import { triggerDownload } from "@/lib/download";
 import { createIcs } from "@/lib/ics";
@@ -56,6 +56,12 @@ export function Generator({
   const resultRef = useRef<HTMLDivElement>(null);
 
   const canGenerate = name.trim().length > 0 && query.trim().length > 0 && interval >= 1 && interval <= 730 && start.length > 0;
+  const printerUrl = generated
+    ? buildEbayLink(
+        { ...generated.tag, q: "50mm Bluetooth thermal label printer QR code", c: "office" },
+        defaultCampaignId
+      )
+    : "";
 
   useEffect(() => {
     if (generated) {
@@ -116,7 +122,7 @@ export function Generator({
   }
 
   return (
-    <section className="builder" aria-labelledby="builder-title">
+    <section className="builder" id="create" aria-labelledby="builder-title">
       <div className="builder-intro">
         <div>
           <div className="section-kicker">BUILD YOUR TAG</div>
@@ -186,10 +192,16 @@ export function Generator({
           <div className="result-actions">
             <div><div className="section-kicker">YOUR TAG IS READY</div><h3>Print it. Stick it. Forget it.</h3><p>The QR contains the instructions. It stays useful even without an account.</p></div>
             <div className="button-grid">
-              <button type="button" className="primary-button" onClick={() => window.print()}>Print label</button>
+              <button type="button" className="primary-button" onClick={() => window.print()}>Print on A4</button>
               <button type="button" className="secondary-button" onClick={downloadQr}>Download PNG</button>
               <button type="button" className="secondary-button" onClick={downloadCalendar}>Add reminder</button>
               <button type="button" className="secondary-button" onClick={copyLink}>Copy link</button>
+            </div>
+            <div className="print-help">
+              <strong>No special printer required.</strong>
+              <p>Use any home or office printer, cut around the border and attach with clear tape or sticker paper. For a mini label printer, download the PNG and import it into the printer app.</p>
+              <a href={printerUrl} target="_blank" rel="sponsored nofollow noopener">Browse optional 50 mm label printers <ArrowRight aria-hidden="true" size={15} /></a>
+              <small>Affiliate link: CycleTag may earn a commission, at no extra cost to you.</small>
             </div>
           </div>
         </div>

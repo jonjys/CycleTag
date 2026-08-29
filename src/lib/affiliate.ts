@@ -7,7 +7,7 @@ export const defaultCampaignId = "5339198614";
 export const marketConfig: Record<Market, MarketConfig> = {
   US: { host: "www.ebay.com", rotationId: "711-53200-19255-0", label: "United States" },
   UK: { host: "www.ebay.co.uk", rotationId: "710-53481-19255-0", label: "United Kingdom" },
-  DE: { host: "www.ebay.de", rotationId: "707-53477-19255-0", label: "Germany / Nordics" },
+  DE: { host: "www.ebay.de", rotationId: "707-53477-19255-0", label: "Europe / Nordics" },
   FR: { host: "www.ebay.fr", rotationId: "709-53476-19255-0", label: "France" },
   IT: { host: "www.ebay.it", rotationId: "724-53478-19255-0", label: "Italy" },
   ES: { host: "www.ebay.es", rotationId: "1185-53479-19255-0", label: "Spain" },

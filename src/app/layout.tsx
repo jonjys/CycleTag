@@ -30,7 +30,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <span className="brand-mark" aria-hidden="true"><RefreshCcw size={19} strokeWidth={3} /></span>
             CycleTag
           </Link>
-          <span className="header-note">No account. No tag database.</span>
+          <nav className="header-nav" aria-label="Primary">
+            <Link href="/#how">How it works</Link>
+            <Link className="header-cta" href="/#create">Create free tag</Link>
+          </nav>
         </header>
         {children}
         <footer className="site-footer no-print">

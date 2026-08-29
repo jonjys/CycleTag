@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowUpRight, ShieldCheck } from "lucide-react";
+import { ArrowDown, ArrowUpRight, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import QRCode from "qrcode";
@@ -46,8 +46,12 @@ export default async function Home() {
           <p className="hero-copy">
             Put a stateless QR label on anything you replace. One scan brings back the exact search and the next replacement date — without an app or account.
           </p>
+          <div className="hero-actions">
+            <a className="primary-button" href="#create">Create free tag <ArrowDown aria-hidden="true" size={18} /></a>
+            <a className="secondary-button" href={sampleUrl}>Try live demo</a>
+          </div>
           <div className="hero-points" aria-label="Key benefits">
-            <span>Free to create</span><span>No app required</span><span>Data stays in the QR</span>
+            <span>Free to create</span><span>No app required</span><span>Any printer · A4 ready</span><span>Data stays in the QR</span>
           </div>
         </div>
 
@@ -64,8 +68,11 @@ export default async function Home() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={sampleQr} alt="Scannable QR code for the Coffee machine filter sample" width={560} height={560} />
             </div>
-            <div className="hero-tag-footer"><span>Replace every 60 days</span><span>No account needed</span></div>
+            <div className="hero-tag-footer"><span>Replace every 60 days</span><span>Scan → exact search</span></div>
           </a>
+          <div className="scan-story" aria-label="How the sample tag is used">
+            <span>1. Print</span><span>2. Stick</span><span>3. Scan</span><span>4. Reorder</span>
+          </div>
           <p className="hero-product-caption">A real tag, not decoration. Scan it to open the sample reorder page.</p>
         </div>
       </section>
