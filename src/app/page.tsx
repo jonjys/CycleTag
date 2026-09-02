@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { ArrowDown, ArrowUpRight, ShieldCheck } from "lucide-react";
+import { ArrowDown, ShieldCheck } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import QRCode from "qrcode";
-import { reorderToolPath, reorderTools } from "@/lib/reorder-tools";
 import { siteUrl } from "@/lib/site";
 import { buildTagUrl, type TagPayload } from "@/lib/tag";
 import { HomeGenerator } from "./home-generator";
+import { ToolDirectory } from "./tool-directory";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -79,24 +78,7 @@ export default async function Home() {
 
       <HomeGenerator />
 
-      <section className="tool-directory no-print" aria-labelledby="tool-directory-title">
-        <div className="directory-heading">
-          <div>
-            <div className="section-kicker">START WITH THE RIGHT REPLACEMENT</div>
-            <h2 id="tool-directory-title">Free QR reorder label makers.</h2>
-          </div>
-          <p>Each tool opens with a useful starting interval. Add your exact model or part number before printing.</p>
-        </div>
-        <div className="tool-link-grid">
-          {reorderTools.map((tool, index) => (
-            <Link href={reorderToolPath(tool)} key={tool.slug}>
-              <small>{String(index + 1).padStart(2, "0")}</small>
-              <strong>{tool.preset.name}</strong>
-              <ArrowUpRight aria-hidden="true" size={18} />
-            </Link>
-          ))}
-        </div>
-      </section>
+      <ToolDirectory />
 
       <section className="how-it-works no-print" id="how">
         <div className="loop-heading">

@@ -14,9 +14,22 @@ export const metadata: Metadata = {
     type: "website",
     title: "CycleTag — Scan. Reorder. Repeat.",
     description: "A permanent QR label for every thing you replace.",
-    siteName: "CycleTag"
+    siteName: "CycleTag",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "CycleTag QR reorder labels for replacement parts"
+      }
+    ]
   },
-  twitter: { card: "summary", title: "CycleTag", description: "Scan. Reorder. Repeat." }
+  twitter: {
+    card: "summary_large_image",
+    title: "CycleTag",
+    description: "Free QR reorder labels for replacement parts.",
+    images: ["/opengraph-image"]
+  }
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#f4f1e9" };

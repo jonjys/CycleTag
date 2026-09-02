@@ -4,8 +4,8 @@ import { siteUrl } from "@/lib/site";
 import { validateTag } from "@/lib/tag";
 
 describe("searchable reorder tools", () => {
-  it("publishes twelve unique, valid generator routes", () => {
-    expect(reorderTools).toHaveLength(12);
+  it("publishes twenty-four unique, valid generator routes", () => {
+    expect(reorderTools).toHaveLength(24);
     expect(new Set(reorderTools.map(({ slug }) => slug)).size).toBe(reorderTools.length);
 
     for (const tool of reorderTools) {

@@ -107,12 +107,24 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .directory-heading { display: grid; grid-template-columns: 1.4fr .6fr; align-items: end; gap: 40px; margin-bottom: 44px; }
 .directory-heading h2, .tool-guide h2, .related-tools h2 { margin: 10px 0 0; font-size: clamp(38px, 5vw, 70px); line-height: .95; letter-spacing: -.06em; }
 .directory-heading > p { max-width: 420px; margin: 0 0 6px; color: var(--muted); line-height: 1.6; }
+.tool-search { min-height: 62px; padding: 0 18px; display: flex; align-items: center; gap: 13px; border: 1px solid var(--ink); background: var(--white); }
+.tool-search input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 17px; }
+.tool-search button { width: 38px; height: 38px; flex: 0 0 auto; display: grid; place-items: center; border: 0; background: transparent; color: var(--muted); cursor: pointer; }
+.tool-filters { margin: 14px 0 10px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.tool-filters::-webkit-scrollbar { display: none; }
+.tool-filters button { min-height: 38px; padding: 0 14px; flex: 0 0 auto; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 800; cursor: pointer; }
+.tool-filters button:hover, .tool-filters button:focus-visible, .tool-filters button.active { border-color: var(--ink); background: var(--ink); color: var(--white); }
+.tool-result-count { margin: 18px 0 10px; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .tool-link-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--ink); border-left: 1px solid var(--line); }
 .tool-link-grid a { min-height: 132px; padding: 18px; display: grid; grid-template-columns: 1fr auto; grid-template-rows: 1fr auto; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; transition: background .15s, color .15s; }
 .tool-link-grid a:hover, .tool-link-grid a:focus-visible { background: var(--green); color: var(--white); }
 .tool-link-grid small { color: var(--orange); font-size: 10px; font-weight: 900; letter-spacing: .1em; }
 .tool-link-grid strong { align-self: end; font-size: 17px; letter-spacing: -.02em; }
 .tool-link-grid svg { grid-column: 2; grid-row: 2; align-self: end; }
+.tool-empty { padding: 42px; border: 1px solid var(--line); background: var(--white); text-align: center; }
+.tool-empty strong { display: block; font-size: 24px; }
+.tool-empty p { margin: 8px 0 22px; color: var(--muted); }
+.tool-empty .primary-button { width: fit-content; margin: auto; }
 
 .tool-hero { padding: clamp(68px, 9vw, 130px) clamp(20px, 10vw, 160px); border-bottom: 1px solid var(--line); background: linear-gradient(135deg, var(--paper) 0 72%, var(--lime) 72% 100%); }
 .tool-back { width: fit-content; margin-bottom: 72px; display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; text-decoration: none; }

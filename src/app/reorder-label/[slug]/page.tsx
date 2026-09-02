@@ -38,7 +38,10 @@ export default async function ReorderToolPage({ params }: PageProps) {
   const tool = getReorderTool(slug);
   if (!tool) notFound();
 
-  const related = reorderTools.filter((candidate) => candidate.slug !== tool.slug).slice(0, 4);
+  const related = [
+    ...reorderTools.filter((candidate) => candidate.slug !== tool.slug && candidate.group === tool.group),
+    ...reorderTools.filter((candidate) => candidate.slug !== tool.slug && candidate.group !== tool.group)
+  ].slice(0, 4);
   const canonical = `${siteUrl}${reorderToolPath(tool)}`;
   const structuredData = {
     "@context": "https://schema.org",
