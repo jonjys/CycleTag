@@ -15,6 +15,18 @@ export const marketConfig: Record<Market, MarketConfig> = {
   CA: { host: "www.ebay.ca", rotationId: "706-53473-19255-0", label: "Canada" }
 };
 
+export function marketplaceName(market: Market): string {
+  return marketConfig[market].host.replace(/^www\./, "").replace(/^ebay/i, "eBay");
+}
+
+export function marketChoiceLabel(market: Market): string {
+  return `${marketConfig[market].label} · ${marketplaceName(market)}`;
+}
+
+export function marketDestinationNote(market: Market): string {
+  return `Reorder links open ${marketplaceName(market)}. CycleTag currently routes ${marketConfig[market].label} to that one eBay marketplace.`;
+}
+
 export function validCampaignId(value: string | undefined): value is string {
   return typeof value === "string" && /^\d{6,20}$/.test(value);
 }

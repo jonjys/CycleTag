@@ -57,7 +57,7 @@ export default async function Home() {
         <div className="hero-product">
           <div className="hero-product-note"><span>LIVE PRODUCT DEMO</span><span>SCAN WITH YOUR PHONE</span></div>
           <a className="hero-tag" href={sampleUrl} aria-label="Open the Coffee machine filter sample CycleTag">
-            <div className="hero-tag-top"><span>CYCLETAG / 01</span><span>DE MARKET</span></div>
+            <div className="hero-tag-top"><span>CYCLETAG / 01</span><span>EBAY.DE</span></div>
             <div className="hero-tag-body">
               <div className="hero-tag-copy">
                 <span>SCAN TO REORDER</span>
@@ -102,13 +102,13 @@ export default async function Home() {
           <article><b>01</b><h3>Create</h3><p>Add the exact item once.</p></article>
           <article><b>02</b><h3>Stick</h3><p>Put the label where it lives.</p></article>
           <article><b>03</b><h3>Scan</h3><p>Use any phone camera.</p></article>
-          <article><b>04</b><h3>Reorder</h3><p>Open the live marketplace search.</p></article>
+          <article><b>04</b><h3>Reorder</h3><p>Open the live eBay search for that region.</p></article>
         </div>
       </section>
 
       <section className="privacy-strip no-print">
         <div><ShieldCheck className="privacy-icon" aria-hidden="true" size={22} /><strong>Zero-database design</strong></div>
-        <p>The item name, search phrase and interval are encoded inside your QR. CycleTag has no account to breach and no list of your supplies to sell.</p>
+        <p>The item name, search phrase, date and market are encoded inside your QR and share link. Anyone with that QR or link can read them. CycleTag has no account to breach and no list of your supplies to sell.</p>
       </section>
     </main>
   );

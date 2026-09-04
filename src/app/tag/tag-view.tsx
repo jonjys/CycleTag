@@ -4,7 +4,7 @@ import Link from "next/link";
 import { CircleAlert, ExternalLink, RefreshCcw, ShieldCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ActionToast, type ToastTone } from "@/app/action-toast";
-import { buildEbayLink, defaultCampaignId, validCampaignId } from "@/lib/affiliate";
+import { buildEbayLink, defaultCampaignId, marketChoiceLabel, marketplaceName, validCampaignId } from "@/lib/affiliate";
 import { calculateCycle, formatDate } from "@/lib/cycle";
 import { copyText } from "@/lib/clipboard";
 import { triggerDownload } from "@/lib/download";
@@ -66,16 +66,16 @@ export function TagView() {
     try {
       if (navigator.share) {
         await navigator.share({ title: tag.n, text: `Reorder ${tag.n}`, url: window.location.href });
-        setFlash({ tone: "success", text: "Tag shared." });
+        setFlash({ tone: "success", text: "Tag shared. Anyone with the link can read the encoded item, search and date." });
         return;
       }
       await copyText(window.location.href);
-      setFlash({ tone: "success", text: "Tag link copied. Anyone with this link can open the reorder page." });
+      setFlash({ tone: "success", text: "Tag link copied. Anyone with this link can read the encoded item, search and date." });
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
       try {
         await copyText(window.location.href);
-        setFlash({ tone: "success", text: "Tag link copied. Anyone with this link can open the reorder page." });
+        setFlash({ tone: "success", text: "Tag link copied. Anyone with this link can read the encoded item, search and date." });
       } catch {
         setFlash({ tone: "error", text: "Copy failed. Copy the address from the browser instead." });
       }
@@ -99,14 +99,20 @@ export function TagView() {
         <div className="section-kicker">YOUR CYCLETAG</div>
         <h1>{tag.n}</h1>
         <p className="search-query">{tag.q}</p>
-        <div className="tag-meta"><span>Every {tag.i} days</span><span>Started {tag.s}</span><span>{tag.m} market</span></div>
+        <div className="tag-meta">
+          <span>Every {tag.i} days</span>
+          <span>Started {tag.s}</span>
+          <span>{marketChoiceLabel(tag.m)}</span>
+        </div>
       </div>
 
       <a className="buy-button" href={buyUrl} target="_blank" rel="nofollow sponsored noopener">
-        Find replacement on eBay <ExternalLink aria-hidden="true" size={18} />
+        Find replacement on {marketplaceName(tag.m)} <ExternalLink aria-hidden="true" size={18} />
       </a>
       <p className="affiliate-near-link">
-        {affiliateActive ? "Affiliate link: CycleTag may earn a commission, at no extra cost to you." : "Marketplace search. Affiliate tracking is not configured on this deployment."}
+        {affiliateActive
+          ? `Affiliate link to ${marketplaceName(tag.m)}: CycleTag may earn a commission, at no extra cost to you.`
+          : `Marketplace search on ${marketplaceName(tag.m)}. Affiliate tracking is not configured on this deployment.`}
       </p>
 
       {flash && (
@@ -123,6 +129,9 @@ export function TagView() {
       </div>
       <p className="tag-edit-note">
         Wrong part number? <Link href={encoded ? `/${builderEditHash(encoded)}` : "/"}>Correct this tag</Link> to print a new QR. This sticker stays as it is — CycleTag has no database that could update it.
+      </p>
+      <p className="tag-share-note">
+        Share, print or bookmark only if this payload can be public. Anyone with the QR or link can read the item name, search, date and {marketplaceName(tag.m)} destination.
       </p>
 
       <div className="tag-privacy"><ShieldCheck aria-hidden="true" size={18} /><p><strong>No tag database.</strong> This page was rebuilt from the QR itself. Anyone with the QR or link can read the information encoded in it.</p></div>

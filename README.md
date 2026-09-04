@@ -40,7 +40,7 @@ Example, not a guarantee: a qualifying €40 replacement at 1–6% produces €0
 - No automatic orders
 - Tags are deliberately `noindex`
 
-The tag payload is visible to anyone who has the URL or QR, but new tags keep it after `#` so it is not included in HTTP requests. The UI tells users not to enter confidential information.
+The tag payload is visible to anyone who has the URL or QR, but new tags keep it after `#` so it is not included in HTTP requests. The create, share and print flows preview the encoded fields and warn users not to enter confidential information. Shopping regions map to one disclosed eBay marketplace each — Europe / Nordics currently opens eBay.de.
 
 ## Stack
 
