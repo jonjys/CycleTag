@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { RefreshCcw } from "lucide-react";
 import Link from "next/link";
 import { siteUrl } from "@/lib/site";
+import { contact, contactLinks } from "@/lib/contact";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -50,8 +51,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </header>
         {children}
         <footer className="site-footer no-print">
-          <span>CycleTag runs without accounts, analytics or tracking cookies.</span>
-          <nav aria-label="Legal">
+          <div className="footer-about">
+            <span>CycleTag runs without accounts, analytics or tracking cookies.</span>
+            <span>A product by <a href={contactLinks.operator}>{contact.operatorName}</a></span>
+          </div>
+          <nav aria-label="Support and legal">
+            <Link href="/support">Support</Link>
+            <a href={contactLinks.general}>Contact</a>
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
             <Link href="/affiliate">Affiliate disclosure</Link>

@@ -203,6 +203,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .legal-page h2 { margin-top: 34px; font-size: 20px; }
 .legal-page p { line-height: 1.7; color: #44433d; }
 .site-footer { padding: 30px clamp(20px, 5vw, 72px); display: flex; justify-content: space-between; gap: 30px; color: var(--muted); font-size: 11px; }
+.footer-about { display: flex; flex-direction: column; gap: 8px; }
+.footer-about a { color: var(--ink); font-weight: 800; }
 .site-footer nav { display: flex; flex-wrap: wrap; gap: 20px; }
 
 @media (max-width: 950px) {
