@@ -36,7 +36,7 @@ export function HomeGenerator() {
     <Generator
       key={draft ? `${draft.reprint ? "print" : "edit"}:${draft.encoded}` : "new-tag"}
       initialTag={draft?.tag}
-      reissuing={Boolean(draft) && !draft.reprint}
+      reissuing={Boolean(draft && !draft.reprint)}
       reprinting={Boolean(draft?.reprint)}
     />
   );
