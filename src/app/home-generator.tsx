@@ -1,7 +1,7 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-import { decodeTag } from "@/lib/tag";
+import { useEffect, useSyncExternalStore } from "react";
+import { payloadFromBuilderHash } from "@/lib/tag";
 import { Generator } from "./generator";
 
 function subscribeToLocation(onStoreChange: () => void) {
@@ -23,14 +23,20 @@ function getServerHashSnapshot() {
 
 export function HomeGenerator() {
   const hash = useSyncExternalStore(subscribeToLocation, getHashSnapshot, getServerHashSnapshot);
-  const encoded = new URLSearchParams(hash.slice(1)).get("clone");
-  const cloned = decodeTag(encoded);
+  const draft = payloadFromBuilderHash(hash);
+  const encoded = draft?.encoded;
+
+  useEffect(() => {
+    if (!encoded) return;
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+    document.getElementById("create")?.scrollIntoView({ behavior, block: "start" });
+  }, [encoded]);
 
   return (
     <Generator
-      key={cloned ? encoded : "new-tag"}
-      initialTag={cloned ?? undefined}
-      initialMessage={cloned ? "Tag copied into the builder. Adjust it and create a fresh label." : undefined}
+      key={draft ? draft.encoded : "new-tag"}
+      initialTag={draft?.tag}
+      reissuing={Boolean(draft)}
     />
   );
 }

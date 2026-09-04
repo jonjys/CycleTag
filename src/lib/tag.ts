@@ -113,3 +113,15 @@ export function buildTagUrl(origin: string, tag: TagPayload): string {
   safeOrigin.hash = new URLSearchParams({ d: encodeTag(tag) }).toString();
   return safeOrigin.toString();
 }
+
+export function builderEditHash(encoded: string): string {
+  return `#edit=${encoded}`;
+}
+
+export function payloadFromBuilderHash(hash: string): { encoded: string; tag: TagPayload } | null {
+  const params = new URLSearchParams(hash.startsWith("#") ? hash.slice(1) : hash);
+  const encoded = params.get("edit") ?? params.get("clone");
+  const tag = decodeTag(encoded);
+  if (!encoded || !tag) return null;
+  return { encoded, tag };
+}
