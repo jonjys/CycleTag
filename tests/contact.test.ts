@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { contact, contactLinks } from "../src/lib/contact";
 
 describe("public contact configuration", () => {
-  it("uses the official Nytto Labs and CycleTag addresses", () => {
+  it("uses official Nytto Labs inboxes, not a product-unique or Gmail address", () => {
     expect(contact).toMatchObject({
       productName: "CycleTag",
       operatorName: "Nytto Labs",
@@ -10,11 +10,14 @@ describe("public contact configuration", () => {
       country: "Sweden",
       email: {
         general: "hello@nyttolabs.com",
-        support: "support@cycletag.eu",
+        support: "support@nyttolabs.com",
         privacy: "privacy@nyttolabs.com",
         billing: "billing@nyttolabs.com"
       }
     });
+    for (const address of Object.values(contact.email)) {
+      expect(address.endsWith("@nyttolabs.com")).toBe(true);
+    }
   });
 
   it("provides mailto links for every public email address", () => {
