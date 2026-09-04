@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { buildTagUrl, decodeTag, encodeTag, validateTag, type TagPayload } from "@/lib/tag";
+import {
+  builderEditHash,
+  buildTagUrl,
+  decodeTag,
+  encodeTag,
+  payloadFromBuilderHash,
+  validateTag,
+  type TagPayload
+} from "@/lib/tag";
 
 const tag: TagPayload = { v: 1, n: "Brother toner åäö", q: "Brother TN-3480 black", c: "office", i: 90, s: "2026-08-27", m: "DE" };
 
@@ -31,5 +39,13 @@ describe("CycleTag codec", () => {
 
   it("rejects non-web origins", () => {
     expect(() => buildTagUrl("javascript:alert(1)", tag)).toThrow();
+  });
+
+  it("reads an edit payload from the builder hash without sending it as a query", () => {
+    const encoded = encodeTag(tag);
+    expect(builderEditHash(encoded)).toBe(`#edit=${encoded}`);
+    expect(payloadFromBuilderHash(builderEditHash(encoded))).toEqual({ encoded, tag });
+    expect(payloadFromBuilderHash(`#clone=${encoded}`)).toEqual({ encoded, tag });
+    expect(payloadFromBuilderHash("#edit=%%%")).toBeNull();
   });
 });

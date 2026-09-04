@@ -3,26 +3,29 @@
 import Link from "next/link";
 import { CircleAlert, ExternalLink, RefreshCcw, ShieldCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { ActionToast, type ToastTone } from "@/app/action-toast";
 import { buildEbayLink, defaultCampaignId, validCampaignId } from "@/lib/affiliate";
 import { calculateCycle, formatDate } from "@/lib/cycle";
 import { copyText } from "@/lib/clipboard";
 import { triggerDownload } from "@/lib/download";
 import { createIcs } from "@/lib/ics";
-import { decodeTag } from "@/lib/tag";
+import { builderEditHash, decodeTag } from "@/lib/tag";
 
 const campaignId = process.env.NEXT_PUBLIC_EBAY_CAMPAIGN_ID || defaultCampaignId;
+
+type Flash = { text: string; tone: ToastTone };
 
 export function TagView() {
   const [encoded, setEncoded] = useState<string | null | undefined>(undefined);
   const tag = useMemo(() => encoded === undefined ? undefined : decodeTag(encoded), [encoded]);
-  const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "failed">("idle");
+  const [flash, setFlash] = useState<Flash | null>(null);
 
   useEffect(() => {
     function readTag() {
       const fragment = new URLSearchParams(window.location.hash.slice(1)).get("d");
       const legacy = new URLSearchParams(window.location.search).get("d");
       setEncoded(fragment ?? legacy);
-      setShareStatus("idle");
+      setFlash(null);
     }
 
     readTag();
@@ -55,6 +58,7 @@ export function TagView() {
     const href = URL.createObjectURL(blob);
     triggerDownload(href, "cycletag-reminder.ics");
     window.setTimeout(() => URL.revokeObjectURL(href), 1_000);
+    setFlash({ tone: "success", text: "Calendar reminder downloaded. Open the .ics file to add the repeating event." });
   }
 
   async function share() {
@@ -62,17 +66,18 @@ export function TagView() {
     try {
       if (navigator.share) {
         await navigator.share({ title: tag.n, text: `Reorder ${tag.n}`, url: window.location.href });
+        setFlash({ tone: "success", text: "Tag shared." });
         return;
       }
       await copyText(window.location.href);
-      setShareStatus("copied");
+      setFlash({ tone: "success", text: "Tag link copied. Anyone with this link can open the reorder page." });
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
       try {
         await copyText(window.location.href);
-        setShareStatus("copied");
+        setFlash({ tone: "success", text: "Tag link copied. Anyone with this link can open the reorder page." });
       } catch {
-        setShareStatus("failed");
+        setFlash({ tone: "error", text: "Copy failed. Copy the address from the browser instead." });
       }
     }
   }
@@ -104,14 +109,21 @@ export function TagView() {
         {affiliateActive ? "Affiliate link: CycleTag may earn a commission, at no extra cost to you." : "Marketplace search. Affiliate tracking is not configured on this deployment."}
       </p>
 
+      {flash && (
+        <div className="tag-flash">
+          <ActionToast message={flash.text} tone={flash.tone} />
+        </div>
+      )}
+
       <div className="tag-secondary">
         <button type="button" onClick={addReminder}>Add recurring reminder</button>
-        <button type="button" onClick={share}>
-          {shareStatus === "copied" ? "Link copied" : shareStatus === "failed" ? "Copy failed" : "Share this tag"}
-        </button>
-        <Link href={encoded ? `/#clone=${encoded}` : "/"}>Clone this tag</Link>
+        <button type="button" onClick={share}>Share this tag</button>
+        <Link href={encoded ? `/${builderEditHash(encoded)}` : "/"}>Correct this tag</Link>
         <Link href="/">Create a different tag</Link>
       </div>
+      <p className="tag-edit-note">
+        Wrong part number? <Link href={encoded ? `/${builderEditHash(encoded)}` : "/"}>Correct this tag</Link> to print a new QR. This sticker stays as it is — CycleTag has no database that could update it.
+      </p>
 
       <div className="tag-privacy"><ShieldCheck aria-hidden="true" size={18} /><p><strong>No tag database.</strong> This page was rebuilt from the QR itself. Anyone with the QR or link can read the information encoded in it.</p></div>
     </section>

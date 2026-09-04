@@ -3,6 +3,7 @@
 import QRCode from "qrcode";
 import { ArrowRight, CheckCircle2, Coffee, Droplets, PawPrint, Printer, Wrench, Wind, type LucideIcon } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { ActionToast, type ToastTone } from "./action-toast";
 import { buildEbayLink, defaultCampaignId, marketConfig } from "@/lib/affiliate";
 import { copyText } from "@/lib/clipboard";
 import { triggerDownload } from "@/lib/download";
@@ -18,6 +19,7 @@ function today(): string {
 }
 
 type Generated = { tag: TagPayload; url: string; qr: string };
+type Flash = { text: string; tone: ToastTone };
 
 const presetIcons: Record<Preset["icon"], LucideIcon> = {
   printer: Printer,
@@ -31,7 +33,7 @@ const presetIcons: Record<Preset["icon"], LucideIcon> = {
 type GeneratorProps = {
   initialPreset?: Preset;
   initialTag?: TagPayload;
-  initialMessage?: string;
+  reissuing?: boolean;
   showPresets?: boolean;
   title?: string;
   description?: string;
@@ -40,10 +42,12 @@ type GeneratorProps = {
 export function Generator({
   initialPreset,
   initialTag,
-  initialMessage = "",
+  reissuing = false,
   showPresets = true,
-  title: builderTitle = "What keeps running out?",
-  description = "Start with a common replacement or make your own."
+  title: builderTitle = reissuing ? "Correct this tag" : "What keeps running out?",
+  description = reissuing
+    ? "Fix the name or part number, then create a new QR. The old sticker is unchanged."
+    : "Start with a common replacement or make your own."
 }: GeneratorProps = {}) {
   const [name, setName] = useState(initialTag?.n ?? initialPreset?.name ?? "");
   const [query, setQuery] = useState(initialTag?.q ?? initialPreset?.query ?? "");
@@ -52,7 +56,7 @@ export function Generator({
   const [start, setStart] = useState(initialTag?.s ?? today);
   const [market, setMarket] = useState<Market>(initialTag?.m ?? "DE");
   const [generated, setGenerated] = useState<Generated | null>(null);
-  const [message, setMessage] = useState(initialMessage);
+  const [flash, setFlash] = useState<Flash | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
   const canGenerate = name.trim().length > 0 && query.trim().length > 0 && interval >= 1 && interval <= 730 && start.length > 0;
@@ -76,25 +80,31 @@ export function Generator({
     setCategory(preset.category);
     setInterval(preset.interval);
     setGenerated(null);
-    setMessage("");
+    setFlash(null);
   }
 
   function invalidate() {
     setGenerated(null);
-    setMessage("");
+    setFlash(null);
   }
 
   async function generate(event: FormEvent) {
     event.preventDefault();
-    setMessage("");
+    setFlash(null);
     if (!canGenerate) return;
     const tag: TagPayload = { v: 1, n: name.trim(), q: query.trim(), c: category, i: interval, s: start, m: market };
     try {
       const url = buildTagUrl(siteUrl, tag);
       const qr = await QRCode.toDataURL(url, { errorCorrectionLevel: "M", width: 720, margin: 2, color: { dark: "#171713", light: "#ffffff" } });
       setGenerated({ tag, url, qr });
+      setFlash({
+        tone: "success",
+        text: reissuing
+          ? "New label ready. Print or download it and cover the old sticker — that QR still has the previous details."
+          : "CycleTag ready. Print, download the PNG, copy the link or add a calendar reminder."
+      });
     } catch {
-      setMessage("That tag could not be created. Check the fields and try again.");
+      setFlash({ tone: "error", text: "That tag could not be created. Check the fields and try again." });
     }
   }
 
@@ -102,15 +112,16 @@ export function Generator({
     if (!generated) return;
     try {
       await copyText(generated.url);
-      setMessage("Tag link copied.");
+      setFlash({ tone: "success", text: "Tag link copied. Anyone with this link can open the reorder page." });
     } catch {
-      setMessage("Copy failed. Open the tag and copy its address from the browser.");
+      setFlash({ tone: "error", text: "Copy failed. Open the tag and copy its address from the browser." });
     }
   }
 
   function downloadQr() {
     if (!generated) return;
     triggerDownload(generated.qr, `${slug(generated.tag.n)}-cycletag.png`);
+    setFlash({ tone: "success", text: "Label PNG downloaded. Import it into a printer app or attach it as a sticker." });
   }
 
   function downloadCalendar() {
@@ -119,17 +130,34 @@ export function Generator({
     const href = URL.createObjectURL(blob);
     triggerDownload(href, `${slug(generated.tag.n)}-reorder.ics`);
     window.setTimeout(() => URL.revokeObjectURL(href), 1_000);
+    setFlash({ tone: "success", text: "Calendar reminder downloaded. Open the .ics file to add the repeating event." });
   }
+
+  function printLabel() {
+    window.print();
+    setFlash({ tone: "success", text: "Print dialog opened. Cut around the dashed border and stick the label." });
+  }
+
+  const toast = flash ? <ActionToast message={flash.text} tone={flash.tone} /> : null;
 
   return (
     <section className="builder" id="create" aria-labelledby="builder-title">
       <div className="builder-intro">
         <div>
-          <div className="section-kicker">BUILD YOUR TAG</div>
+          <div className="section-kicker">{reissuing ? "RE-ISSUE A LABEL" : "BUILD YOUR TAG"}</div>
           <h2 id="builder-title">{builderTitle}</h2>
         </div>
         <p>{description}</p>
       </div>
+
+      {reissuing && (
+        <aside className="reissue-banner" aria-labelledby="reissue-title">
+          <strong id="reissue-title">This creates a new QR, not an update.</strong>
+          <p>
+            CycleTag keeps every payload inside the label itself, so an already-printed sticker cannot be changed. Cover or discard the old one after you print this replacement; scanning the old QR still opens the previous part number.
+          </p>
+        </aside>
+      )}
 
       {showPresets && (
         <div className="preset-grid">
@@ -154,7 +182,7 @@ export function Generator({
         <div className="field wide">
           <label htmlFor="query">Exact reorder search</label>
           <input id="query" value={query} onChange={(event) => { setQuery(event.target.value); invalidate(); }} maxLength={160} placeholder="e.g. Brother TN-3480 black toner" required aria-describedby="query-help" />
-          <small id="query-help">Use a model or part number for the best result.</small>
+          <small id="query-help">Use a model or part number for the best result. Typo? Fix it here and create a new label.</small>
         </div>
         <div className="field">
           <label htmlFor="interval">Replace every</label>
@@ -176,11 +204,13 @@ export function Generator({
             {categories.map((value) => <option key={value} value={value}>{title(value)}</option>)}
           </select>
         </div>
-        <button className="primary-button wide" type="submit" disabled={!canGenerate}>Create CycleTag <ArrowRight aria-hidden="true" size={18} /></button>
+        <button className="primary-button wide" type="submit" disabled={!canGenerate}>
+          {reissuing ? "Create new label" : "Create CycleTag"} <ArrowRight aria-hidden="true" size={18} />
+        </button>
         <p className="form-trust wide"><CheckCircle2 aria-hidden="true" size={14} /> Generated entirely in your browser. Nothing is uploaded.</p>
       </form>
 
-      {message && <div className="toast" role="status">{message}</div>}
+      {!generated && toast}
 
       {generated && (
         <div className="result" ref={resultRef}>
@@ -190,13 +220,23 @@ export function Generator({
             <div><span>SCAN TO REORDER</span><strong>{generated.tag.n}</strong><small>Every {generated.tag.i} days · free label at cycletag.eu</small></div>
           </div>
           <div className="result-actions">
-            <div><div className="section-kicker">YOUR TAG IS READY</div><h3>Print it. Stick it. Forget it.</h3><p>The QR contains the instructions. It stays useful even without an account.</p></div>
+            <div>
+              <div className="section-kicker">{reissuing ? "REPLACEMENT LABEL READY" : "YOUR TAG IS READY"}</div>
+              <h3>Print it. Stick it. Forget it.</h3>
+              <p>The QR contains the instructions. It stays useful even without an account.</p>
+            </div>
+            {toast}
             <div className="button-grid">
-              <button type="button" className="primary-button" onClick={() => window.print()}>Print on A4</button>
+              <button type="button" className="primary-button" onClick={printLabel}>Print on A4</button>
               <button type="button" className="secondary-button" onClick={downloadQr}>Download PNG</button>
               <button type="button" className="secondary-button" onClick={downloadCalendar}>Add reminder</button>
               <button type="button" className="secondary-button" onClick={copyLink}>Copy link</button>
             </div>
+            <p className="reissue-hint">
+              {reissuing
+                ? "Cover or discard the previous sticker. Scanning it still opens the old part number because CycleTag cannot rewrite a printed QR."
+                : "Typo in the part number? Change the fields above and create a new QR. Already-printed labels keep whatever was encoded in them."}
+            </p>
             <div className="print-help">
               <strong>No special printer required.</strong>
               <p>Use any home or office printer, cut around the border and attach with clear tape or sticker paper. For a mini label printer, download the PNG and import it into the printer app.</p>
