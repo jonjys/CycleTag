@@ -118,10 +118,15 @@ export function builderEditHash(encoded: string): string {
   return `#edit=${encoded}`;
 }
 
-export function payloadFromBuilderHash(hash: string): { encoded: string; tag: TagPayload } | null {
+export function builderPrintHash(encoded: string): string {
+  return `#print=${encoded}`;
+}
+
+export function payloadFromBuilderHash(hash: string): { encoded: string; tag: TagPayload; reprint: boolean } | null {
   const params = new URLSearchParams(hash.startsWith("#") ? hash.slice(1) : hash);
-  const encoded = params.get("edit") ?? params.get("clone");
+  const printEncoded = params.get("print");
+  const encoded = printEncoded ?? params.get("edit") ?? params.get("clone");
   const tag = decodeTag(encoded);
   if (!encoded || !tag) return null;
-  return { encoded, tag };
+  return { encoded, tag, reprint: Boolean(printEncoded) };
 }
