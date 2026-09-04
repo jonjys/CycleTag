@@ -5,7 +5,7 @@ export const contact = {
   country: "Sweden",
   email: {
     general: "hello@nyttolabs.com",
-    support: "support@cycletag.eu",
+    support: "support@nyttolabs.com",
     privacy: "privacy@nyttolabs.com",
     billing: "billing@nyttolabs.com"
   }
