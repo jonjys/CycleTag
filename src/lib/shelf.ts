@@ -86,7 +86,7 @@ export function shelfOpenHref(record: Pick<ShelfRecord, "encoded">): string {
 }
 
 export function shelfPrintHref(record: Pick<ShelfRecord, "encoded">): string {
-  return `/${builderPrintHash(record.encoded)}`;
+  return builderPrintHash(record.encoded);
 }
 
 export function listShelf(storage?: ShelfStorage): ShelfRecord[] {

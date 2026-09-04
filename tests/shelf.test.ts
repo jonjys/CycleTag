@@ -47,7 +47,7 @@ describe("CycleTag local shelf", () => {
     });
     expect(records[1]?.name).toBe("Office toner");
     expect(shelfOpenHref(records[0])).toBe(`/tag#d=${filterEncoded}`);
-    expect(shelfPrintHref(records[0])).toBe(`/${builderPrintHash(filterEncoded)}`);
+    expect(shelfPrintHref(records[0])).toBe(builderPrintHash(filterEncoded));
   });
 
   it("upserts the same payload without duplicating it and keeps the original saved time", () => {

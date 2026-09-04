@@ -102,7 +102,7 @@ export function TagShelf() {
                 </div>
                 <div className="shelf-item-actions">
                   <Link href={shelfOpenHref(record)}>Open</Link>
-                  <Link href={shelfPrintHref(record)}>Print again</Link>
+                  <a href={shelfPrintHref(record)}>Print again</a>
                   <button type="button" onClick={() => removeOne(record)}>Remove</button>
                 </div>
               </li>
