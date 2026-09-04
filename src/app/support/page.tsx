@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { contact, contactLinks } from "@/lib/contact";
+import { contact, contactLinks, operatorTaxDisclosure } from "@/lib/contact";
 
 export const metadata: Metadata = { title: "Support", alternates: { canonical: "/support" }, openGraph: { url: "/support" } };
 
@@ -14,6 +14,6 @@ export default function SupportPage() {
     <h2>Privacy and GDPR</h2><p>For privacy questions, data requests or deletion requests, email <a href={contactLinks.privacy}>{contact.email.privacy}</a>.</p>
     <h2>Billing and payments</h2><p>For invoice, charge or payment questions, email <a href={contactLinks.billing}>{contact.email.billing}</a>.</p>
     <h2>General enquiries</h2><p>For partnerships, media and company enquiries, email <a href={contactLinks.general}>{contact.email.general}</a>.</p>
-    <p>CycleTag is a product by <a href={contactLinks.operator}>{contact.operatorName}</a>, {contact.country}.</p>
+    <p>CycleTag is a product of <a href={contactLinks.operator}>{contact.operatorName}</a>, operated by {contact.operatorPerson}, {contact.country}. {operatorTaxDisclosure}</p>
   </article></main>;
 }

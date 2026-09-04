@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { contact, contactLinks } from "../src/lib/contact";
+import {
+  contact,
+  contactLinks,
+  operatorAttribution,
+  operatorTaxDisclosure
+} from "../src/lib/contact";
 
 describe("public contact configuration", () => {
   it("uses official Nytto Labs inboxes, not a product-unique or Gmail address", () => {
@@ -17,7 +22,30 @@ describe("public contact configuration", () => {
     });
     for (const address of Object.values(contact.email)) {
       expect(address.endsWith("@nyttolabs.com")).toBe(true);
+      expect(address.startsWith("fkornelind@")).toBe(false);
     }
+  });
+
+  it("names the Swedish sole trader without unpublished numbers", () => {
+    expect(contact.operatorPerson).toBe("Fredrik Kornelind");
+    expect(contact.legalForm).toBe("Swedish sole trader");
+    expect(contact.fTaxStatus).toBe("Approved for F-tax");
+    expect(contact.vatStatus).toBe("Registered for VAT");
+    expect(operatorAttribution).toBe("Nytto Labs, operated by Fredrik Kornelind");
+    expect(operatorTaxDisclosure).toBe("Approved for F-tax. Registered for VAT.");
+
+    const publicIdentity = JSON.stringify({
+      contact,
+      operatorAttribution,
+      operatorTaxDisclosure
+    });
+    expect(publicIdentity).not.toMatch(/registration in progress/i);
+    expect(publicIdentity).not.toMatch(/not VAT registered/i);
+    expect(publicIdentity).not.toMatch(/fkornelind@/);
+    expect(publicIdentity).not.toMatch(/personnummer/i);
+    expect(contact).not.toHaveProperty("vatNumber");
+    expect(contact).not.toHaveProperty("orgNumber");
+    expect(contact).not.toHaveProperty("address");
   });
 
   it("provides mailto links for every public email address", () => {

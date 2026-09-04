@@ -54,7 +54,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <footer className="site-footer no-print">
           <div className="footer-about">
             <span>CycleTag runs without accounts, analytics or tracking cookies.</span>
-            <span>A product by <a href={contactLinks.operator}>{contact.operatorName}</a></span>
+            <span>A product by <a href={contactLinks.operator}>{contact.operatorName}</a>, operated by {contact.operatorPerson}, {contact.country}. {contact.fTaxStatus}.</span>
           </div>
           <nav aria-label="Support and legal">
             <Link href="/support">Support</Link>
