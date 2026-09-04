@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   builderEditHash,
+  builderPrintHash,
   buildTagUrl,
   decodeTag,
   encodeTag,
@@ -44,8 +45,10 @@ describe("CycleTag codec", () => {
   it("reads an edit payload from the builder hash without sending it as a query", () => {
     const encoded = encodeTag(tag);
     expect(builderEditHash(encoded)).toBe(`#edit=${encoded}`);
-    expect(payloadFromBuilderHash(builderEditHash(encoded))).toEqual({ encoded, tag });
-    expect(payloadFromBuilderHash(`#clone=${encoded}`)).toEqual({ encoded, tag });
+    expect(payloadFromBuilderHash(builderEditHash(encoded))).toEqual({ encoded, tag, reprint: false });
+    expect(payloadFromBuilderHash(`#clone=${encoded}`)).toEqual({ encoded, tag, reprint: false });
+    expect(payloadFromBuilderHash(builderPrintHash(encoded))).toEqual({ encoded, tag, reprint: true });
     expect(payloadFromBuilderHash("#edit=%%%")).toBeNull();
+    expect(payloadFromBuilderHash("#print=%%%")).toBeNull();
   });
 });

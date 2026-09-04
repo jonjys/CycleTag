@@ -45,7 +45,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             CycleTag
           </Link>
           <nav className="header-nav" aria-label="Primary">
-            <Link href="/#how">How it works</Link>
+            <Link href="/#tags">My tags</Link>
+            <Link className="header-optional" href="/#how">How it works</Link>
             <Link className="header-cta" href="/#create">Create free tag</Link>
           </nav>
         </header>

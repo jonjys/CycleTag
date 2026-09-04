@@ -5,6 +5,7 @@ import QRCode from "qrcode";
 import { siteUrl } from "@/lib/site";
 import { buildTagUrl, type TagPayload } from "@/lib/tag";
 import { HomeGenerator } from "./home-generator";
+import { TagShelf } from "./tag-shelf";
 import { ToolDirectory } from "./tool-directory";
 
 export const metadata: Metadata = {
@@ -77,6 +78,8 @@ export default async function Home() {
       </section>
 
       <HomeGenerator />
+
+      <TagShelf />
 
       <ToolDirectory />
 

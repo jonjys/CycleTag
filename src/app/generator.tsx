@@ -2,6 +2,7 @@
 
 import QRCode from "qrcode";
 import { ArrowRight, CheckCircle2, Coffee, Droplets, PawPrint, Printer, ShieldCheck, Wrench, Wind, type LucideIcon } from "lucide-react";
+import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { ActionToast, type ToastTone } from "./action-toast";
 import {
@@ -17,7 +18,8 @@ import { triggerDownload } from "@/lib/download";
 import { createIcs } from "@/lib/ics";
 import { presets, type Preset } from "@/lib/presets";
 import { siteUrl } from "@/lib/site";
-import { buildTagUrl, categories, markets, type Market, type TagCategory, type TagPayload } from "@/lib/tag";
+import { saveShelfTag } from "@/lib/shelf";
+import { buildTagUrl, encodeTag, categories, markets, type Market, type TagCategory, type TagPayload } from "@/lib/tag";
 
 function today(): string {
   const now = new Date();
@@ -41,6 +43,7 @@ type GeneratorProps = {
   initialPreset?: Preset;
   initialTag?: TagPayload;
   reissuing?: boolean;
+  reprinting?: boolean;
   showPresets?: boolean;
   title?: string;
   description?: string;
@@ -50,11 +53,18 @@ export function Generator({
   initialPreset,
   initialTag,
   reissuing = false,
+  reprinting = false,
   showPresets = true,
-  title: builderTitle = reissuing ? "Correct this tag" : "What keeps running out?",
-  description = reissuing
-    ? "Fix the name or part number, then create a new QR. The old sticker is unchanged."
-    : "Start with a common replacement or make your own."
+  title: builderTitle = reprinting
+    ? "Print this tag again"
+    : reissuing
+      ? "Correct this tag"
+      : "What keeps running out?",
+  description = reprinting
+    ? "The saved label is unchanged. Print it, or edit the fields to create a new QR."
+    : reissuing
+      ? "Fix the name or part number, then create a new QR. The old sticker is unchanged."
+      : "Start with a common replacement or make your own."
 }: GeneratorProps = {}) {
   const [name, setName] = useState(initialTag?.n ?? initialPreset?.name ?? "");
   const [query, setQuery] = useState(initialTag?.q ?? initialPreset?.query ?? "");
@@ -97,6 +107,13 @@ export function Generator({
     }
   }, [generated]);
 
+  useEffect(() => {
+    if (!reprinting) return;
+    void generateLabel();
+    // Reprint once from the saved payload; later field edits still require Create.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reprinting]);
+
   function choosePreset(preset: Preset) {
     setName(preset.name);
     setQuery(preset.query);
@@ -111,24 +128,40 @@ export function Generator({
     setFlash(null);
   }
 
-  async function generate(event: FormEvent) {
-    event.preventDefault();
+  async function generateLabel() {
     setFlash(null);
     if (!canGenerate) return;
     const tag: TagPayload = { v: 1, n: name.trim(), q: query.trim(), c: category, i: interval, s: start, m: market };
     try {
       const url = buildTagUrl(siteUrl, tag);
       const qr = await QRCode.toDataURL(url, { errorCorrectionLevel: "M", width: 720, margin: 2, color: { dark: "#171713", light: "#ffffff" } });
+      const saved = saveShelfTag(tag, encodeTag(tag));
       setGenerated({ tag, url, qr });
+      if (!saved.ok) {
+        setFlash({
+          tone: "error",
+          text: saved.reason === "quota"
+            ? "CycleTag ready, but this browser’s local list is full. Print or copy the link — nothing was uploaded."
+            : "CycleTag ready, but this browser blocked a local list (private mode or storage). Print or copy the link to keep it."
+        });
+        return;
+      }
       setFlash({
         tone: "success",
         text: reissuing
-          ? "New label ready. Print or download it and cover the old sticker — that QR still has the previous details."
-          : "CycleTag ready. Print, download the PNG, copy the link or add a calendar reminder."
+          ? "New label ready and saved on this device. Print it and cover the old sticker — that QR still has the previous details."
+          : reprinting
+            ? "Label ready to print. It stays on this device only — CycleTag does not upload your list."
+            : "CycleTag ready and saved on this device. Print, download the PNG, copy the link or add a calendar reminder."
       });
     } catch {
       setFlash({ tone: "error", text: "That tag could not be created. Check the fields and try again." });
     }
+  }
+
+  async function generate(event: FormEvent) {
+    event.preventDefault();
+    await generateLabel();
   }
 
   async function copyLink() {
@@ -167,7 +200,7 @@ export function Generator({
     <section className="builder" id="create" aria-labelledby="builder-title">
       <div className="builder-intro">
         <div>
-          <div className="section-kicker">{reissuing ? "RE-ISSUE A LABEL" : "BUILD YOUR TAG"}</div>
+          <div className="section-kicker">{reprinting ? "SAVED ON THIS DEVICE" : reissuing ? "RE-ISSUE A LABEL" : "BUILD YOUR TAG"}</div>
           <h2 id="builder-title">{builderTitle}</h2>
         </div>
         <p>{description}</p>
@@ -270,7 +303,7 @@ export function Generator({
           </div>
           <div className="result-actions">
             <div>
-              <div className="section-kicker">{reissuing ? "REPLACEMENT LABEL READY" : "YOUR TAG IS READY"}</div>
+              <div className="section-kicker">{reprinting ? "SAVED LABEL READY" : reissuing ? "REPLACEMENT LABEL READY" : "YOUR TAG IS READY"}</div>
               <h3>Print it. Stick it. Forget it.</h3>
               <p>
                 The QR opens {marketplaceName(generated.tag.m)} for {marketConfig[generated.tag.m].label}. Anyone with the sticker or link can read the encoded item, search and date.
@@ -283,7 +316,7 @@ export function Generator({
             </div>
             <p className="payload-warning">
               <ShieldCheck aria-hidden="true" size={14} />
-              Print, download, copy or share only if you are happy for this payload to be public. CycleTag has no account that could hide it later.
+              Print, download, copy or share only if you are happy for this payload to be public. CycleTag has no account that could hide it later. A copy can also sit in My tags on this device — that list is not uploaded.
             </p>
             <div className="button-grid">
               <button type="button" className="primary-button" onClick={printLabel}>Print on A4</button>
@@ -295,6 +328,8 @@ export function Generator({
               {reissuing
                 ? "Cover or discard the previous sticker. Scanning it still opens the old part number because CycleTag cannot rewrite a printed QR."
                 : "Typo in the part number? Change the fields above and create a new QR. Already-printed labels keep whatever was encoded in them."}
+              {" "}
+              <Link href="/#tags">View My tags on this device</Link>
             </p>
             <div className="print-help">
               <strong>No special printer required.</strong>
