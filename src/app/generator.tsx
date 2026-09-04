@@ -1,10 +1,17 @@
 "use client";
 
 import QRCode from "qrcode";
-import { ArrowRight, CheckCircle2, Coffee, Droplets, PawPrint, Printer, Wrench, Wind, type LucideIcon } from "lucide-react";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { ArrowRight, CheckCircle2, Coffee, Droplets, PawPrint, Printer, ShieldCheck, Wrench, Wind, type LucideIcon } from "lucide-react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { ActionToast, type ToastTone } from "./action-toast";
-import { buildEbayLink, defaultCampaignId, marketConfig } from "@/lib/affiliate";
+import {
+  buildEbayLink,
+  defaultCampaignId,
+  marketChoiceLabel,
+  marketConfig,
+  marketDestinationNote,
+  marketplaceName
+} from "@/lib/affiliate";
 import { copyText } from "@/lib/clipboard";
 import { triggerDownload } from "@/lib/download";
 import { createIcs } from "@/lib/ics";
@@ -60,6 +67,22 @@ export function Generator({
   const resultRef = useRef<HTMLDivElement>(null);
 
   const canGenerate = name.trim().length > 0 && query.trim().length > 0 && interval >= 1 && interval <= 730 && start.length > 0;
+  const draftUrl = useMemo(() => {
+    if (!canGenerate) return "";
+    try {
+      return buildTagUrl(siteUrl, {
+        v: 1,
+        n: name.trim(),
+        q: query.trim(),
+        c: category,
+        i: interval,
+        s: start,
+        m: market
+      });
+    } catch {
+      return "";
+    }
+  }, [canGenerate, name, query, category, interval, start, market]);
   const printerUrl = generated
     ? buildEbayLink(
         { ...generated.tag, q: "50mm Bluetooth thermal label printer QR code", c: "office" },
@@ -112,7 +135,7 @@ export function Generator({
     if (!generated) return;
     try {
       await copyText(generated.url);
-      setFlash({ tone: "success", text: "Tag link copied. Anyone with this link can open the reorder page." });
+      setFlash({ tone: "success", text: "Tag link copied. Anyone with this link can read the encoded item, search and date." });
     } catch {
       setFlash({ tone: "error", text: "Copy failed. Open the tag and copy its address from the browser." });
     }
@@ -193,10 +216,11 @@ export function Generator({
           <input id="start" type="date" value={start} onChange={(event) => { setStart(event.target.value); invalidate(); }} required />
         </div>
         <div className="field">
-          <label htmlFor="market">Shopping market</label>
-          <select id="market" value={market} onChange={(event) => { setMarket(event.target.value as Market); invalidate(); }}>
-            {markets.map((code) => <option key={code} value={code}>{marketConfig[code].label}</option>)}
+          <label htmlFor="market">Shopping region</label>
+          <select id="market" value={market} onChange={(event) => { setMarket(event.target.value as Market); invalidate(); }} aria-describedby="market-help">
+            {markets.map((code) => <option key={code} value={code}>{marketChoiceLabel(code)}</option>)}
           </select>
+          <small id="market-help">{marketDestinationNote(market)}</small>
         </div>
         <div className="field">
           <label htmlFor="category">Category</label>
@@ -204,6 +228,27 @@ export function Generator({
             {categories.map((value) => <option key={value} value={value}>{title(value)}</option>)}
           </select>
         </div>
+        <aside className="encode-preview wide" aria-labelledby="encode-preview-title">
+          <div className="section-kicker" id="encode-preview-title">ENCODED IN THE QR AND LINK</div>
+          <dl className="encode-preview-list">
+            <div><dt>Item</dt><dd>{name.trim() || "Not set yet"}</dd></div>
+            <div><dt>Search</dt><dd>{query.trim() || "Not set yet"}</dd></div>
+            <div><dt>Cycle</dt><dd>Every {interval || "—"} days from {start || "—"}</dd></div>
+            <div><dt>Opens</dt><dd>{marketplaceName(market)}</dd></div>
+          </dl>
+          {draftUrl ? (
+            <p className="encode-preview-link">
+              <span>Share link preview</span>
+              <code>{draftUrl}</code>
+            </p>
+          ) : (
+            <p className="encode-preview-link"><span>Share link preview</span> Add a name and search to see the public URL before you create the QR.</p>
+          )}
+          <p className="payload-warning">
+            <ShieldCheck aria-hidden="true" size={14} />
+            Anyone with this QR or link can read the item name, search, date and market. Do not encode personal or confidential details. CycleTag still stores nothing — the payload lives in the URL by design.
+          </p>
+        </aside>
         <button className="primary-button wide" type="submit" disabled={!canGenerate}>
           {reissuing ? "Create new label" : "Create CycleTag"} <ArrowRight aria-hidden="true" size={18} />
         </button>
@@ -217,15 +262,29 @@ export function Generator({
           <div className="label-preview printable">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={generated.qr} alt={`QR code for ${generated.tag.n}`} />
-            <div><span>SCAN TO REORDER</span><strong>{generated.tag.n}</strong><small>Every {generated.tag.i} days · free label at cycletag.eu</small></div>
+            <div>
+              <span>SCAN TO REORDER</span>
+              <strong>{generated.tag.n}</strong>
+              <small>Every {generated.tag.i} days · {marketplaceName(generated.tag.m)} · cycletag.eu</small>
+            </div>
           </div>
           <div className="result-actions">
             <div>
               <div className="section-kicker">{reissuing ? "REPLACEMENT LABEL READY" : "YOUR TAG IS READY"}</div>
               <h3>Print it. Stick it. Forget it.</h3>
-              <p>The QR contains the instructions. It stays useful even without an account.</p>
+              <p>
+                The QR opens {marketplaceName(generated.tag.m)} for {marketConfig[generated.tag.m].label}. Anyone with the sticker or link can read the encoded item, search and date.
+              </p>
             </div>
             {toast}
+            <div className="share-preview">
+              <span>Public tag link</span>
+              <code>{generated.url}</code>
+            </div>
+            <p className="payload-warning">
+              <ShieldCheck aria-hidden="true" size={14} />
+              Print, download, copy or share only if you are happy for this payload to be public. CycleTag has no account that could hide it later.
+            </p>
             <div className="button-grid">
               <button type="button" className="primary-button" onClick={printLabel}>Print on A4</button>
               <button type="button" className="secondary-button" onClick={downloadQr}>Download PNG</button>

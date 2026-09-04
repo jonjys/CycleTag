@@ -88,6 +88,18 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .secondary-button:hover, .secondary-button:focus-visible { background: var(--lime); }
 .form-trust { margin: 0; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--muted); font-size: 12px; text-align: center; }
 .form-trust svg { color: #347547; }
+.encode-preview { padding: 16px 18px; border: 1px solid var(--ink); background: var(--white); display: flex; flex-direction: column; gap: 12px; }
+.encode-preview-list { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; }
+.encode-preview-list div { min-width: 0; }
+.encode-preview-list dt { font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.encode-preview-list dd { margin: 5px 0 0; font-size: 14px; line-height: 1.35; overflow-wrap: anywhere; }
+.encode-preview-link { margin: 0; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; line-height: 1.5; }
+.encode-preview-link span { display: block; margin-bottom: 6px; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.encode-preview-link code, .share-preview code { display: block; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; line-height: 1.45; overflow-wrap: anywhere; color: var(--ink); }
+.payload-warning { margin: 0; display: flex; align-items: flex-start; gap: 8px; color: #3d3c36; font-size: 12px; line-height: 1.55; }
+.payload-warning svg { flex: 0 0 auto; margin-top: 1px; color: var(--green); }
+.share-preview { padding: 12px 14px; border: 1px solid var(--line); background: var(--white); }
+.share-preview span { display: block; margin-bottom: 6px; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .toast { margin-top: 12px; padding: 14px 16px; display: flex; align-items: flex-start; gap: 10px; border: 1px solid var(--ink); background: var(--green); color: var(--white); font-size: 13px; line-height: 1.45; }
 .toast svg { flex: 0 0 auto; margin-top: 1px; color: var(--lime); }
 .toast p { margin: 0; }
@@ -205,8 +217,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .tag-secondary button:hover, .tag-secondary button:focus-visible, .tag-secondary a:hover, .tag-secondary a:focus-visible { border-color: var(--ink); background: var(--paper); }
 .tag-flash { padding: 0 32px 12px; }
 .tag-flash .toast { margin-top: 0; }
-.tag-edit-note { margin: 0 32px 22px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.tag-edit-note { margin: 0 32px 12px; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .tag-edit-note a { color: var(--ink); font-weight: 800; }
+.tag-share-note { margin: 0 32px 22px; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .tag-privacy { padding: 18px 28px; display: flex; gap: 12px; align-items: start; background: var(--green); color: #d9e7de; font-size: 11px; line-height: 1.5; }
 .tag-privacy > svg { flex: 0 0 auto; color: var(--lime); }
 .tag-privacy p { margin: 0; }
@@ -268,6 +281,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .preset { min-height: 120px; }
   .tag-form { grid-template-columns: 1fr; padding: 20px; }
   .field, .field.wide, .wide { grid-column: 1; }
+  .encode-preview-list { grid-template-columns: 1fr; }
   .label-preview { flex-direction: column; align-items: flex-start; }
   .label-preview img { width: 65%; }
   .button-grid { grid-template-columns: 1fr; }
@@ -296,13 +310,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .buy-button { margin-left: 20px; margin-right: 20px; }
   .affiliate-near-link { margin-left: 20px; margin-right: 20px; }
   .tag-secondary { padding-left: 20px; padding-right: 20px; grid-template-columns: 1fr; }
-  .tag-flash, .tag-edit-note { margin-left: 20px; margin-right: 20px; padding-left: 0; padding-right: 0; }
+  .tag-flash, .tag-edit-note, .tag-share-note { margin-left: 20px; margin-right: 20px; padding-left: 0; padding-right: 0; }
 }
 
 @media print {
   @page { size: auto; margin: 12mm; }
   body { background: white; }
-  .no-print, .site-header, .site-footer, .builder-intro, .preset-grid, .tag-form, .toast, .reissue-banner { display: none !important; }
+  .no-print, .site-header, .site-footer, .builder-intro, .preset-grid, .tag-form, .toast, .reissue-banner, .encode-preview { display: none !important; }
   .builder { padding: 0; border: 0; background: white; }
   .result { display: block; margin: 0; border: 0; }
   .result-actions { display: none; }
