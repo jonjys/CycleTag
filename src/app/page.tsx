@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { ArrowDown, ShieldCheck } from "lucide-react";
+import { ArrowDown, ArrowRight, Package, ShieldCheck } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import QRCode from "qrcode";
+import { brandsCopy, heroCopy } from "@/lib/home-copy";
 import { siteUrl } from "@/lib/site";
 import { buildTagUrl, type TagPayload } from "@/lib/tag";
 import { HomeGenerator } from "./home-generator";
@@ -41,22 +43,24 @@ export default async function Home() {
     <main>
       <section className="hero">
         <div className="hero-message">
-          <div className="eyebrow">THE REORDER LABEL THAT NEVER FORGETS</div>
-          <h1>Scan.<br />Reorder.<br /><em>Repeat.</em></h1>
-          <p className="hero-copy">
-            Put a stateless QR label on anything you replace. One scan brings back the exact search and the next replacement date — without an app or account.
-          </p>
+          <div className="eyebrow">{heroCopy.eyebrow}</div>
+          <h1>{heroCopy.titleLead}<br />{heroCopy.titleMid}<br /><em>{heroCopy.titleAccent}</em></h1>
+          <p className="hero-copy">{heroCopy.body}</p>
           <div className="hero-actions">
-            <a className="primary-button" href="#create">Create free tag <ArrowDown aria-hidden="true" size={18} /></a>
-            <a className="secondary-button" href={sampleUrl}>Try live demo</a>
+            <a className="primary-button" href="#create">{heroCopy.primaryCta} <ArrowDown aria-hidden="true" size={18} /></a>
+            <a className="secondary-button" href={sampleUrl}>{heroCopy.secondaryCta}</a>
           </div>
           <div className="hero-points" aria-label="Key benefits">
-            <span>Free to create</span><span>No app required</span><span>Any printer · A4 ready</span><span>Data stays in the QR</span>
+            {heroCopy.points.map((point) => <span key={point}>{point}</span>)}
           </div>
+          <p className="hero-affiliate">
+            {heroCopy.affiliateNote}{" "}
+            <Link href="/affiliate">Affiliate disclosure</Link>
+          </p>
         </div>
 
         <div className="hero-product">
-          <div className="hero-product-note"><span>LIVE PRODUCT DEMO</span><span>SCAN WITH YOUR PHONE</span></div>
+          <div className="hero-product-note"><span>Live product demo</span><span>Scan with your phone</span></div>
           <a className="hero-tag" href={sampleUrl} aria-label="Open the Coffee machine filter sample CycleTag">
             <div className="hero-tag-top"><span>CYCLETAG / 01</span><span>EBAY.DE</span></div>
             <div className="hero-tag-body">
@@ -107,6 +111,27 @@ export default async function Home() {
           <article><b>03</b><h3>Scan</h3><p>Use any phone camera.</p></article>
           <article><b>04</b><h3>Reorder</h3><p>Open the live eBay search for that region.</p></article>
         </div>
+      </section>
+
+      <section className="brands-band no-print" id="brands" aria-labelledby="brands-title">
+        <div className="brands-copy">
+          <div className="section-kicker">{brandsCopy.kicker}</div>
+          <h2 id="brands-title">{brandsCopy.title}</h2>
+          <p>{brandsCopy.body}</p>
+          <p className="brands-honesty">{brandsCopy.honesty}</p>
+          <a className="primary-button" href="#create">{brandsCopy.cta} <ArrowRight aria-hidden="true" size={18} /></a>
+        </div>
+        <ul className="brands-points">
+          {brandsCopy.points.map((point, index) => (
+            <li key={point.title}>
+              <Package aria-hidden="true" size={18} />
+              <div>
+                <strong><span>0{index + 1}</span> {point.title}</strong>
+                <p>{point.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="privacy-strip no-print">
