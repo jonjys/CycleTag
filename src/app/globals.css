@@ -86,6 +86,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .primary-button, .secondary-button, .buy-button { min-height: 56px; padding: 0 20px; display: inline-flex; align-items: center; justify-content: space-between; gap: 16px; border: 1px solid var(--ink); border-radius: 0; font-weight: 800; text-decoration: none; cursor: pointer; }
 .primary-button { background: var(--lime); color: var(--ink); }
 .primary-button:hover, .primary-button:focus-visible { background: var(--green); color: var(--white); }
+.result-actions .primary-button { background: var(--ink); color: var(--white); }
+.result-actions .primary-button:hover, .result-actions .primary-button:focus-visible { background: var(--green); color: var(--white); }
 .primary-button:disabled { opacity: .4; cursor: not-allowed; }
 .secondary-button { background: transparent; color: var(--ink); }
 .secondary-button:hover, .secondary-button:focus-visible { background: var(--lime); }
@@ -183,11 +185,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 
 .how-it-works { padding: 88px clamp(20px, 8vw, 120px); }
 .brands-band { padding: 88px clamp(20px, 8vw, 120px); display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(280px, .86fr); gap: clamp(36px, 6vw, 80px); align-items: start; border-top: 1px solid var(--line); background: var(--white); scroll-margin-top: 80px; }
-.brands-copy h2 { margin: 10px 0 18px; max-width: 16ch; font-size: clamp(36px, 4.8vw, 64px); line-height: .95; letter-spacing: -.06em; }
+.brands-copy h2 { margin: 10px 0 18px; max-width: 11em; font-size: clamp(36px, 4.8vw, 64px); line-height: .95; letter-spacing: -.06em; }
 .brands-copy > p { max-width: 560px; margin: 0 0 16px; color: #3d3c36; font-size: 17px; line-height: 1.65; }
 .brands-copy .brands-honesty { color: var(--muted); font-size: 15px; }
 .brands-copy .primary-button { width: fit-content; margin-top: 8px; }
-.brands-points { margin: 6px 0 0; padding: 0; list-style: none; border: 1px solid var(--ink); background: var(--paper); box-shadow: 10px 10px 0 var(--lime); }
+.brands-points { margin: 6px 12px 0 0; padding: 0; list-style: none; border: 1px solid var(--ink); background: var(--paper); box-shadow: 10px 10px 0 var(--lime); }
 .brands-points li { padding: 20px 22px; display: grid; grid-template-columns: 22px 1fr; gap: 14px; border-bottom: 1px solid var(--line); }
 .brands-points li:last-child { border-bottom: 0; }
 .brands-points svg { margin-top: 3px; color: var(--green); }
