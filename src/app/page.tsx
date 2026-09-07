@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import QRCode from "qrcode";
 import { brandsCopy, heroCopy } from "@/lib/home-copy";
+import { bulkPackPaymentUrl, bulkPackPrice } from "@/lib/commerce";
 import { siteUrl } from "@/lib/site";
 import { buildTagUrl, type TagPayload } from "@/lib/tag";
 import { HomeGenerator } from "./home-generator";
@@ -86,6 +87,29 @@ export default async function Home() {
       <TagShelf />
 
       <ToolDirectory />
+
+      <section className="bulk-offer no-print" id="bulk" aria-labelledby="bulk-offer-title">
+        <div className="bulk-offer-copy">
+          <div className="section-kicker">PAID BULK PACK</div>
+          <h2 id="bulk-offer-title">Print 50 reorder labels at once.</h2>
+          <p>For offices, workshops, cleaners, landlords and stock rooms. Paste a list of recurring replacements and turn it into an A4 sheet of QR labels.</p>
+          <div className="bulk-price">{bulkPackPrice}<span>one-time</span></div>
+          <div className="bulk-actions-row">
+            <a className="primary-button" href={bulkPackPaymentUrl}>Get CycleTag Bulk <ArrowRight aria-hidden="true" size={18} /></a>
+            <Link className="secondary-button" href="/bulk">Open bulk tool</Link>
+          </div>
+          <small>One-time setup. No account. No subscription. Payment is handled by Stripe.</small>
+        </div>
+        <div className="bulk-card" aria-label="Bulk pack contents">
+          <strong>Included</strong>
+          <ul>
+            <li>Up to 50 labels per A4 sheet</li>
+            <li>CSV-style paste input</li>
+            <li>QRs generated in the browser</li>
+            <li>Same CycleTag scan + reorder flow</li>
+          </ul>
+        </div>
+      </section>
 
       <section className="how-it-works no-print" id="how">
         <div className="loop-heading">
