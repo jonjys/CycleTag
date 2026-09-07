@@ -2,6 +2,8 @@ import type { Market, TagCategory, TagPayload } from "./tag";
 
 type MarketConfig = { host: string; rotationId: string; label: string };
 
+export type AffiliateLinkSource = "scan" | "instant" | "printer";
+
 export const defaultCampaignId = "5339198614";
 
 export const marketConfig: Record<Market, MarketConfig> = {
@@ -31,7 +33,7 @@ export function validCampaignId(value: string | undefined): value is string {
   return typeof value === "string" && /^\d{6,20}$/.test(value);
 }
 
-export function buildEbayLink(tag: TagPayload, campaignId?: string): string {
+export function buildEbayLink(tag: TagPayload, campaignId?: string, source: AffiliateLinkSource = "scan"): string {
   const market = marketConfig[tag.m];
   const url = new URL(`https://${market.host}/sch/i.html`);
   url.searchParams.set("_nkw", tag.q);
@@ -41,9 +43,14 @@ export function buildEbayLink(tag: TagPayload, campaignId?: string): string {
     url.searchParams.set("mkrid", market.rotationId);
     url.searchParams.set("campid", campaignId);
     url.searchParams.set("toolid", "10001");
-    url.searchParams.set("customid", `cycletag-${safeCategory(tag.c)}`);
+    url.searchParams.set("customid", affiliateCustomId(tag.c, source));
   }
   return url.toString();
+}
+
+export function affiliateCustomId(category: TagCategory, source: AffiliateLinkSource): string {
+  if (source === "printer") return "cycletag-printer-office";
+  return `cycletag-${source}-${safeCategory(category)}`;
 }
 
 function safeCategory(category: TagCategory): string {
