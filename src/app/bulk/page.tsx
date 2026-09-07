@@ -22,7 +22,7 @@ export default function BulkPage() {
         <Link className="tool-back" href="/"><ArrowLeft aria-hidden="true" size={16} /> Back to CycleTag</Link>
         <div className="section-kicker">CYCLETAG BULK PACK</div>
         <h1>Print 50 reorder labels at once.</h1>
-        <p>For offices, workshops, cleaners, landlords and stock rooms. Paste a recurring replacement list and turn it into a printable A4 QR-label sheet.</p>
+        <p>For offices, workshops, cleaners, landlords and stock rooms. Paste up to 50 recurring replacements and print them across A4 pages. Use ordinary paper, cut out the labels and attach them.</p>
         <div className="tool-facts" aria-label="Bulk facts">
           <span><CheckCircle2 aria-hidden="true" size={14} /> One-time purchase</span>
           <span><CheckCircle2 aria-hidden="true" size={14} /> No account</span>

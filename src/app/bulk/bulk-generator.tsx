@@ -69,7 +69,7 @@ export function BulkGenerator() {
         <div className="field wide">
           <label htmlFor="bulk-rows">Rows</label>
           <textarea id="bulk-rows" value={raw} onChange={(event) => setRaw(event.target.value)} rows={9} />
-          <small>Format: name, exact reorder search, days. Maximum 50 labels per sheet.</small>
+          <small>Format: name, exact reorder search, days. Maximum 50 labels per batch, printed across A4 pages.</small>
         </div>
         <div className="field">
           <label htmlFor="bulk-market">Shopping region</label>

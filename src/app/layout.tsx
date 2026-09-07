@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     siteName: "CycleTag",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "CycleTag - Scan. Reorder. Repeat."
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "CycleTag — Scan. Reorder. Repeat.",
     description: "The reorder label that never forgets. Free QR reorder labels for replacement parts.",
-    images: ["/og-image.jpg"]
+    images: ["/opengraph-image"]
   }
 };
 

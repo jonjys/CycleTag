@@ -49,7 +49,7 @@ export default async function Home() {
           <p className="hero-copy">{heroCopy.body}</p>
           <div className="hero-actions">
             <a className="primary-button" href="#create">{heroCopy.primaryCta} <ArrowDown aria-hidden="true" size={18} /></a>
-            <a className="secondary-button" href={sampleUrl}>{heroCopy.secondaryCta}</a>
+            <a className="secondary-button" href="#bulk">Need multiple labels? <ArrowRight aria-hidden="true" size={18} /></a>
           </div>
           <div className="hero-points" aria-label="Key benefits">
             {heroCopy.points.map((point) => <span key={point}>{point}</span>)}
@@ -84,31 +84,40 @@ export default async function Home() {
 
       <HomeGenerator />
 
-      <TagShelf />
-
-      <ToolDirectory />
-
       <section className="bulk-offer no-print" id="bulk" aria-labelledby="bulk-offer-title">
         <div className="bulk-offer-copy">
           <div className="section-kicker">PAID BULK PACK</div>
-          <h2 id="bulk-offer-title">Print 50 reorder labels at once.</h2>
-          <p>For offices, workshops, cleaners, landlords and stock rooms. Paste a list of recurring replacements and turn it into an A4 sheet of QR labels.</p>
+          <h2 id="bulk-offer-title">One list.<br />Up to 50 reorder labels.</h2>
+          <p>Label an office, workshop or stock room in one batch. Paste the toner, filters and parts you replace, then print QR labels on ordinary A4 paper.</p>
           <div className="bulk-price">{bulkPackPrice}<span>one-time</span></div>
           <div className="bulk-actions-row">
             <a className="primary-button" href={bulkPackPaymentUrl}>Get CycleTag Bulk <ArrowRight aria-hidden="true" size={18} /></a>
             <Link className="secondary-button" href="/bulk">Open bulk tool</Link>
           </div>
-          <small>One-time setup. No account. No subscription. Payment is handled by Stripe.</small>
+          <small>One-time purchase. No subscription. Base price in Swedish kronor; Stripe shows the final payment currency and total before you pay.</small>
         </div>
         <div className="bulk-card" aria-label="Bulk pack contents">
           <strong>Included</strong>
           <ul>
-            <li>Up to 50 labels per A4 sheet</li>
+            <li>Up to 50 labels per batch, across A4 pages</li>
             <li>CSV-style paste input</li>
             <li>QRs generated in the browser</li>
             <li>Same CycleTag scan + reorder flow</li>
           </ul>
         </div>
+      </section>
+
+      <ToolDirectory />
+
+      <TagShelf />
+
+      <section className="purchase-faq no-print" aria-labelledby="purchase-faq-title">
+        <div className="section-kicker">BEFORE YOU PRINT</div>
+        <h2 id="purchase-faq-title">A few practical answers.</h2>
+        <details><summary>Do I need a label printer?</summary><p>No. Print on ordinary A4 paper, cut out the labels and attach them. Full-sheet adhesive paper is optional and must suit your printer. Pre-cut label sheets need a matching template; CycleTag does not promise alignment with every brand.</p></details>
+        <details><summary>Does the QR buy the item automatically?</summary><p>No. It opens your saved item and an eBay search. You check the model, seller, price and delivery before buying on eBay. CycleTag does not guarantee stock or compatibility.</p></details>
+        <details><summary>What is free?</summary><p>Creating a single label is free. Bulk is the separate batch tool. Labels, printers and replacement products are not included in the software price.</p></details>
+        <details><summary>Can I change a printed label?</summary><p>The QR stores the original item details. To change a part number, create and print a corrected label. The destination search can show new eBay listings without changing the QR.</p></details>
       </section>
 
       <section className="how-it-works no-print" id="how">
