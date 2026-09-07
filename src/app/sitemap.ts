@@ -5,6 +5,7 @@ import { siteLaunchDate, siteUrl } from "@/lib/site";
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     { url: siteUrl, lastModified: siteLaunchDate, changeFrequency: "weekly", priority: 1 },
+    { url: `${siteUrl}/bulk`, lastModified: siteLaunchDate, changeFrequency: "weekly", priority: 0.9 },
     { url: `${siteUrl}/privacy`, lastModified: siteLaunchDate, changeFrequency: "yearly", priority: 0.2 },
     { url: `${siteUrl}/terms`, lastModified: siteLaunchDate, changeFrequency: "yearly", priority: 0.2 },
     { url: `${siteUrl}/affiliate`, lastModified: siteLaunchDate, changeFrequency: "yearly", priority: 0.2 },
