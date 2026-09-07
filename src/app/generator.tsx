@@ -77,26 +77,24 @@ export function Generator({
   const resultRef = useRef<HTMLDivElement>(null);
 
   const canGenerate = name.trim().length > 0 && query.trim().length > 0 && interval >= 1 && interval <= 730 && start.length > 0;
+  const draftTag = useMemo<TagPayload | null>(() => {
+    if (!canGenerate) return null;
+    return { v: 1, n: name.trim(), q: query.trim(), c: category, i: interval, s: start, m: market };
+  }, [canGenerate, name, query, category, interval, start, market]);
   const draftUrl = useMemo(() => {
-    if (!canGenerate) return "";
+    if (!draftTag) return "";
     try {
-      return buildTagUrl(siteUrl, {
-        v: 1,
-        n: name.trim(),
-        q: query.trim(),
-        c: category,
-        i: interval,
-        s: start,
-        m: market
-      });
+      return buildTagUrl(siteUrl, draftTag);
     } catch {
       return "";
     }
-  }, [canGenerate, name, query, category, interval, start, market]);
+  }, [draftTag]);
+  const instantBuyUrl = draftTag ? buildEbayLink(draftTag, defaultCampaignId, "instant") : "";
   const printerUrl = generated
     ? buildEbayLink(
         { ...generated.tag, q: "50mm Bluetooth thermal label printer QR code", c: "office" },
-        defaultCampaignId
+        defaultCampaignId,
+        "printer"
       )
     : "";
 
@@ -130,8 +128,8 @@ export function Generator({
 
   async function generateLabel() {
     setFlash(null);
-    if (!canGenerate) return;
-    const tag: TagPayload = { v: 1, n: name.trim(), q: query.trim(), c: category, i: interval, s: start, m: market };
+    if (!draftTag) return;
+    const tag: TagPayload = draftTag;
     try {
       const url = buildTagUrl(siteUrl, tag);
       const qr = await QRCode.toDataURL(url, { errorCorrectionLevel: "M", width: 720, margin: 2, color: { dark: "#171713", light: "#ffffff" } });
@@ -282,6 +280,19 @@ export function Generator({
             Anyone with this QR or link can read the item name, search, date and market. Do not encode personal or confidential details. CycleTag still stores nothing — the payload lives in the URL by design.
           </p>
         </aside>
+        {instantBuyUrl && (
+          <aside className="instant-buy wide" aria-labelledby="instant-buy-title">
+            <div>
+              <div className="section-kicker">BUY NOW</div>
+              <h3 id="instant-buy-title">Need the replacement now?</h3>
+              <p>Search eBay for the exact item now, then print the CycleTag so you never have to remember it again.</p>
+              <small>Affiliate link: CycleTag may earn a commission, at no extra cost to you.</small>
+            </div>
+            <a className="buy-button" href={instantBuyUrl} target="_blank" rel="nofollow sponsored noopener">
+              Find replacement now <ArrowRight aria-hidden="true" size={18} />
+            </a>
+          </aside>
+        )}
         <button className="primary-button wide" type="submit" disabled={!canGenerate}>
           {reissuing ? "Create new label" : "Create CycleTag"} <ArrowRight aria-hidden="true" size={18} />
         </button>
