@@ -49,7 +49,7 @@ export function TagView() {
   }
 
   const cycle = calculateCycle(tag.s, tag.i);
-  const buyUrl = buildEbayLink(tag, campaignId);
+  const buyUrl = buildEbayLink(tag, campaignId, "scan");
   const affiliateActive = validCampaignId(campaignId);
 
   function addReminder() {
