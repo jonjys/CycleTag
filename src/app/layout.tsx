@@ -4,6 +4,7 @@ import Link from "next/link";
 import { siteUrl } from "@/lib/site";
 import { contact, contactLinks } from "@/lib/contact";
 import "./globals.css";
+import "./revenue.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Link href="/#tags">My tags</Link>
             <Link className="header-optional" href="/#how">How it works</Link>
             <Link className="header-optional" href="/#brands">For brands</Link>
+            <Link className="header-optional" href="/bulk">Bulk</Link>
             <Link className="header-cta" href="/#create">Create free tag</Link>
           </nav>
         </header>
