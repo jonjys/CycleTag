@@ -54,6 +54,109 @@
   background: var(--green);
 }
 
+.starter-offer {
+  padding: 76px clamp(20px, 8vw, 120px);
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(300px, .62fr);
+  gap: clamp(28px, 6vw, 72px);
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  background:
+    linear-gradient(90deg, rgba(223, 255, 85, .44), rgba(223, 255, 85, 0) 42%),
+    var(--white);
+  scroll-margin-top: 80px;
+}
+
+.starter-offer h2 {
+  max-width: 760px;
+  margin: 10px 0 18px;
+  font-size: clamp(40px, 6vw, 82px);
+  line-height: .9;
+  letter-spacing: -.07em;
+}
+
+.starter-offer p {
+  max-width: 650px;
+  margin: 0;
+  color: #3d3c36;
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+.starter-panel {
+  padding: 26px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 10px 10px 0 var(--lime);
+}
+
+.starter-price {
+  font-size: clamp(42px, 5vw, 68px);
+  font-weight: 900;
+  letter-spacing: -.06em;
+}
+
+.starter-price span {
+  display: block;
+  margin-top: 3px;
+  color: var(--green);
+  font-size: 12px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.starter-panel ol {
+  margin: 22px 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: starter;
+  border-top: 1px solid var(--line);
+}
+
+.starter-panel li {
+  padding: 14px 0 14px 38px;
+  border-bottom: 1px solid var(--line);
+  color: #3d3c36;
+  line-height: 1.45;
+  position: relative;
+}
+
+.starter-panel li::before {
+  counter-increment: starter;
+  content: counter(starter);
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 900;
+  position: absolute;
+  left: 0;
+  top: 12px;
+}
+
+.starter-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.starter-actions .primary-button,
+.starter-actions .secondary-button {
+  justify-content: center;
+}
+
+.starter-panel small {
+  display: block;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
 .bulk-offer {
   padding: 88px clamp(20px, 8vw, 120px);
   display: grid;
@@ -256,14 +359,21 @@
 
 @media (max-width: 760px) {
   .instant-buy,
+  .starter-offer,
   .bulk-offer {
     grid-template-columns: 1fr;
   }
 
   .instant-buy .buy-button,
+  .starter-actions .primary-button,
+  .starter-actions .secondary-button,
   .bulk-actions-row .primary-button,
   .bulk-actions-row .secondary-button {
     width: 100%;
+  }
+
+  .starter-actions {
+    grid-template-columns: 1fr;
   }
 
   .bulk-sheet {

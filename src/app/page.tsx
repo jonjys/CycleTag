@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import QRCode from "qrcode";
 import { brandsCopy, heroCopy } from "@/lib/home-copy";
-import { bulkPackPaymentUrl, bulkPackPrice } from "@/lib/commerce";
+import { bulkPackPaymentUrl, bulkPackPrice, starterSheetPaymentUrl, starterSheetPrice } from "@/lib/commerce";
 import { siteUrl } from "@/lib/site";
 import { buildTagUrl, type TagPayload } from "@/lib/tag";
 import { HomeGenerator } from "./home-generator";
@@ -83,6 +83,27 @@ export default async function Home() {
       </section>
 
       <HomeGenerator />
+
+      <section className="starter-offer no-print" id="starter" aria-labelledby="starter-offer-title">
+        <div className="starter-offer-copy">
+          <div className="section-kicker">FASTEST PAID START</div>
+          <h2 id="starter-offer-title">Send the items.<br />Get the sheet.</h2>
+          <p>For teams that do not want to build labels one by one. Send 5–10 recurring supplies and get a ready-to-print QR reorder sheet back.</p>
+        </div>
+        <div className="starter-panel">
+          <div className="starter-price">{starterSheetPrice}<span>starter sheet</span></div>
+          <ol>
+            <li>Pay the starter price.</li>
+            <li>Email the items you reorder.</li>
+            <li>Receive a printable CycleTag sheet.</li>
+          </ol>
+          <div className="starter-actions">
+            <a className="primary-button" href={starterSheetPaymentUrl}>Buy starter sheet <ArrowRight aria-hidden="true" size={18} /></a>
+            <a className="secondary-button" href="mailto:hello@nyttolabs.com?subject=CycleTag%20starter%20sheet&body=Hi%20Nytto%20Labs%2C%0A%0AI%20want%20a%20CycleTag%20starter%20sheet.%20Here%20are%20the%20items%20we%20reorder%3A%0A%0A1.%20%0A2.%20%0A3.%20%0A4.%20%0A5.%20%0A%0AWebsite%20or%20supplier%20we%20normally%20use%3A%0A%0A">Send item list</a>
+          </div>
+          <small>Best for toner, filters, coffee supplies, cleaning stock, workshop parts and appliance refills.</small>
+        </div>
+      </section>
 
       <section className="bulk-offer no-print" id="bulk" aria-labelledby="bulk-offer-title">
         <div className="bulk-offer-copy">

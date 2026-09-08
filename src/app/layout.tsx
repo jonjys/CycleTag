@@ -51,7 +51,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Link className="header-optional" href="/#how">How it works</Link>
             <Link className="header-optional" href="/#brands">For brands</Link>
             <Link className="header-optional" href="/bulk">Bulk</Link>
-            <Link className="header-cta" href="/#create">Create free tag</Link>
+            <Link className="header-cta" href="/#starter">Starter 49 SEK</Link>
           </nav>
         </header>
         {children}
