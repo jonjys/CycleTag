@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import QRCode from "qrcode";
 import { brandsCopy, heroCopy } from "@/lib/home-copy";
-import { bulkPackPaymentUrl, bulkPackPrice, starterSheetPaymentUrl, starterSheetPrice } from "@/lib/commerce";
+import { bulkPackPaymentUrl, bulkPackPrice, bulkPackPriceSek, starterSheetPaymentUrl, starterSheetPrice, starterSheetPriceSek } from "@/lib/commerce";
 import { siteUrl } from "@/lib/site";
 import { buildTagUrl, type TagPayload } from "@/lib/tag";
 import { HomeGenerator } from "./home-generator";
@@ -85,13 +85,14 @@ export default async function Home() {
       <HomeGenerator />
 
       <section className="starter-offer no-print" id="starter" aria-labelledby="starter-offer-title">
+        <div id="sheet" />
         <div className="starter-offer-copy">
           <div className="section-kicker">FASTEST PAID START</div>
           <h2 id="starter-offer-title">Send the items.<br />Get the sheet.</h2>
           <p>For teams that do not want to build labels one by one. Send 5–10 recurring supplies and get a ready-to-print QR reorder sheet back.</p>
         </div>
         <div className="starter-panel">
-          <div className="starter-price">{starterSheetPrice}<span>starter sheet</span></div>
+          <div className="starter-price">{starterSheetPrice}<span>{starterSheetPriceSek} · starter sheet</span></div>
           <ol>
             <li>Pay the starter price.</li>
             <li>Email the items you reorder.</li>
@@ -110,7 +111,7 @@ export default async function Home() {
           <div className="section-kicker">PAID BULK PACK</div>
           <h2 id="bulk-offer-title">One list.<br />Up to 50 reorder labels.</h2>
           <p>Label an office, workshop or stock room in one batch. Paste the toner, filters and parts you replace, then print QR labels on ordinary A4 paper.</p>
-          <div className="bulk-price">{bulkPackPrice}<span>one-time</span></div>
+          <div className="bulk-price">{bulkPackPrice}<span>{bulkPackPriceSek} · one-time</span></div>
           <div className="bulk-actions-row">
             <a className="primary-button" href={bulkPackPaymentUrl}>Get CycleTag Bulk <ArrowRight aria-hidden="true" size={18} /></a>
             <Link className="secondary-button" href="/bulk">Open bulk tool</Link>

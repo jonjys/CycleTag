@@ -3,6 +3,7 @@ import { RefreshCcw } from "lucide-react";
 import Link from "next/link";
 import { siteUrl } from "@/lib/site";
 import { contact, contactLinks } from "@/lib/contact";
+import { starterSheetPrice } from "@/lib/commerce";
 import "./globals.css";
 import "./revenue.css";
 
@@ -51,7 +52,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Link className="header-optional" href="/#how">How it works</Link>
             <Link className="header-optional" href="/#brands">For brands</Link>
             <Link className="header-optional" href="/bulk">Bulk</Link>
-            <Link className="header-cta" href="/#starter">Starter 49 SEK</Link>
+            <Link className="header-cta" href="/#starter">Starter {starterSheetPrice}</Link>
           </nav>
         </header>
         {children}
