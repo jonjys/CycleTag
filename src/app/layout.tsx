@@ -3,14 +3,14 @@ import { RefreshCcw } from "lucide-react";
 import Link from "next/link";
 import { siteUrl } from "@/lib/site";
 import { contact, contactLinks } from "@/lib/contact";
-import { starterSheetPrice } from "@/lib/commerce";
+import { starterSheetPaymentUrl, starterSheetPrice } from "@/lib/commerce";
 import "./globals.css";
 import "./revenue.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: "CycleTag — Scan. Reorder. Repeat.", template: "%s · CycleTag" },
-  description: "Create stateless QR reorder labels and recurring reminders. No account, tag database or tracking cookies.",
+  description: "QR reorder labels for filters, toner and the things you replace. Starter sheet $5 (49 SEK at checkout). No app. No account.",
   applicationName: "CycleTag",
   keywords: ["QR reorder label", "replacement reminder", "consumables", "maintenance tag"],
   openGraph: {
@@ -52,7 +52,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Link className="header-optional" href="/#how">How it works</Link>
             <Link className="header-optional" href="/#brands">For brands</Link>
             <Link className="header-optional" href="/bulk">Bulk</Link>
-            <Link className="header-cta" href="/#starter">Starter {starterSheetPrice}</Link>
+            <a className="header-cta" href={starterSheetPaymentUrl}>Buy {starterSheetPrice}</a>
           </nav>
         </header>
         {children}

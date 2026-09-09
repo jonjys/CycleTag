@@ -33,6 +33,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .hero h1 { margin: 16px 0 18px; max-width: min(680px, 100%); font-size: clamp(52px, 7.1vw, 108px); line-height: .82; letter-spacing: -.08em; text-transform: uppercase; }
 .hero h1 em { color: var(--orange); font-style: normal; }
 .hero-copy { max-width: 540px; font-size: clamp(17px, 1.7vw, 21px); line-height: 1.5; color: #3d3c36; }
+.hero-price { margin-top: 22px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 14px; }
+.hero-price strong { font-size: clamp(44px, 5.4vw, 72px); line-height: .9; letter-spacing: -.07em; }
+.hero-price span { color: var(--muted); font-size: 13px; font-weight: 700; }
+.hero-shot { margin-bottom: 18px; border: 1px solid var(--ink); background: var(--white); box-shadow: 16px 16px 0 var(--lime); overflow: hidden; }
+.hero-shot img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
 .hero-actions .primary-button, .hero-actions .secondary-button { min-width: 188px; }
 .hero-points { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
@@ -313,6 +318,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .hero-actions { margin-top: 22px; }
   .hero-actions .primary-button, .hero-actions .secondary-button { width: 100%; justify-content: center; }
   .hero-product { width: 100%; margin: 0; }
+  .hero-shot { box-shadow: 9px 9px 0 var(--lime); }
   .hero-tag { box-shadow: 9px 9px 0 var(--lime); transform: rotate(.5deg); }
   .hero-tag:hover, .hero-tag:focus-visible { transform: none; box-shadow: 9px 9px 0 var(--lime); }
   .hero-tag-body { grid-template-columns: 1fr 42%; padding: 22px 18px; gap: 14px; }

@@ -47,12 +47,19 @@ export default async function Home() {
           <div className="eyebrow">{heroCopy.eyebrow}</div>
           <h1>{heroCopy.titleLead}<br />{heroCopy.titleMid}<br /><em>{heroCopy.titleAccent}</em></h1>
           <p className="hero-copy">{heroCopy.body}</p>
+          <div className="hero-price">
+            <strong>{starterSheetPrice}</strong>
+            <span>{starterSheetPriceSek} at checkout · starter sheet</span>
+          </div>
           <div className="hero-actions">
-            <a className="primary-button" href="#create">{heroCopy.primaryCta} <ArrowDown aria-hidden="true" size={18} /></a>
-            <a className="secondary-button" href="#bulk">Need multiple labels? <ArrowRight aria-hidden="true" size={18} /></a>
+            <a className="primary-button" href={starterSheetPaymentUrl}>Buy starter sheet <ArrowRight aria-hidden="true" size={18} /></a>
+            <a className="secondary-button" href="#create">{heroCopy.primaryCta} <ArrowDown aria-hidden="true" size={18} /></a>
           </div>
           <div className="hero-points" aria-label="Key benefits">
-            {heroCopy.points.map((point) => <span key={point}>{point}</span>)}
+            <span>{starterSheetPrice} sheet</span>
+            <span>{bulkPackPrice} bulk</span>
+            <span>No app or account</span>
+            <span>Any printer · A4</span>
           </div>
           <p className="hero-affiliate">
             {heroCopy.affiliateNote}{" "}
@@ -61,6 +68,15 @@ export default async function Home() {
         </div>
 
         <div className="hero-product">
+          <div className="hero-shot">
+            <Image
+              src="/images/product.jpg"
+              alt="A CycleTag QR label stuck on toner next to an air filter"
+              width={1200}
+              height={900}
+              priority
+            />
+          </div>
           <div className="hero-product-note"><span>Live product demo</span><span>Scan with your phone</span></div>
           <a className="hero-tag" href={sampleUrl} aria-label="Open the Coffee machine filter sample CycleTag">
             <div className="hero-tag-top"><span>CYCLETAG / 01</span><span>EBAY.DE</span></div>
