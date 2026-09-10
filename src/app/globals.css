@@ -310,7 +310,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 
 @media (max-width: 650px) {
-  .site-header { height: 62px; }
+  .site-header { height: auto; min-height: 62px; padding-top: 12px; padding-bottom: 12px; flex-wrap: wrap; gap: 12px; }
+  .header-nav { flex-wrap: wrap; gap: 12px; }
   .header-nav .header-optional { display: none; }
   .header-cta { padding: 10px 12px; letter-spacing: .07em; }
   .hero { min-height: auto; padding: 36px 20px 48px; gap: 32px; }

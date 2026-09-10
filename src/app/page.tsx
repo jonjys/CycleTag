@@ -100,6 +100,20 @@ export default async function Home() {
 
       <HomeGenerator />
 
+      <section className="bulk-offer no-print" aria-labelledby="spaces-title">
+        <div className="bulk-offer-copy">
+          <div className="section-kicker">NEW / FREE CYCLETAG SPACES</div>
+          <h2 id="spaces-title">One QR.<br />Every refill.</h2>
+          <p>Your kitchen, office or workshop — up to six replacements behind one QR. Share the refill list with anyone. No app, no account, no database.</p>
+          <Link className="primary-button" href="/spaces">Create a Space <ArrowRight aria-hidden="true" size={18} /></Link>
+        </div>
+        <div className="bulk-card" aria-label="CycleTag Spaces features">
+          <strong>One label for the whole corner.</strong>
+          <ul><li>Combine existing tags or add your own items</li><li>Scan once, choose the item, reopen its search</li><li>Share a link with your household or team</li><li>Print on ordinary A4 paper</li></ul>
+          <p>Shared snapshots, not live inventory. Changes need a new QR.</p>
+        </div>
+      </section>
+
       <section className="starter-offer no-print" id="starter" aria-labelledby="starter-offer-title">
         <div id="sheet" />
         <div className="starter-offer-copy">
