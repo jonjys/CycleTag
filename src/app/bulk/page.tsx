@@ -24,7 +24,7 @@ export default function BulkPage() {
         <h1>Print 50 reorder labels at once.</h1>
         <p>For offices, workshops, cleaners, landlords and stock rooms. Paste up to 50 recurring replacements and print them across A4 pages. Use ordinary paper, cut out the labels and attach them.</p>
         <div className="tool-facts" aria-label="Bulk facts">
-          <span><CheckCircle2 aria-hidden="true" size={14} /> One-time purchase</span>
+          <span><CheckCircle2 aria-hidden="true" size={14} /> Free to use</span>
           <span><CheckCircle2 aria-hidden="true" size={14} /> No account</span>
           <span><CheckCircle2 aria-hidden="true" size={14} /> No subscription</span>
           <span><CheckCircle2 aria-hidden="true" size={14} /> Browser generated</span>
