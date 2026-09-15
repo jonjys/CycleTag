@@ -10,6 +10,7 @@ import { copyText } from "@/lib/clipboard";
 import { triggerDownload } from "@/lib/download";
 import { createIcs } from "@/lib/ics";
 import { builderEditHash, decodeTag } from "@/lib/tag";
+import { AddToRelay } from "@/app/relay/add-to-relay";
 
 const campaignId = process.env.NEXT_PUBLIC_EBAY_CAMPAIGN_ID || defaultCampaignId;
 
@@ -122,6 +123,7 @@ export function TagView() {
       )}
 
       <div className="tag-secondary">
+        <AddToRelay tag={tag} />
         <button type="button" onClick={addReminder}>Add recurring reminder</button>
         <button type="button" onClick={share}>Share this tag</button>
         <Link href={encoded ? `/${builderEditHash(encoded)}` : "/"}>Correct this tag</Link>

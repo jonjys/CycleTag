@@ -1,0 +1,44 @@
+.seller-page { max-width: 1120px; margin: auto; padding: 40px 24px 64px; }
+.seller-heading { max-width: 760px; margin-bottom: 32px; }
+.seller-heading h1 { font-size: clamp(40px, 6vw, 76px); letter-spacing: -.055em; line-height: 1; margin: 16px 0; }
+.seller-heading em { font-style: normal; color: var(--orange); }
+.seller-page p { line-height: 1.6; font-size: 16px; }
+.seller-heading > p { font-size: 18px; color: var(--muted); }
+.seller-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.seller-chips span { border: 1px solid var(--line); padding: 10px 14px; font-size: 14px; background: var(--white); }
+.seller-form fieldset { border: 1px solid var(--ink); padding: 28px; min-width: 0; background: var(--white); }
+.seller-form legend { font-size: 24px; font-weight: 800; padding: 0 10px; }
+.seller-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.seller-page label { display: flex; flex-direction: column; gap: 8px; min-width: 0; font-size: 14px; font-weight: 700; }
+.seller-page input:not([type=checkbox]), .seller-page select { width: 100%; min-width: 0; min-height: 50px; padding: 12px; border: 1px solid var(--line); background: var(--white); color: var(--ink); font-size: 16px; }
+.seller-link-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 14px; padding: 20px; background: var(--paper); margin: 20px 0; }
+.seller-link-row button { grid-column: 1/-1; justify-self: start; }
+.seller-warning { border-left: 3px solid var(--orange); padding: 20px; background: var(--paper); margin: 24px 0; }
+.seller-page .seller-consent { flex-direction: row; align-items: start; gap: 12px; line-height: 1.5; }
+.seller-consent input { width: 22px; height: 22px; flex-shrink: 0; accent-color: var(--green); }
+.seller-page button:disabled { opacity: .45; cursor: not-allowed; }
+.seller-message:not(:empty) { background: var(--lime); padding: 18px; }
+.seller-result { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; align-items: start; margin: 32px 0; }
+.seller-card { background: white; border: 1px dashed var(--ink); padding: 24px; color: var(--ink); text-align: center; overflow-wrap: anywhere; }
+.seller-card h2 { font-size: 24px; margin: 16px 0; }
+.seller-card img { display: block; width: 100%; height: auto; }
+.seller-card small { font-size: 14px; }
+.seller-brand { font-weight: 800; overflow-wrap: anywhere; }
+.seller-print-copy { display: none; }
+.seller-result-tools { display: grid; gap: 14px; }
+.seller-result-tools h2 { margin: 0; font-size: 32px; letter-spacing: -.035em; }
+.seller-result-tools p { margin: 0; }
+.seller-pilot { display: flex; align-items: center; gap: 28px; background: var(--green); color: var(--white); padding: 28px; margin-top: 36px; }
+.seller-pilot h2 { font-size: 30px; letter-spacing: -.035em; }
+.seller-pilot a { flex-shrink: 0; }
+.seller-pilot .section-kicker { color: var(--lime); }
+.seller-customer { max-width: 740px; margin: auto; }
+.seller-customer h1 { font-size: clamp(36px, 6vw, 64px); line-height: 1.05; letter-spacing: -.045em; overflow-wrap: anywhere; }
+.seller-sku { padding: 18px; background: var(--lime); overflow-wrap: anywhere; }
+.seller-stores { display: grid; gap: 18px; }
+.seller-stores > section { padding: 24px; background: var(--white); border: 1px solid var(--ink); }
+.seller-stores h3 { margin: 0 0 12px; font-size: 24px; overflow-wrap: anywhere; }
+.seller-stores a { display: flex; margin: 16px 0; }
+.seller-destination, .seller-full-url { overflow-wrap: anywhere; }
+@media (max-width: 700px) { .seller-page { padding: 26px 16px 48px; } .seller-fields, .seller-link-row, .seller-result { grid-template-columns: minmax(0, 1fr); } .seller-form fieldset { padding: 18px; } .seller-pilot { flex-direction: column; align-items: stretch; } }
+@media print { @page { size: A4; margin: 8mm; } .seller-page { padding: 0; margin: 0; max-width: none; } .seller-result { display: block; margin: 0; } .seller-card-grid { display: grid; grid-template-columns: repeat(2, 94mm); gap: 4mm; } .seller-card, .seller-print-copy { display: block; width: 94mm; min-height: 137mm; padding: 4mm; break-inside: avoid; } .seller-card img { width: 80mm; height: 80mm; margin: auto; } .seller-card h2 { font-size: 14px; margin: 3mm 0; } .seller-card p { font-size: 12px; line-height: 1.25; margin: 2mm 0; } .seller-card > strong, .seller-brand { font-size: 13px; line-height: 1.2; } .seller-card small { font-size: 12px; } }

@@ -9,6 +9,13 @@
   --orange: #e9683b;
 }
 
+.relay-add { margin: 18px 0; padding: 18px; border: 1px solid var(--line); background: var(--paper); grid-column: 1 / -1; }
+.relay-add > button { width: 100%; font-size: 16px; justify-content: center; }
+.relay-add p { font-size: 14px; line-height: 1.5; color: var(--green); }
+.relay-add p:empty { display: none; }
+.relay-add > a { display: inline-block; margin-top: 12px; font-size: 14px; font-weight: 700; }
+@media (max-width: 1000px) { .site-header { height: auto; min-height: 72px; padding-top: 12px; padding-bottom: 12px; flex-wrap: wrap; } .header-nav { flex-wrap: wrap; } }
+
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; color: var(--ink); background: var(--paper); font-family: Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }

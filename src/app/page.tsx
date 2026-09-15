@@ -100,6 +100,13 @@ export default async function Home() {
 
       <HomeGenerator />
 
+      <section className="bulk-offer no-print" aria-labelledby="seller-kits-title"><div className="bulk-offer-copy"><div className="section-kicker">NEW / FOR SELLERS & BRANDS</div><h2 id="seller-kits-title">Your package.<br />Your next sale.</h2><p>Turn the package you already send into a reorder card. Your product, exact SKU and your own regional store links — not a competing marketplace search.</p><Link href="/sellers" className="primary-button">Create a Seller Kit <ArrowRight size={18} aria-hidden="true" /></Link></div><div className="bulk-card"><strong>Give buyers a way back.</strong><ul><li>One QR, up to three regional store links</li><li>English, Swedish and Chinese customer pages</li><li>Printable A4 cards and vector QR download</li><li>No account, no affiliate ID replacement</li></ul><p>Free DIY. Check your sales channel’s packaging rules before use. No marketplace affiliation implied.</p></div></section>
+      <section className="bulk-offer no-print" aria-labelledby="relay-title">
+        <div className="bulk-offer-copy"><div className="section-kicker">NEW / FREE REFILL RELAY</div><h2 id="relay-title">You scan.<br />They restock.</h2><p>Collect refills from different labels into one list. Send exact searches and quantities to your partner, office manager or whoever does the buying.</p><Link className="primary-button" href="/relay">Start a refill list <ArrowRight aria-hidden="true" size={18} /></Link></div>
+        <div className="bulk-card"><strong>Turn “we need more” into a handoff.</strong><ul><li>Works with existing CycleTag labels and Spaces</li><li>One list, up to 24 items, adjustable quantities</li><li>Share a link or print a shopping checklist</li><li>Recipients open it without an account</li></ul><p>Shared snapshots, not live inventory. No automatic purchases.</p><Link href="/relay#demo=1">Try an example handoff →</Link></div>
+      </section>
+
+
       <section className="bulk-offer no-print" aria-labelledby="spaces-title">
         <div className="bulk-offer-copy">
           <div className="section-kicker">NEW / FREE CYCLETAG SPACES</div>

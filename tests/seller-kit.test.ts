@@ -1,0 +1,13 @@
+import { describe, expect, it } from "vitest";
+import QRCode from "qrcode";
+import { buildSellerKitUrl, decodeSellerKit, encodeSellerKit, safeSellerUrl, validateSellerKit, type SellerKit } from "../src/lib/seller-kit";
+const kit: SellerKit = { v: 1, seller: "Filter 水", product: "Refill pack", sku: "F-200", language: "zh", links: [{ region: "Europe", url: "https://example.com/products/f200?affiliate=seller&campaign=pack" }] };
+describe("Seller Kits", () => {
+  it("round-trips names and preserves seller attribution", () => expect(decodeSellerKit(encodeSellerKit(kit))).toEqual(kit));
+  it.each(["http://example.com", "javascript:alert(1)", "https://user:pass@example.com", "https://127.0.0.1", "https://[::1]", "https://localhost", "https://shop.internal", "https://example.com:123", "https://example.com/#secret", "https://xn--pple-43d.com", "https://example.com\\@evil.com", "https://example.com/\nfoo"]) ("rejects unsafe or ambiguous URL %s", url => expect(safeSellerUrl(url)).toBeNull());
+  it("does not rewrite valid marketplace or seller query parameters", () => { for (const url of ["https://www.amazon.com/dp/B000000000?tag=seller-20", "https://www.temu.com/goods.html?goods_id=123", "https://www.alibaba.com/product-detail/filter_123.html", "https://www.shein.com/product-p-123.html"]) expect(safeSellerUrl(url)).toBe(url); });
+  it("builds a real QR from three stores without server-side data", () => { const three = { ...kit, links: [...kit.links, { region: "US", url: "https://example.com/us" }, { region: "China", url: "https://example.com/cn" }] }; const url = new URL(buildSellerKitUrl("https://u:p@cycletag.eu/old?x=1", three)); expect(url.pathname).toBe("/reorder"); expect(url.search).toBe(""); expect(url.username).toBe(""); expect(decodeSellerKit(url.hash.slice(5))).toEqual(three); expect(QRCode.create(url.href, { errorCorrectionLevel: "M" }).modules.size).toBeGreaterThan(0); });
+  it.each([null, {}, { ...kit, language: "xx" }, { ...kit, sku: "" }, { ...kit, links: [] }, { ...kit, links: Array(4).fill(kit.links[0]) }, { ...kit, links: [{ region: "US", url: "javascript:alert(1)" }] }])("rejects malformed kit %#", input => expect(validateSellerKit(input)).toBeNull());
+  it.each([null, "_w", "bad!", "a".repeat(2201)])("rejects malformed links %#", encoded => expect(decodeSellerKit(encoded)).toBeNull());
+  it("bounds dense Unicode data", () => expect(() => encodeSellerKit({ ...kit, seller: "水".repeat(60), product: "水".repeat(80), sku: "水".repeat(60), links: Array(3).fill({ region: "水".repeat(32), url: "https://example.com/" + "a".repeat(360) }) })).toThrow(/Too much/));
+});
