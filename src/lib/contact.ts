@@ -1,7 +1,6 @@
 export const contact = {
   productName: "CycleTag",
   operatorName: "Nytto Labs",
-  operatorPerson: "Fredrik Kornelind",
   operatorWebsite: "https://nyttolabs.com",
   country: "Sweden",
   legalForm: "Swedish sole trader",
@@ -23,6 +22,6 @@ export const contactLinks = {
   billing: `mailto:${contact.email.billing}`
 } as const;
 
-export const operatorAttribution = `${contact.operatorName}, operated by ${contact.operatorPerson}`;
+export const operatorAttribution = contact.operatorName;
 
 export const operatorTaxDisclosure = `${contact.fTaxStatus}. ${contact.vatStatus}.`;
