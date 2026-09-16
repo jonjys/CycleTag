@@ -26,12 +26,12 @@ describe("public contact configuration", () => {
     }
   });
 
-  it("names the Swedish sole trader without unpublished numbers", () => {
-    expect(contact.operatorPerson).toBe("Fredrik Kornelind");
+  it("names the Swedish operator without a personal name or unpublished numbers", () => {
+    expect(contact).not.toHaveProperty("operatorPerson");
     expect(contact.legalForm).toBe("Swedish sole trader");
     expect(contact.fTaxStatus).toBe("Approved for F-tax");
     expect(contact.vatStatus).toBe("Registered for VAT");
-    expect(operatorAttribution).toBe("Nytto Labs, operated by Fredrik Kornelind");
+    expect(operatorAttribution).toBe("Nytto Labs");
     expect(operatorTaxDisclosure).toBe("Approved for F-tax. Registered for VAT.");
 
     const publicIdentity = JSON.stringify({
@@ -39,6 +39,8 @@ describe("public contact configuration", () => {
       operatorAttribution,
       operatorTaxDisclosure
     });
+    expect(publicIdentity).not.toMatch(/Fredrik/i);
+    expect(publicIdentity).not.toMatch(/Kornelind/i);
     expect(publicIdentity).not.toMatch(/registration in progress/i);
     expect(publicIdentity).not.toMatch(/not VAT registered/i);
     expect(publicIdentity).not.toMatch(/fkornelind@/);

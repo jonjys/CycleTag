@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Privacy", alternates: { canonical: "
 export default function PrivacyPage() {
   return <Legal title="Privacy policy" updated="15 September 2026">
     <h2>Operator</h2>
-    <p>{contact.productName} is a product of <a href={contactLinks.operator}>{contact.operatorName}</a>, operated by {contact.operatorPerson} in {contact.country}. {contact.operatorName} is a {contact.legalForm}. {operatorTaxDisclosure}</p>
+    <p>{contact.productName} is a product of <a href={contactLinks.operator}>{contact.operatorName}</a> in {contact.country}. {contact.operatorName} is a {contact.legalForm}. {operatorTaxDisclosure}</p>
     <h2>What CycleTag stores</h2><p>CycleTag does not provide accounts and does not store the content of tags in a database. A tag’s item name, search phrase, interval, start date and market are encoded after the # in its URL and QR code. Browsers do not send that fragment to the web server.</p>
     <h2>On-device list</h2><p>If your browser allows it, CycleTag can keep a short list of tags you create so you can reopen or print them later. That list stays in the browser and is not uploaded. Private mode, blocked site data or a full storage quota can prevent saving; the QR and share link still work. Clearing the list, clearing site data or switching browsers removes the local copy. Printed labels are unchanged.</p>
     <h2>Hosting logs</h2><p>The hosting provider may process ordinary request metadata such as IP address, user agent, requested path and timestamp for security and service operation. Newly generated tag data is kept in the URL fragment rather than the requested path. CycleTag does not add analytics, advertising pixels or tracking cookies.</p>
