@@ -1,13 +1,13 @@
 /** Homepage copy kept in one place so claims stay product-true. */
 
 export const heroCopy = {
-  eyebrow: "The reorder label that never forgets",
-  titleLead: "Scan.",
-  titleMid: "Reorder.",
+  eyebrow: "Care history that stays on the machine",
+  titleLead: "Record.",
+  titleMid: "Care.",
   titleAccent: "Repeat.",
-  body: "Print a QR label for anything you replace — toner, filters, descaler, bags. One scan brings back the exact marketplace search and the next replacement date. No app. No account.",
-  primaryCta: "Create a free tag",
-  secondaryCta: "Open sample tag",
+  body: "Put a care record on the machine. Scan its QR to see the last replacement, exact filter or part and next due date. Add a photo fingerprint without uploading a photo. No app. No account.",
+  primaryCta: "Create a free care tag",
+  secondaryCta: "Open sample care chain",
   points: ["Free to create", "No app or account", "Any printer · A4 ready", "Data stays in the QR"] as const,
   affiliateNote: "Reorder links can be affiliate links. Same price to you."
 } as const;

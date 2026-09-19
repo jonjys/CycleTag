@@ -1,6 +1,12 @@
 # CycleTag
 
-**A stateless QR reorder label for every consumable.**
+**Care Proof: the care history that stays on the machine.**
+
+The main landing, create and scan flows now lead with last replacement, exact item / optional part number, next due and an optional locally calculated photo hash. Log a replacement to issue a new QR containing the previous entries. Old stickers remain snapshots. No photo upload, account or database is added.
+
+`/care-sheet` provides a free 12-up A4 print preview plus a duration schedule, saved as PDF through the browser print dialog. The planned €19 / 12 tags + duration PDF package is marked coming soon, with no checkout. Marketplace search remains an optional secondary action with affiliate disclosure. See [Care Proof demo and limitations](docs/care-proof.md).
+
+The sections below document the original reorder tools and infrastructure, which remain available for compatibility.
 
 CycleTag turns a replacement item, interval and marketplace search into a printable QR label and recurring calendar event. The QR carries its own state. A scan reconstructs the reorder page without an account, database, cookie or external API.
 

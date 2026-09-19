@@ -24,4 +24,7 @@ export const contactLinks = {
 
 export const operatorAttribution = contact.operatorName;
 
+// Legal attribution is only rendered in the footer and legal pages.
+export const operatorLegalLine = "Nytto Labs, operated by Fredrik Kornelind · F-tax";
+
 export const operatorTaxDisclosure = `${contact.fTaxStatus}. ${contact.vatStatus}.`;

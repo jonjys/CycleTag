@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
-export const alt = 'CycleTag - Free QR reorder labels'
+export const alt = 'CycleTag - Care history on the machine'
 export const size = {
   width: 1200,
   height: 630,
@@ -32,7 +32,7 @@ export default function Image() {
             marginBottom: '40px',
           }}
         >
-          CYCLETAG
+          NYTTO LABS / CYCLETAG CARE PROOF
         </div>
         <div
           style={{
@@ -44,7 +44,7 @@ export default function Image() {
             lineHeight: '1.1',
           }}
         >
-          Free QR reorder labels.
+          Care history on the machine.
         </div>
         <div
           style={{
@@ -54,7 +54,7 @@ export default function Image() {
             marginTop: '20px',
           }}
         >
-          Scan. Reorder. Repeat.
+          Last replaced. Exact part. Next due.
         </div>
       </div>
     ),
