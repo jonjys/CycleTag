@@ -5,7 +5,8 @@ import { CircleAlert, ExternalLink, RefreshCcw, ShieldCheck } from "lucide-react
 import { useEffect, useMemo, useState } from "react";
 import { ActionToast, type ToastTone } from "@/app/action-toast";
 import { buildEbayLink, defaultCampaignId, marketChoiceLabel, marketplaceName, validCampaignId } from "@/lib/affiliate";
-import { calculateCycle, formatDate } from "@/lib/cycle";
+import { careDue } from "@/lib/care";
+import { CareTimeline } from "@/app/care-timeline";
 import { copyText } from "@/lib/clipboard";
 import { triggerDownload } from "@/lib/download";
 import { createIcs } from "@/lib/ics";
@@ -49,7 +50,9 @@ export function TagView() {
     );
   }
 
-  const cycle = calculateCycle(tag.s, tag.i);
+  const nextDue = careDue(tag);
+  const daysUntil = Math.round((Date.parse(`${nextDue}T00:00:00Z`) - Date.parse(new Date().toISOString().slice(0, 10))) / 86400000);
+  const cycle = { state: daysUntil <= 0 ? "due" : daysUntil <= 7 ? "soon" : "scheduled", daysUntil };
   const buyUrl = buildEbayLink(tag, campaignId, "scan");
   const affiliateActive = validCampaignId(campaignId);
 
@@ -66,7 +69,7 @@ export function TagView() {
     if (!tag) return;
     try {
       if (navigator.share) {
-        await navigator.share({ title: tag.n, text: `Reorder ${tag.n}`, url: window.location.href });
+        await navigator.share({ title: tag.n, text: `Care history for ${tag.n}`, url: window.location.href });
         setFlash({ tone: "success", text: "Tag shared. Anyone with the link can read the encoded item, search and date." });
         return;
       }
@@ -90,24 +93,27 @@ export function TagView() {
           {cycle.state === "due" ? <CircleAlert aria-hidden="true" size={22} /> : <RefreshCcw aria-hidden="true" size={22} />}
         </span>
         <div>
-          <small>{cycle.state === "due" ? "REPLACEMENT DUE TODAY" : cycle.state === "soon" ? "COMING UP" : "NEXT REPLACEMENT"}</small>
-          <strong>{formatDate(cycle.nextDue)}</strong>
-          <span>{cycle.daysUntil === 0 ? "Today" : `In ${cycle.daysUntil} day${cycle.daysUntil === 1 ? "" : "s"}`}</span>
+          <small>{daysUntil < 0 ? "CARE OVERDUE" : daysUntil === 0 ? "CARE DUE TODAY" : "NEXT CARE DUE"}</small>
+          <strong>{nextDue}</strong>
+          <span>{daysUntil < 0 ? `${-daysUntil} days overdue` : daysUntil === 0 ? "Today" : `In ${daysUntil} days`}</span>
         </div>
       </div>
 
       <div className="tag-product">
-        <div className="section-kicker">YOUR CYCLETAG</div>
+        <div className="section-kicker">NYTTO LABS · CYCLETAG CARE PROOF</div>
         <h1>{tag.n}</h1>
-        <p className="search-query">{tag.q}</p>
+        <p className="search-query">Care stays with the machine.</p>
         <div className="tag-meta">
           <span>Every {tag.i} days</span>
           <span>Started {tag.s}</span>
-          <span>{marketChoiceLabel(tag.m)}</span>
+          <span>{tag.care?.marketplace !== false ? marketChoiceLabel(tag.m) : "Care only"}</span>
         </div>
       </div>
 
-      <a className="buy-button" href={buyUrl} target="_blank" rel="nofollow sponsored noopener">
+      <CareTimeline tag={tag} />
+      <Link className="primary-button care-log" href={`/#log=${encoded}`}>Log replacement · create new QR <RefreshCcw size={18} aria-hidden="true" /></Link>
+      <p>Logging creates a new sticker with the previous care entries. The old sticker remains a snapshot.</p>
+      {tag.care?.marketplace !== false && <><a className="secondary-button" href={buyUrl} target="_blank" rel="nofollow sponsored noopener">
         Find replacement on {marketplaceName(tag.m)} <ExternalLink aria-hidden="true" size={18} />
       </a>
       <p className="affiliate-near-link">
@@ -116,6 +122,8 @@ export function TagView() {
           : `Marketplace search on ${marketplaceName(tag.m)}. Affiliate tracking is not configured on this deployment.`}
       </p>
 
+      </>}
+
       {flash && (
         <div className="tag-flash">
           <ActionToast message={flash.text} tone={flash.tone} />
@@ -123,7 +131,8 @@ export function TagView() {
       )}
 
       <div className="tag-secondary">
-        <AddToRelay tag={tag} />
+        {tag.care?.marketplace !== false && <AddToRelay tag={tag} />}
+        <Link href={`/care-sheet#d=${encoded}`}>Print Care Sheet / PDF</Link>
         <button type="button" onClick={addReminder}>Add recurring reminder</button>
         <button type="button" onClick={share}>Share this tag</button>
         <Link href={encoded ? `/${builderEditHash(encoded)}` : "/"}>Correct this tag</Link>
@@ -133,7 +142,7 @@ export function TagView() {
         Wrong part number? <Link href={encoded ? `/${builderEditHash(encoded)}` : "/"}>Correct this tag</Link> to print a new QR. This sticker stays as it is — CycleTag has no database that could update it.
       </p>
       <p className="tag-share-note">
-        Share, print or bookmark only if this payload can be public. Anyone with the QR or link can read the item name, search, date and {marketplaceName(tag.m)} destination.
+        Share, print or bookmark only if this payload can be public. Anyone with the QR or link can read all encoded care fields, dates, photo hashes and marketplace details.
       </p>
 
       <div className="tag-privacy"><ShieldCheck aria-hidden="true" size={18} /><p><strong>No tag database.</strong> This page was rebuilt from the QR itself. Anyone with the QR or link can read the information encoded in it.</p></div>

@@ -5,14 +5,15 @@ import { ArrowRight, CheckCircle2, Coffee, Droplets, PawPrint, Printer, ShieldCh
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { ActionToast, type ToastTone } from "./action-toast";
+import { CareTimeline } from "./care-timeline";
 import {
   buildEbayLink,
   defaultCampaignId,
   marketChoiceLabel,
-  marketConfig,
   marketDestinationNote,
   marketplaceName
 } from "@/lib/affiliate";
+import { careDue, hashPhoto, logReplacement } from "@/lib/care";
 import { copyText } from "@/lib/clipboard";
 import { triggerDownload } from "@/lib/download";
 import { createIcs } from "@/lib/ics";
@@ -43,6 +44,7 @@ type GeneratorProps = {
   initialPreset?: Preset;
   initialTag?: TagPayload;
   reissuing?: boolean;
+  logging?: boolean;
   reprinting?: boolean;
   showPresets?: boolean;
   title?: string;
@@ -53,43 +55,57 @@ export function Generator({
   initialPreset,
   initialTag,
   reissuing = false,
+  logging = false,
   reprinting = false,
   showPresets = true,
   title: builderTitle = reprinting
     ? "Print this tag again"
     : reissuing
       ? "Correct this tag"
-      : "What keeps running out?",
+      : "What did you care for?",
   description = reprinting
     ? "The saved label is unchanged. Print it, or edit the fields to create a new QR."
     : reissuing
       ? "Fix the name or part number, then create a new QR. The old sticker is unchanged."
-      : "Start with a common replacement or make your own."
+      : "Record the exact item and when you replaced it. Print its care history onto a sticker."
 }: GeneratorProps = {}) {
   const [name, setName] = useState(initialTag?.n ?? initialPreset?.name ?? "");
   const [query, setQuery] = useState(initialTag?.q ?? initialPreset?.query ?? "");
   const [category, setCategory] = useState<TagCategory>(initialTag?.c ?? initialPreset?.category ?? "home");
   const [interval, setInterval] = useState(initialTag?.i ?? initialPreset?.interval ?? 90);
-  const [start, setStart] = useState(initialTag?.s ?? today);
+  const [start, setStart] = useState(logging ? today : initialTag?.s ?? today);
+  const [part, setPart] = useState(initialTag?.care?.part ?? "");
+  const [photo, setPhoto] = useState(logging ? "" : initialTag?.care?.photo ?? "");
+  const [hashing, setHashing] = useState(false);
+  const photoRequest = useRef(0);
+  const [marketplace, setMarketplace] = useState(initialTag ? initialTag.care?.marketplace ?? true : false);
   const [market, setMarket] = useState<Market>(initialTag?.m ?? "DE");
   const [generated, setGenerated] = useState<Generated | null>(null);
   const [flash, setFlash] = useState<Flash | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
 
-  const canGenerate = name.trim().length > 0 && query.trim().length > 0 && interval >= 1 && interval <= 730 && start.length > 0;
+  const canGenerate = name.trim().length > 0 && !hashing && interval >= 1 && interval <= 730 && start.length > 0;
   const draftTag = useMemo<TagPayload | null>(() => {
     if (!canGenerate) return null;
-    return { v: 1, n: name.trim(), q: query.trim(), c: category, i: interval, s: start, m: market };
-  }, [canGenerate, name, query, category, interval, start, market]);
+    const draft: TagPayload = { v: 1, n: name.trim(), q: query.trim() || [name.trim(), part.trim()].filter(Boolean).join(" "), c: category, i: interval, s: start, m: market };
+    if (reprinting && initialTag && !initialTag.care && name === initialTag.n && query === initialTag.q && start === initialTag.s && interval === initialTag.i && market === initialTag.m && !part && !photo) return initialTag;
+    draft.care = { ...(part.trim() ? { part: part.trim() } : {}), ...(photo ? { photo } : {}), history: initialTag?.care?.history ?? [], marketplace };
+    return draft;
+  }, [canGenerate, name, query, category, interval, start, market, part, photo, marketplace, initialTag, reprinting]);
+  const draftError = useMemo(() => {
+    if (!draftTag) return "";
+    try { buildTagUrl(siteUrl, logging && initialTag ? logReplacement(initialTag, draftTag) : draftTag); return ""; }
+    catch (error) { return error instanceof Error ? error.message : "Check your care details."; }
+  }, [draftTag, logging, initialTag]);
   const draftUrl = useMemo(() => {
     if (!draftTag) return "";
     try {
-      return buildTagUrl(siteUrl, draftTag);
+      return buildTagUrl(siteUrl, logging && initialTag ? logReplacement(initialTag, draftTag) : draftTag);
     } catch {
       return "";
     }
-  }, [draftTag]);
-  const instantBuyUrl = draftTag ? buildEbayLink(draftTag, defaultCampaignId, "instant") : "";
+  }, [draftTag, logging, initialTag]);
+  const instantBuyUrl = draftTag && marketplace ? buildEbayLink(draftTag, defaultCampaignId, "instant") : "";
   const printerUrl = generated
     ? buildEbayLink(
         { ...generated.tag, q: "50mm Bluetooth thermal label printer QR code", c: "office" },
@@ -129,10 +145,10 @@ export function Generator({
   async function generateLabel() {
     setFlash(null);
     if (!draftTag) return;
-    const tag: TagPayload = draftTag;
     try {
+      const tag = logging && initialTag ? logReplacement(initialTag, draftTag) : draftTag;
       const url = buildTagUrl(siteUrl, tag);
-      const qr = await QRCode.toDataURL(url, { errorCorrectionLevel: "M", width: 720, margin: 2, color: { dark: "#171713", light: "#ffffff" } });
+      const qr = await QRCode.toDataURL(url, { errorCorrectionLevel: "M", width: 900, margin: 4, color: { dark: "#171713", light: "#ffffff" } });
       const saved = saveShelfTag(tag, encodeTag(tag));
       setGenerated({ tag, url, qr });
       if (!saved.ok) {
@@ -152,8 +168,8 @@ export function Generator({
             ? "Label ready to print. It stays on this device only — CycleTag does not upload your list."
             : "CycleTag ready and saved on this device. Print, download the PNG, copy the link or add a calendar reminder."
       });
-    } catch {
-      setFlash({ tone: "error", text: "That tag could not be created. Check the fields and try again." });
+    } catch (error) {
+      setFlash({ tone: "error", text: error instanceof Error ? error.message : "That tag could not be created. Check the fields and try again." });
     }
   }
 
@@ -199,7 +215,7 @@ export function Generator({
       <div className="builder-intro">
         <div>
           <div className="section-kicker">{reprinting ? "SAVED ON THIS DEVICE" : reissuing ? "RE-ISSUE A LABEL" : "BUILD YOUR TAG"}</div>
-          <h2 id="builder-title">{builderTitle}</h2>
+          <h2 id="builder-title">{logging ? "Log a replacement" : builderTitle}</h2>
         </div>
         <p>{description}</p>
       </div>
@@ -213,7 +229,7 @@ export function Generator({
         </aside>
       )}
 
-      {showPresets && (
+      {showPresets && !initialTag && (
         <div className="preset-grid">
           {presets.map((preset) => {
             const Icon = presetIcons[preset.icon];
@@ -230,21 +246,42 @@ export function Generator({
 
       <form onSubmit={generate} className="tag-form">
         <div className="field wide">
-          <label htmlFor="name">Label name</label>
+          <label htmlFor="name">Exact item / part name</label>
           <input id="name" value={name} onChange={(event) => { setName(event.target.value); invalidate(); }} maxLength={80} placeholder="e.g. Office printer toner" required />
         </div>
         <div className="field wide">
-          <label htmlFor="query">Exact reorder search</label>
-          <input id="query" value={query} onChange={(event) => { setQuery(event.target.value); invalidate(); }} maxLength={160} placeholder="e.g. Brother TN-3480 black toner" required aria-describedby="query-help" />
-          <small id="query-help">Use a model or part number for the best result. Typo? Fix it here and create a new label.</small>
+          <label htmlFor="part">Part number (optional)</label>
+          <input id="part" value={part} maxLength={60} onChange={event => { setPart(event.target.value); invalidate(); }} placeholder="e.g. DLSC002" />
+        </div>
+        <div className="field wide">
+          <label htmlFor="photo">Photo fingerprint (optional)</label>
+          <input id="photo" type="file" accept="image/*" onChange={async event => {
+            const file = event.target.files?.[0];
+            const request = ++photoRequest.current;
+            setPhoto(""); invalidate();
+            if (!file) { setHashing(false); return; }
+            setHashing(true);
+            try { const digest = await hashPhoto(file); if (request === photoRequest.current) setPhoto(digest); }
+            catch (error) { if (request === photoRequest.current) setFlash({ tone: "error", text: error instanceof Error ? error.message : "Photo hashing unavailable in this browser." }); }
+            finally { if (request === photoRequest.current) setHashing(false); }
+          }} />
+          <small>{hashing ? "Hashing locally…" : "Only a SHA-256 fingerprint is saved. The photo never leaves your device. Keep the original yourself."}</small>
+          {photo && <><code className="care-hash">{photo}</code><button type="button" className="secondary-button" onClick={() => { ++photoRequest.current; setPhoto(""); setHashing(false); invalidate(); }}>Remove fingerprint</button></>}
         </div>
         <div className="field">
-          <label htmlFor="interval">Replace every</label>
+          <label htmlFor="interval">Care interval</label>
           <div className="suffix-input"><input id="interval" type="number" min="1" max="730" value={interval} onChange={(event) => { setInterval(Number(event.target.value)); invalidate(); }} required /><span>days</span></div>
         </div>
         <div className="field">
           <label htmlFor="start">Last replaced</label>
           <input id="start" type="date" value={start} onChange={(event) => { setStart(event.target.value); invalidate(); }} required />
+        </div>
+        <details className="wide care-advanced"><summary>Optional marketplace & category</summary>
+        <label><input type="checkbox" checked={marketplace} onChange={event => { setMarketplace(event.target.checked); invalidate(); }} /> Include a Find replacement button</label>
+        <div className="field wide">
+          <label htmlFor="query">Optional marketplace search</label>
+          <input id="query" value={query} onChange={(event) => { setQuery(event.target.value); invalidate(); }} maxLength={160} placeholder="e.g. Brother TN-3480 black toner" aria-describedby="query-help" />
+          <small id="query-help">Use a model or part number for the best result. Typo? Fix it here and create a new label.</small>
         </div>
         <div className="field">
           <label htmlFor="market">Shopping region</label>
@@ -259,31 +296,37 @@ export function Generator({
             {categories.map((value) => <option key={value} value={value}>{title(value)}</option>)}
           </select>
         </div>
+        </details>
         <aside className="encode-preview wide" aria-labelledby="encode-preview-title">
           <div className="section-kicker" id="encode-preview-title">ENCODED IN THE QR AND LINK</div>
           <dl className="encode-preview-list">
             <div><dt>Item</dt><dd>{name.trim() || "Not set yet"}</dd></div>
-            <div><dt>Search</dt><dd>{query.trim() || "Not set yet"}</dd></div>
+            <div><dt>Part #</dt><dd>{part || "Not provided"}</dd></div>
+            <div><dt>Photo SHA-256</dt><dd className="care-hash">{photo || "Not provided"}</dd></div>
+            <div><dt>Next due</dt><dd>{draftUrl && draftTag ? careDue(draftTag) : "Check dates"}</dd></div>
+            <div><dt>History</dt><dd>{(initialTag?.care?.history.length ?? 0) + (logging ? 1 : 0)} previous entries; saved in the new QR</dd></div>
             <div><dt>Cycle</dt><dd>Every {interval || "—"} days from {start || "—"}</dd></div>
-            <div><dt>Opens</dt><dd>{marketplaceName(market)}</dd></div>
+            <div><dt>Marketplace</dt><dd>{marketplace ? `${marketplaceName(market)} · ${query || name}` : "Not enabled"}</dd></div>
+            <div><dt>Encoded search</dt><dd>{draftTag?.q || "Not set"}</dd></div>
           </dl>
+          {draftUrl && draftTag && <details><summary>Preview all encoded care entries</summary><CareTimeline tag={logging && initialTag ? logReplacement(initialTag, draftTag) : draftTag} /></details>}
           {draftUrl ? (
             <p className="encode-preview-link">
               <span>Share link preview</span>
               <code>{draftUrl}</code>
             </p>
           ) : (
-            <p className="encode-preview-link"><span>Share link preview</span> Add a name and search to see the public URL before you create the QR.</p>
+            <p className="encode-preview-link"><span>Share link preview</span> Add valid care details to see the public URL before you create the QR.</p>
           )}
           <p className="payload-warning">
             <ShieldCheck aria-hidden="true" size={14} />
-            Anyone with this QR or link can read the item name, search, date and market. Do not encode personal or confidential details. CycleTag still stores nothing — the payload lives in the URL by design.
+            Anyone with this QR or link can read all care entries, part numbers, dates, photo hashes and marketplace details. Do not encode personal or confidential details. CycleTag still stores nothing — the payload lives in the URL by design.
           </p>
         </aside>
-        {instantBuyUrl && (
+        {instantBuyUrl && marketplace && (
           <aside className="instant-buy wide" aria-labelledby="instant-buy-title">
             <div>
-              <div className="section-kicker">BUY NOW</div>
+              <div className="section-kicker">OPTIONAL REPLACEMENT SEARCH</div>
               <h3 id="instant-buy-title">Need the replacement now?</h3>
               <p>Search eBay for the exact item now, then print the CycleTag so you never have to remember it again.</p>
               <small>Affiliate link: CycleTag may earn a commission, at no extra cost to you.</small>
@@ -293,8 +336,9 @@ export function Generator({
             </a>
           </aside>
         )}
-        <button className="primary-button wide" type="submit" disabled={!canGenerate}>
-          {reissuing ? "Create new label" : "Create CycleTag"} <ArrowRight aria-hidden="true" size={18} />
+        {draftError && <p className="wide" role="alert">{draftError}</p>}
+        <button className="primary-button wide" type="submit" disabled={!canGenerate || !draftUrl}>
+          {logging ? "Save care entry & create new QR" : reissuing ? "Create new label" : "Create care tag"} <ArrowRight aria-hidden="true" size={18} />
         </button>
         <p className="form-trust wide"><CheckCircle2 aria-hidden="true" size={14} /> Generated entirely in your browser. Nothing is uploaded.</p>
       </form>
@@ -307,17 +351,17 @@ export function Generator({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={generated.qr} alt={`QR code for ${generated.tag.n}`} />
             <div>
-              <span>SCAN TO REORDER</span>
+              <span>SCAN FOR CARE HISTORY</span>
               <strong>{generated.tag.n}</strong>
-              <small>Every {generated.tag.i} days · {marketplaceName(generated.tag.m)} · cycletag.eu</small>
+              <small>{generated.tag.care?.part && `Part ${generated.tag.care.part} · `}Last replaced {generated.tag.s} · Next due {careDue(generated.tag)} · cycletag.eu</small>
             </div>
           </div>
           <div className="result-actions">
             <div>
               <div className="section-kicker">{reprinting ? "SAVED LABEL READY" : reissuing ? "REPLACEMENT LABEL READY" : "YOUR TAG IS READY"}</div>
-              <h3>Print it. Stick it. Forget it.</h3>
+              <h3>Keep the care with the machine.</h3>
               <p>
-                The QR opens {marketplaceName(generated.tag.m)} for {marketConfig[generated.tag.m].label}. Anyone with the sticker or link can read the encoded item, search and date.
+                The QR opens this care snapshot. Anyone with the sticker or link can read its encoded fields. Recorded entries are self-reported, not independently verified.
               </p>
             </div>
             {toast}
@@ -331,6 +375,8 @@ export function Generator({
             </p>
             <div className="button-grid">
               <button type="button" className="primary-button" onClick={printLabel}>Print on A4</button>
+              <Link className="secondary-button" href={`/care-sheet#d=${encodeTag(generated.tag)}`}>12-up Care Sheet / PDF</Link>
+              <a className="secondary-button" href={generated.url}>Open care history</a>
               <button type="button" className="secondary-button" onClick={downloadQr}>Download PNG</button>
               <button type="button" className="secondary-button" onClick={downloadCalendar}>Add reminder</button>
               <button type="button" className="secondary-button" onClick={copyLink}>Copy link</button>

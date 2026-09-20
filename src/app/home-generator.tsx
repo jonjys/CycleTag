@@ -34,10 +34,11 @@ export function HomeGenerator() {
 
   return (
     <Generator
-      key={draft ? `${draft.reprint ? "print" : "edit"}:${draft.encoded}` : "new-tag"}
+      key={draft ? `${draft.reprint ? "print" : draft.logging ? "log" : "edit"}:${draft.encoded}` : "new-tag"}
       initialTag={draft?.tag}
       reissuing={Boolean(draft && !draft.reprint)}
       reprinting={Boolean(draft?.reprint)}
+      logging={Boolean(draft?.logging)}
     />
   );
 }

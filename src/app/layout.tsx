@@ -2,36 +2,36 @@ import type { Metadata, Viewport } from "next";
 import { RefreshCcw } from "lucide-react";
 import Link from "next/link";
 import { siteUrl } from "@/lib/site";
-import { contact, contactLinks } from "@/lib/contact";
-import { starterSheetPaymentUrl, starterSheetPrice } from "@/lib/commerce";
+import { contact, contactLinks, operatorLegalLine } from "@/lib/contact";
 import "./globals.css";
 import "./revenue.css";
+import "./care.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: "CycleTag — Scan. Reorder. Repeat.", template: "%s · CycleTag" },
-  description: "QR reorder labels for filters, toner and the things you replace. Starter sheet $5 (49 SEK at checkout). No app. No account.",
+  title: { default: "CycleTag Care Proof · Nytto Labs", template: "%s · CycleTag" },
+  description: "Care history on the machine: exact part, last replacement and next due. Free QR tags. No account or database.",
   applicationName: "CycleTag",
   keywords: ["QR reorder label", "replacement reminder", "consumables", "maintenance tag"],
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "CycleTag — Scan. Reorder. Repeat.",
-    description: "A permanent QR label for every thing you replace. Scan. Reorder. Repeat.",
+    title: "CycleTag Care Proof · Nytto Labs",
+    description: "A care snapshot on the machine. Scan the maintenance chain; log the next replacement.",
     siteName: "CycleTag",
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "CycleTag - Scan. Reorder. Repeat."
+        alt: "CycleTag Care Proof · Nytto Labs"
       }
     ]
   },
   twitter: {
     card: "summary_large_image",
-    title: "CycleTag — Scan. Reorder. Repeat.",
-    description: "The reorder label that never forgets. Free QR reorder labels for replacement parts.",
+    title: "CycleTag Care Proof · Nytto Labs",
+    description: "Care stays with the machine. Last replaced, exact part, next due.",
     images: ["/opengraph-image"]
   }
 };
@@ -54,14 +54,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Link href="/#tags">My tags</Link>
             <Link className="header-optional" href="/#how">How it works</Link>
             <Link className="header-optional" href="/bulk">Bulk</Link>
-            <a className="header-cta" href={starterSheetPaymentUrl}>Buy {starterSheetPrice}</a>
+            <Link className="header-cta" href="/#create">Create care tag</Link>
           </nav>
         </header>
         {children}
         <footer className="site-footer no-print">
           <div className="footer-about">
             <span>CycleTag runs without accounts, analytics or tracking cookies.</span>
-            <span>A product by <a href={contactLinks.operator}>{contact.operatorName}</a> · {contact.country}.</span>
+            <span><a href={contactLinks.operator}>{contact.operatorName}</a> · {contact.country}.</span>
+            <span>{operatorLegalLine}</span>
           </div>
           <nav aria-label="Support and legal">
             <Link href="/support">Support</Link>

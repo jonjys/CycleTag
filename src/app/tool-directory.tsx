@@ -22,7 +22,7 @@ export function ToolDirectory() {
     <section className="tool-directory no-print" aria-labelledby="tool-directory-title">
       <div className="directory-heading">
         <div>
-          <div className="section-kicker">FIND YOUR REPLACEMENT</div>
+          <div className="section-kicker">START A CARE RECORD</div>
           <h2 id="tool-directory-title">What needs a tag?</h2>
         </div>
         <p>Search common refills and replacement parts. Choose one, add the exact model or part number, then print your free QR label.</p>
