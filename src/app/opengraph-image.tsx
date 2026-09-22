@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
-export const alt = 'CycleTag - Care history on the machine'
+export const alt = 'StayTag - the QR that stays on the machine'
 export const size = {
   width: 1200,
   height: 630,
@@ -32,7 +32,7 @@ export default function Image() {
             marginBottom: '40px',
           }}
         >
-          NYTTO LABS / CYCLETAG CARE PROOF
+          NYTTO LABS / STAYTAG
         </div>
         <div
           style={{
@@ -44,7 +44,7 @@ export default function Image() {
             lineHeight: '1.1',
           }}
         >
-          Care history on the machine.
+          Never search for the same part twice.
         </div>
         <div
           style={{
@@ -54,7 +54,7 @@ export default function Image() {
             marginTop: '20px',
           }}
         >
-          Last replaced. Exact part. Next due.
+          Exact part. Next due. Manual attached.
         </div>
       </div>
     ),

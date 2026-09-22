@@ -9,29 +9,29 @@ import "./care.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: "CycleTag Care Proof · Nytto Labs", template: "%s · CycleTag" },
-  description: "Care history on the machine: exact part, last replacement and next due. Free QR tags. No account or database.",
-  applicationName: "CycleTag",
+  title: { default: "StayTag · Nytto Labs", template: "%s · StayTag" },
+  description: "Print a QR label that remembers the exact part, last replacement and next due date. Manual attached. No app. No account.",
+  applicationName: "StayTag",
   keywords: ["QR reorder label", "replacement reminder", "consumables", "maintenance tag"],
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "CycleTag Care Proof · Nytto Labs",
-    description: "A care snapshot on the machine. Scan the maintenance chain; log the next replacement.",
-    siteName: "CycleTag",
+    title: "StayTag · Nytto Labs",
+    description: "Never search for the same replacement part twice. Scan the sticker on the machine.",
+    siteName: "StayTag",
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "CycleTag Care Proof · Nytto Labs"
+        alt: "StayTag · Nytto Labs"
       }
     ]
   },
   twitter: {
     card: "summary_large_image",
-    title: "CycleTag Care Proof · Nytto Labs",
-    description: "Care stays with the machine. Last replaced, exact part, next due.",
+    title: "StayTag · Nytto Labs",
+    description: "The QR that remembers the part, the date and the manual.",
     images: ["/opengraph-image"]
   }
 };
@@ -43,24 +43,21 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" data-scroll-behavior="smooth">
       <body>
         <header className="site-header no-print">
-          <Link href="/" className="brand" aria-label="CycleTag home">
+          <Link href="/" className="brand" aria-label="StayTag home">
             <span className="brand-mark" aria-hidden="true"><RefreshCcw size={19} strokeWidth={3} /></span>
-            CycleTag
+            StayTag
+            <span className="header-optional" style={{ marginLeft: 8, fontWeight: 500, opacity: 0.65 }}>cycletag.eu</span>
           </Link>
           <nav className="header-nav" aria-label="Primary">
-            <Link href="/sellers">Seller Kits</Link>
-            <Link href="/relay">Refill Relay</Link>
-            <Link href="/spaces">Spaces</Link>
-            <Link href="/#tags">My tags</Link>
             <Link className="header-optional" href="/#how">How it works</Link>
-            <Link className="header-optional" href="/bulk">Bulk</Link>
-            <Link className="header-cta" href="/#create">Create care tag</Link>
+            <Link className="header-optional" href="/#sheet">Care Sheet</Link>
+            <Link className="header-cta" href="/#create">Create label</Link>
           </nav>
         </header>
         {children}
         <footer className="site-footer no-print">
           <div className="footer-about">
-            <span>CycleTag runs without accounts, analytics or tracking cookies.</span>
+            <span>StayTag runs without accounts, analytics or tracking cookies.</span>
             <span><a href={contactLinks.operator}>{contact.operatorName}</a> · {contact.country}.</span>
             <span>{operatorLegalLine}</span>
           </div>
@@ -70,6 +67,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
             <Link href="/affiliate">Affiliate disclosure</Link>
+            <Link href="/bulk">Bulk</Link>
+            <Link href="/spaces">Spaces</Link>
+            <Link href="/relay">Refill Relay</Link>
+            <Link href="/sellers">Seller Kits</Link>
           </nav>
         </footer>
       </body>
