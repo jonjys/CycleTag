@@ -1,5 +1,5 @@
 export const contact = {
-  productName: "CycleTag",
+  productName: "StayTag",
   operatorName: "Nytto Labs",
   operatorWebsite: "https://nyttolabs.com",
   country: "Sweden",
@@ -24,7 +24,6 @@ export const contactLinks = {
 
 export const operatorAttribution = contact.operatorName;
 
-// Legal attribution is only rendered in the footer and legal pages.
 export const operatorLegalLine = "Nytto Labs, operated by Fredrik Kornelind · F-tax";
 
 export const operatorTaxDisclosure = `${contact.fTaxStatus}. ${contact.vatStatus}.`;

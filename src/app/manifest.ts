@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "CycleTag",
-    short_name: "CycleTag",
-    description: "Stateless QR reorder labels without accounts.",
+    name: "StayTag",
+    short_name: "StayTag",
+    description: "QR labels that remember the part, the date and the manual.",
     start_url: "/",
     display: "standalone",
     background_color: "#f4f1e9",

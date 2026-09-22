@@ -1,26 +1,26 @@
 /** Homepage copy kept in one place so claims stay product-true. */
 
 export const heroCopy = {
-  eyebrow: "Care history that stays on the machine",
-  titleLead: "Record.",
-  titleMid: "Care.",
-  titleAccent: "Repeat.",
-  body: "Put a care record on the machine. Scan its QR to see the last replacement, exact filter or part and next due date. Add a photo fingerprint without uploading a photo. No app. No account.",
-  primaryCta: "Create a free care tag",
-  secondaryCta: "Open sample care chain",
-  points: ["Free to create", "No app or account", "Any printer · A4 ready", "Data stays in the QR"] as const,
-  affiliateNote: "Reorder links can be affiliate links. Same price to you."
+  eyebrow: "StayTag · Nytto Labs",
+  titleLead: "Never search for",
+  titleMid: "the same part",
+  titleAccent: "twice.",
+  body: "Print a QR label that remembers the exact part, last replacement and next due date — and opens the user manual when you scan. No app. No account.",
+  primaryCta: "Create a free label",
+  secondaryCta: "See the scan result",
+  points: ["No app", "No account", "Manual attached automatically", "Print on A4"] as const,
+  affiliateNote: "Buy links are optional and last. Same price to you if a marketplace link is used."
 } as const;
 
 export const brandsCopy = {
-  kicker: "For brands & OEM packaging",
-  title: "Put a free reorder QR on the pack.",
-  body: "Private-label sellers, exporters and OEMs can print the same CycleTag on a carton, insert or spare-parts bag. Customers scan it later to reopen the exact search and the next replacement date. Create the label here, then print it on your artwork or stick it on the pack.",
-  honesty: "No portal, SKU feed or contract. CycleTag does not take orders or stock products. The QR carries its own data — there is no account or database to connect.",
+  kicker: "On your product",
+  title: "Put a reorder QR on the pack.",
+  body: "Private-label sellers and OEMs can print the same StayTag on a carton or spare-parts bag. Customers scan it later to see the exact part and the next replacement date.",
+  honesty: "No portal, SKU feed or contract. StayTag does not take orders or stock products. The QR carries its own data — there is no account or database to connect.",
   points: [
-    { title: "Same public generator", detail: "Use the form on this page. Choose the model or SKU search you want the customer to open." },
-    { title: "Print it yourself", detail: "Download the PNG or print on A4, then place it on the pack. Any ordinary printer works." },
-    { title: "Free to add", detail: "Creating and printing the QR costs nothing. If a later purchase goes through the tag’s marketplace link, CycleTag may earn a disclosed commission." }
+    { title: "Same public generator", detail: "Use the form on this page. The buy link is optional and comes last." },
+    { title: "Print it yourself", detail: "Download the PNG or print on A4, then place it on the pack." },
+    { title: "Free to add", detail: "Creating and printing the QR costs nothing. If a later purchase goes through the tag’s marketplace link, StayTag may earn a disclosed commission." }
   ] as const,
   cta: "Create a pack label"
 } as const;
