@@ -44,7 +44,7 @@ export function TagView() {
       <section className="tag-shell invalid-tag">
         <span className="status-dot"><CircleAlert aria-hidden="true" size={22} /></span>
         <h1>This tag cannot be read.</h1>
-        <p>It may be incomplete or damaged. Create a fresh CycleTag in under a minute.</p>
+        <p>It may be incomplete or damaged. Create a fresh StayTag in under a minute.</p>
         <Link className="primary-button" href="/">Create a new tag</Link>
       </section>
     );
@@ -53,8 +53,10 @@ export function TagView() {
   const nextDue = careDue(tag);
   const daysUntil = Math.round((Date.parse(`${nextDue}T00:00:00Z`) - Date.parse(new Date().toISOString().slice(0, 10))) / 86400000);
   const cycle = { state: daysUntil <= 0 ? "due" : daysUntil <= 7 ? "soon" : "scheduled", daysUntil };
-  const buyUrl = buildEbayLink(tag, campaignId, "scan");
+  const buyUrl = tag.care?.marketplace !== false ? buildEbayLink(tag, campaignId, "scan") : null;
   const affiliateActive = validCampaignId(campaignId);
+  const part = tag.care?.part;
+  const manualUrl = `https://www.google.com/search?q=${encodeURIComponent([part, tag.n, "user manual official filetype:pdf"].filter(Boolean).join(" "))}`;
 
   function addReminder() {
     if (!tag) return;
@@ -100,9 +102,9 @@ export function TagView() {
       </div>
 
       <div className="tag-product">
-        <div className="section-kicker">NYTTO LABS · CYCLETAG CARE PROOF</div>
+        <div className="section-kicker">STAYTAG · ON THE MACHINE</div>
         <h1>{tag.n}</h1>
-        <p className="search-query">Care stays with the machine.</p>
+        <p className="search-query">The sticker remembers the part, the date and the manual.</p>
         <div className="tag-meta">
           <span>Every {tag.i} days</span>
           <span>Started {tag.s}</span>
@@ -111,18 +113,23 @@ export function TagView() {
       </div>
 
       <CareTimeline tag={tag} />
-      <Link className="primary-button care-log" href={`/#log=${encoded}`}>Log replacement · create new QR <RefreshCcw size={18} aria-hidden="true" /></Link>
-      <p>Logging creates a new sticker with the previous care entries. The old sticker remains a snapshot.</p>
-      {tag.care?.marketplace !== false && <><a className="secondary-button" href={buyUrl} target="_blank" rel="nofollow sponsored noopener">
-        Find replacement on {marketplaceName(tag.m)} <ExternalLink aria-hidden="true" size={18} />
+      <a className="primary-button care-log" href={manualUrl} target="_blank" rel="noopener noreferrer">
+        Open manual <ExternalLink aria-hidden="true" size={18} />
       </a>
-      <p className="affiliate-near-link">
-        {affiliateActive
-          ? `Affiliate link to ${marketplaceName(tag.m)}: CycleTag may earn a commission, at no extra cost to you.`
-          : `Marketplace search on ${marketplaceName(tag.m)}. Affiliate tracking is not configured on this deployment.`}
-      </p>
-
-      </>}
+      <Link className="secondary-button" href={`/#log=${encoded}`}>Log replacement · create new QR <RefreshCcw size={18} aria-hidden="true" /></Link>
+      <p>Logging creates a new sticker with the previous entries. The old sticker remains a snapshot.</p>
+      {buyUrl ? (
+        <>
+          <a className="secondary-button" href={buyUrl} target="_blank" rel="nofollow sponsored noopener">
+            Find replacement on {marketplaceName(tag.m)} <ExternalLink aria-hidden="true" size={18} />
+          </a>
+          <p className="affiliate-near-link">
+            {affiliateActive
+              ? `Optional affiliate link to ${marketplaceName(tag.m)}: StayTag may earn a commission, at no extra cost to you.`
+              : `Marketplace search on ${marketplaceName(tag.m)}. Affiliate tracking is not configured on this deployment.`}
+          </p>
+        </>
+      ) : null}
 
       {flash && (
         <div className="tag-flash">
@@ -139,7 +146,7 @@ export function TagView() {
         <Link href="/">Create a different tag</Link>
       </div>
       <p className="tag-edit-note">
-        Wrong part number? <Link href={encoded ? `/${builderEditHash(encoded)}` : "/"}>Correct this tag</Link> to print a new QR. This sticker stays as it is — CycleTag has no database that could update it.
+        Wrong part number? <Link href={encoded ? `/${builderEditHash(encoded)}` : "/"}>Correct this tag</Link> to print a new QR. This sticker stays as it is — StayTag has no database that could update it.
       </p>
       <p className="tag-share-note">
         Share, print or bookmark only if this payload can be public. Anyone with the QR or link can read all encoded care fields, dates, photo hashes and marketplace details.
