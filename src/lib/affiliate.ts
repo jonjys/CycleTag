@@ -26,7 +26,7 @@ export function marketChoiceLabel(market: Market): string {
 }
 
 export function marketDestinationNote(market: Market): string {
-  return `Reorder links open ${marketplaceName(market)}. CycleTag currently routes ${marketConfig[market].label} to that one eBay marketplace.`;
+  return `Reorder links open ${marketplaceName(market)}. StayTag currently routes ${marketConfig[market].label} to that one eBay marketplace.`;
 }
 
 export function validCampaignId(value: string | undefined): value is string {
@@ -56,3 +56,4 @@ export function affiliateCustomId(category: TagCategory, source: AffiliateLinkSo
 function safeCategory(category: TagCategory): string {
   return category.replace(/[^a-z]/g, "").slice(0, 20) || "other";
 }
+

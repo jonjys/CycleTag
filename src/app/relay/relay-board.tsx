@@ -66,7 +66,7 @@ function ListEditor({ initial, shared, isDemo, raw }: { initial: RelayList; shar
       const url = buildRelayUrl(siteUrl, { v: 1, items: pending });
       setShareUrl(url);
       if (!copyOnly && typeof navigator.share === "function") {
-        await navigator.share({ title: "CycleTag refill list", text: `${pending.length} refills to check. Exact searches and quantities inside.`, url });
+        await navigator.share({ title: "StayTag refill list", text: `${pending.length} refills to check. Exact searches and quantities inside.`, url });
         setMessage("Share dialog completed. Delivery and purchases are not tracked.");
       } else { await copyText(url); setMessage("Link copied. Send it to whoever handles the shopping."); }
     } catch (error) {
@@ -75,13 +75,13 @@ function ListEditor({ initial, shared, isDemo, raw }: { initial: RelayList; shar
     }
   }
   return <>
-    <header className="relay-heading"><div className="section-kicker">NEW / CYCLETAG REFILL RELAY</div><h1>Scan it. Send it.<br /><em>Sorted.</em></h1><p>{shared ? "Someone did the finding. You do the buying. Check the exact model and quantity, then open its marketplace search." : "Spot what’s running low. Collect it here. Send one list to the person who buys — at home or at work."}</p>
+    <header className="relay-heading"><div className="section-kicker">NEW / STAYTAG REFILL RELAY</div><h1>Scan it. Send it.<br /><em>Sorted.</em></h1><p>{shared ? "Someone did the finding. You do the buying. Check the exact model and quantity, then open its marketplace search." : "Spot what’s running low. Collect it here. Send one list to the person who buys — at home or at work."}</p>
       <div className="relay-mode">{isDemo ? "DEMO — example models, not compatibility recommendations" : shared ? "RECEIVED SNAPSHOT — edits stay in this tab" : sessionOnly ? "SESSION ONLY — keep a share link before leaving" : "YOUR DEVICE — no account or live sync"}</div>
     </header>
     <div className="relay-workspace">
       <section aria-label="Refill list" className="relay-list">
         <div className="relay-list-heading"><h2>{shared ? "The handoff" : "Your refill list"}</h2><span>{pending.length} to get / {list.items.length} items</span></div>
-        {!list.items.length && <div className="relay-empty"><h3>Your next refill starts here.</h3><p>Scan any existing CycleTag and tap “Need this”. Keep scanning to collect items from different rooms or Spaces.</p><a href="#demo=1" className="secondary-button">Try a 3-item handoff →</a><p>Or add your first item using the form.</p></div>}
+        {!list.items.length && <div className="relay-empty"><h3>Your next refill starts here.</h3><p>Scan any existing StayTag and tap “Need this”. Keep scanning to collect items from different rooms or Spaces.</p><a href="#demo=1" className="secondary-button">Try a 3-item handoff →</a><p>Or add your first item using the form.</p></div>}
         {list.items.map(item => {
           const key = relayItemKey(item), checked = done.has(key);
           return <article className={`relay-item${checked ? " is-done" : ""}`} key={key}>
@@ -103,7 +103,8 @@ function ListEditor({ initial, shared, isDemo, raw }: { initial: RelayList; shar
       </aside>
     </div>
     <p className="relay-feedback no-print" role="status" aria-live="polite">{message}</p>
-    <p className="relay-fine">{validCampaignId(campaign) ? "Marketplace links are affiliate links. CycleTag may earn a commission at no extra cost to you. " : ""}Confirm compatibility, pack size, price and delivery with the seller. Quantity is your requested number of units or packs — it is not sent to a marketplace cart.</p>
-    <p className="relay-fine">Your own list is stored only in this browser when storage is available. Clearing site data removes it. Received lists never overwrite it. Shared names, searches, quantities and markets live in the link, not a CycleTag database; links can be forwarded. <Link href="/privacy">Privacy details</Link>.</p>
+    <p className="relay-fine">{validCampaignId(campaign) ? "Marketplace links are affiliate links. StayTag may earn a commission at no extra cost to you. " : ""}Confirm compatibility, pack size, price and delivery with the seller. Quantity is your requested number of units or packs — it is not sent to a marketplace cart.</p>
+    <p className="relay-fine">Your own list is stored only in this browser when storage is available. Clearing site data removes it. Received lists never overwrite it. Shared names, searches, quantities and markets live in the link, not a StayTag database; links can be forwarded. <Link href="/privacy">Privacy details</Link>.</p>
   </>;
 }
+

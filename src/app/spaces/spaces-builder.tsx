@@ -68,7 +68,7 @@ function SpaceForm({ initial, invalid }: { initial: SpacePayload | null; invalid
     if (!result) return;
     const canShare = typeof navigator.share === "function";
     try {
-      if (canShare) await navigator.share({ title: result.space.name, text: "One QR. Every refill. Open this CycleTag Space:", url: result.url });
+      if (canShare) await navigator.share({ title: result.space.name, text: "One QR. Every refill. Open this StayTag Space:", url: result.url });
       else await copyText(result.url);
       setError(false); setMessage(canShare ? "Space shared." : "Space link copied.");
     } catch (err) {
@@ -79,8 +79,8 @@ function SpaceForm({ initial, invalid }: { initial: SpacePayload | null; invalid
 
   return <>
     <header className="spaces-heading no-print">
-      <Link href="/">← CycleTag home</Link>
-      <div className="section-kicker">NEW / CYCLETAG SPACES</div>
+      <Link href="/">← StayTag home</Link>
+      <div className="section-kicker">NEW / STAYTAG SPACES</div>
       <h1>One QR.<br /><em>Every refill.</em></h1>
       <p>Your coffee corner, office or workshop. Put up to six replacements behind one QR. Anyone who scans it gets the same list — no account needed.</p>
       <div className="spaces-badges"><span>Free</span><span>No database</span><span>Share with anyone</span></div>
@@ -107,7 +107,7 @@ function SpaceForm({ initial, invalid }: { initial: SpacePayload | null; invalid
     </form>
     <p className={`spaces-feedback no-print${error ? " is-error" : ""}`} role="status" aria-live="polite">{message}</p>
     {result && <section ref={resultRef} tabIndex={-1} className="spaces-result" aria-label="Your printable Space QR">
-      <div className="space-print-label"><div className="space-label-top">CYCLETAG SPACES <span>{result.space.items.length} ITEMS / ONE SCAN</span></div><h2>{result.space.name}</h2>
+      <div className="space-print-label"><div className="space-label-top">STAYTAG SPACES <span>{result.space.items.length} ITEMS / ONE SCAN</span></div><h2>{result.space.name}</h2>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="space-qr" src={result.qr} alt={`QR for ${result.space.name}`} width={1200} height={1200} />
         <p>SCAN. CHOOSE. REORDER.</p><small>cycletag.eu · No app. No account.</small></div>
@@ -122,3 +122,4 @@ function SpaceForm({ initial, invalid }: { initial: SpacePayload | null; invalid
     </section>}
   </>;
 }
+
