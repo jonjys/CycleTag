@@ -1,5 +1,7 @@
 "use client";
 
+import { useMarket } from "@/lib/use-market";
+import { measure } from "@/lib/measure-client";
 import QRCode from "qrcode";
 import { FormEvent, useState } from "react";
 import { marketChoiceLabel } from "@/lib/affiliate";
@@ -22,7 +24,7 @@ function today(): string {
 
 export function BulkGenerator() {
   const [raw, setRaw] = useState(example);
-  const [market, setMarket] = useState<Market>("DE");
+  const { market, chooseMarket, lockMarket } = useMarket();
   const [category, setCategory] = useState<TagCategory>("office");
   const [labels, setLabels] = useState<BulkLabel[]>([]);
   const [flash, setFlash] = useState<Flash | null>(null);
@@ -30,6 +32,8 @@ export function BulkGenerator() {
 
   async function generate(event: FormEvent) {
     event.preventDefault();
+    if (busy) return;
+    lockMarket();
     setBusy(true);
     setFlash(null);
     try {
@@ -42,11 +46,12 @@ export function BulkGenerator() {
 
       const nextLabels = await Promise.all(rows.map(async (tag) => {
         const url = buildTagUrl(siteUrl, tag);
-        const qr = await QRCode.toDataURL(url, { errorCorrectionLevel: "M", width: 420, margin: 1, color: { dark: "#171713", light: "#ffffff" } });
+        const qr = await QRCode.toDataURL(url, { errorCorrectionLevel: "M", width: 420, margin: 4, color: { dark: "#171713", light: "#ffffff" } });
         return { tag, url, qr };
       }));
 
       setLabels(nextLabels);
+      measure("label_created", "bulk");
       setFlash({ tone: "success", text: `${nextLabels.length} labels ready. Print this page on A4 and cut the labels.` });
     } catch {
       setFlash({ tone: "error", text: "The bulk sheet could not be created. Check the rows and try again." });
@@ -56,7 +61,7 @@ export function BulkGenerator() {
   }
 
   return (
-    <section className="bulk-builder" aria-labelledby="bulk-builder-title">
+    <section className="bulk-builder" data-tag-builder aria-labelledby="bulk-builder-title">
       <div className="builder-intro">
         <div>
           <div className="section-kicker">BULK SHEET</div>
@@ -73,7 +78,7 @@ export function BulkGenerator() {
         </div>
         <div className="field">
           <label htmlFor="bulk-market">Shopping region</label>
-          <select id="bulk-market" value={market} onChange={(event) => setMarket(event.target.value as Market)}>
+          <select id="bulk-market" value={market} onChange={(event) => chooseMarket(event.target.value as Market)}>
             {markets.map((code) => <option key={code} value={code}>{marketChoiceLabel(code)}</option>)}
           </select>
         </div>
@@ -93,7 +98,7 @@ export function BulkGenerator() {
           <div className="bulk-actions no-print">
             <div>
               <div className="section-kicker">PRINT READY</div>
-              <h2>{labels.length} CycleTags</h2>
+              <h2>{labels.length} StayTags</h2>
             </div>
             <button className="primary-button" type="button" onClick={() => window.print()}>Print A4 sheet</button>
           </div>
@@ -137,3 +142,4 @@ function parseRows(raw: string, market: Market, category: TagCategory): TagPaylo
     })
     .filter((tag) => tag.n.length > 0 && tag.q.length > 0);
 }
+

@@ -44,7 +44,7 @@ export default function Image() {
             lineHeight: '1.1',
           }}
         >
-          Never search for the same part twice.
+          A little label. A longer memory.
         </div>
         <div
           style={{
@@ -54,7 +54,7 @@ export default function Image() {
             marginTop: '20px',
           }}
         >
-          Exact part. Next due. Manual attached.
+          Part numbers. Care dates. Free QR labels.
         </div>
       </div>
     ),
@@ -63,3 +63,4 @@ export default function Image() {
     }
   )
 }
+

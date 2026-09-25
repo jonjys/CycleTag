@@ -5,11 +5,11 @@ export const heroCopy = {
   titleLead: "Never search for",
   titleMid: "the same part",
   titleAccent: "twice.",
-  body: "Print a QR label that remembers the exact part, last replacement and next due date — and opens the user manual when you scan. No app. No account.",
+  body: "Print a QR label for your filter or toner that remembers the exact part, last replacement and next due date — and lets you search for a manual when you scan. No app. No account.",
   primaryCta: "Create a free label",
   secondaryCta: "See the scan result",
-  points: ["No app", "No account", "Manual attached automatically", "Print on A4"] as const,
-  affiliateNote: "Buy links are optional and last. Same price to you if a marketplace link is used."
+  points: ["No app", "No account", "Manual search", "Print on A4"] as const,
+  affiliateNote: "Affiliate buy links are optional and last. Same price to you if a marketplace link is used."
 } as const;
 
 export const brandsCopy = {
@@ -53,3 +53,4 @@ export function homepageCopyInventedClaims(): string[] {
 
   return inventedFeatureClaims.filter((term) => haystack.includes(term));
 }
+

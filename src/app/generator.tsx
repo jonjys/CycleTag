@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/locale";
+import { useMarket } from "@/lib/use-market";
+import { measure } from "@/lib/measure-client";
 import QRCode from "qrcode";
 import { ArrowRight, CheckCircle2, Coffee, Droplets, PawPrint, Printer, ShieldCheck, Wrench, Wind, type LucideIcon } from "lucide-react";
 import Link from "next/link";
@@ -69,6 +72,9 @@ export function Generator({
       ? "Fix the name or part number, then create a new QR. The old sticker is unchanged."
       : "Record the exact item and when you replaced it. Print its care history onto a sticker."
 }: GeneratorProps = {}) {
+  const { t } = useLocale();
+  const { market, chooseMarket, lockMarket } = useMarket(initialTag?.m);
+  const [busy, setBusy] = useState(false);
   const [name, setName] = useState(initialTag?.n ?? initialPreset?.name ?? "");
   const [query, setQuery] = useState(initialTag?.q ?? initialPreset?.query ?? "");
   const [category, setCategory] = useState<TagCategory>(initialTag?.c ?? initialPreset?.category ?? "home");
@@ -79,7 +85,6 @@ export function Generator({
   const [hashing, setHashing] = useState(false);
   const photoRequest = useRef(0);
   const [marketplace, setMarketplace] = useState(initialTag ? initialTag.care?.marketplace ?? true : false);
-  const [market, setMarket] = useState<Market>(initialTag?.m ?? "US");
   const [generated, setGenerated] = useState<Generated | null>(null);
   const [flash, setFlash] = useState<Flash | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
@@ -144,19 +149,22 @@ export function Generator({
 
   async function generateLabel() {
     setFlash(null);
-    if (!draftTag) return;
+    if (!draftTag || busy) return;
+    lockMarket();
+    setBusy(true);
     try {
       const tag = logging && initialTag ? logReplacement(initialTag, draftTag) : draftTag;
       const url = buildTagUrl(siteUrl, tag);
       const qr = await QRCode.toDataURL(url, { errorCorrectionLevel: "M", width: 900, margin: 4, color: { dark: "#171713", light: "#ffffff" } });
       const saved = saveShelfTag(tag, encodeTag(tag));
       setGenerated({ tag, url, qr });
+      if (!reprinting) measure("label_created", location.pathname === "/" ? "home" : "other");
       if (!saved.ok) {
         setFlash({
           tone: "error",
           text: saved.reason === "quota"
-            ? "CycleTag ready, but this browser’s local list is full. Print or copy the link — nothing was uploaded."
-            : "CycleTag ready, but this browser blocked a local list (private mode or storage). Print or copy the link to keep it."
+            ? "StayTag ready, but this browser’s local list is full. Print or copy the link — nothing was uploaded."
+            : "StayTag ready, but this browser blocked a local list (private mode or storage). Print or copy the link to keep it."
         });
         return;
       }
@@ -165,12 +173,12 @@ export function Generator({
         text: reissuing
           ? "New label ready and saved on this device. Print it and cover the old sticker — that QR still has the previous details."
           : reprinting
-            ? "Label ready to print. It stays on this device only — CycleTag does not upload your list."
-            : "CycleTag ready and saved on this device. Print, download the PNG, copy the link or add a calendar reminder."
+            ? "Label ready to print. It stays on this device only — StayTag does not upload your list."
+            : "StayTag ready and saved on this device. Print, download the PNG, copy the link or add a calendar reminder."
       });
     } catch (error) {
       setFlash({ tone: "error", text: error instanceof Error ? error.message : "That tag could not be created. Check the fields and try again." });
-    }
+    } finally { setBusy(false); }
   }
 
   async function generate(event: FormEvent) {
@@ -190,6 +198,7 @@ export function Generator({
 
   function downloadQr() {
     if (!generated) return;
+    measure("png_downloaded", location.pathname === "/" ? "home" : "other");
     triggerDownload(generated.qr, `${slug(generated.tag.n)}-cycletag.png`);
     setFlash({ tone: "success", text: "Label PNG downloaded. Import it into a printer app or attach it as a sticker." });
   }
@@ -211,20 +220,20 @@ export function Generator({
   const toast = flash ? <ActionToast message={flash.text} tone={flash.tone} /> : null;
 
   return (
-    <section className="builder" id="create" aria-labelledby="builder-title">
+    <section className="builder" data-tag-builder id="create" aria-labelledby="builder-title">
       <div className="builder-intro">
         <div>
           <div className="section-kicker">{reprinting ? "SAVED ON THIS DEVICE" : reissuing ? "RE-ISSUE A LABEL" : "BUILD YOUR TAG"}</div>
-          <h2 id="builder-title">{logging ? "Log a replacement" : builderTitle}</h2>
+          <h2 id="builder-title">{logging ? t("Log a replacement", "Logga ett byte") : builderTitle === "What did you care for?" ? t(builderTitle, "Vad har du tagit hand om?") : builderTitle}</h2>
         </div>
-        <p>{description}</p>
+        <p>{!initialTag && !initialPreset ? t(description, "Ange delen och när du bytte den. Skriv ut en etikett med skötselhistoriken.") : description}</p>
       </div>
 
       {reissuing && (
         <aside className="reissue-banner" aria-labelledby="reissue-title">
           <strong id="reissue-title">This creates a new QR, not an update.</strong>
           <p>
-            CycleTag keeps every payload inside the label itself, so an already-printed sticker cannot be changed. Cover or discard the old one after you print this replacement; scanning the old QR still opens the previous part number.
+            StayTag keeps every payload inside the label itself, so an already-printed sticker cannot be changed. Cover or discard the old one after you print this replacement; scanning the old QR still opens the previous part number.
           </p>
         </aside>
       )}
@@ -246,15 +255,15 @@ export function Generator({
 
       <form onSubmit={generate} className="tag-form">
         <div className="field wide">
-          <label htmlFor="name">Exact item / part name</label>
+          <label htmlFor="name">{t("Exact item / part name", "Exakt namn på del eller produkt")}</label>
           <input id="name" value={name} onChange={(event) => { setName(event.target.value); invalidate(); }} maxLength={80} placeholder="e.g. Office printer toner" required />
         </div>
         <div className="field wide">
-          <label htmlFor="part">Part number (optional)</label>
+          <label htmlFor="part">{t("Part number (optional)", "Artikelnummer (valfritt)")}</label>
           <input id="part" value={part} maxLength={60} onChange={event => { setPart(event.target.value); invalidate(); }} placeholder="e.g. DLSC002" />
         </div>
-        <div className="field wide">
-          <label htmlFor="photo">Photo fingerprint (optional)</label>
+        <details className="field wide care-options"><summary>{t("Add a photo fingerprint (optional)", "Lägg till fotofingeravtryck (valfritt)")}</summary>
+          <label htmlFor="photo">{t("Photo fingerprint", "Fotofingeravtryck")}</label>
           <input id="photo" type="file" accept="image/*" onChange={async event => {
             const file = event.target.files?.[0];
             const request = ++photoRequest.current;
@@ -267,25 +276,25 @@ export function Generator({
           }} />
           <small>{hashing ? "Hashing locally…" : "Only a SHA-256 fingerprint is saved. The photo never leaves your device. Keep the original yourself."}</small>
           {photo && <><code className="care-hash">{photo}</code><button type="button" className="secondary-button" onClick={() => { ++photoRequest.current; setPhoto(""); setHashing(false); invalidate(); }}>Remove fingerprint</button></>}
-        </div>
+        </details>
         <div className="field">
-          <label htmlFor="interval">Care interval</label>
+          <label htmlFor="interval">{t("Care interval", "Bytesintervall")}</label>
           <div className="suffix-input"><input id="interval" type="number" min="1" max="730" value={interval} onChange={(event) => { setInterval(Number(event.target.value)); invalidate(); }} required /><span>days</span></div>
         </div>
         <div className="field">
-          <label htmlFor="start">Last replaced</label>
+          <label htmlFor="start">{t("Last replaced", "Senast bytt")}</label>
           <input id="start" type="date" value={start} onChange={(event) => { setStart(event.target.value); invalidate(); }} required />
         </div>
-        <details className="wide care-advanced"><summary>Optional marketplace & category</summary>
-        <label><input type="checkbox" checked={marketplace} onChange={event => { setMarketplace(event.target.checked); invalidate(); }} /> Include a Find replacement button</label>
+        <div className="market-toggle wide"><label><input type="checkbox" checked={marketplace} onChange={event => { setMarketplace(event.target.checked); invalidate(); }} /> {t("Include an optional eBay replacement link", "Lägg till valfri eBay-länk för ersättningsdelen")}</label><small>{t("Affiliate link: eligible purchases may earn us a commission. No extra cost to you.", "Affiliatelänk: kvalificerade köp kan ge oss provision. Ingen extra kostnad för dig.")} {marketplaceName(market)}</small></div>
+        <details className="wide care-advanced"><summary>{t("Shopping region, search & category", "Butiksregion, sökning och kategori")}</summary>
         <div className="field wide">
           <label htmlFor="query">Optional marketplace search</label>
           <input id="query" value={query} onChange={(event) => { setQuery(event.target.value); invalidate(); }} maxLength={160} placeholder="e.g. Brother TN-3480 black toner" aria-describedby="query-help" />
           <small id="query-help">Use a model or part number for the best result. Typo? Fix it here and create a new label.</small>
         </div>
         <div className="field">
-          <label htmlFor="market">Shopping region</label>
-          <select id="market" value={market} onChange={(event) => { setMarket(event.target.value as Market); invalidate(); }} aria-describedby="market-help">
+          <label htmlFor="market">{t("Shopping region", "Butiksregion")}</label>
+          <select id="market" value={market} onChange={(event) => { chooseMarket(event.target.value as Market); invalidate(); }} aria-describedby="market-help">
             {markets.map((code) => <option key={code} value={code}>{marketChoiceLabel(code)}</option>)}
           </select>
           <small id="market-help">{marketDestinationNote(market)}</small>
@@ -297,7 +306,7 @@ export function Generator({
           </select>
         </div>
         </details>
-        <aside className="encode-preview wide" aria-labelledby="encode-preview-title">
+        <details className="encode-preview wide encode-details"><summary>{t("Preview everything encoded in this QR", "Förhandsgranska allt som sparas i QR-koden")}</summary>
           <div className="section-kicker" id="encode-preview-title">ENCODED IN THE QR AND LINK</div>
           <dl className="encode-preview-list">
             <div><dt>Item</dt><dd>{name.trim() || "Not set yet"}</dd></div>
@@ -318,18 +327,18 @@ export function Generator({
           ) : (
             <p className="encode-preview-link"><span>Share link preview</span> Add valid care details to see the public URL before you create the QR.</p>
           )}
-          <p className="payload-warning">
+        </details>
+          <p className="payload-warning compact-public-warning wide">
             <ShieldCheck aria-hidden="true" size={14} />
-            Anyone with this QR or link can read all care entries, part numbers, dates, photo hashes and marketplace details. Do not encode personal or confidential details. CycleTag still stores nothing — the payload lives in the URL by design.
+            {t("Anyone with this QR or link can read its care details, dates, part numbers and optional photo hash. Do not include personal or confidential information. Tag contents stay in the link and on this device.", "Alla med QR-koden eller länken kan läsa skötseluppgifter, datum, artikelnummer och valfritt fotofingeravtryck. Lägg inte in personliga eller hemliga uppgifter. Etikettens innehåll finns i länken och på enheten.")}
           </p>
-        </aside>
         {instantBuyUrl && marketplace && (
           <aside className="instant-buy wide" aria-labelledby="instant-buy-title">
             <div>
               <div className="section-kicker">OPTIONAL REPLACEMENT SEARCH</div>
               <h3 id="instant-buy-title">Need the replacement now?</h3>
-              <p>Search eBay for the exact item now, then print the CycleTag so you never have to remember it again.</p>
-              <small>Affiliate link: CycleTag may earn a commission, at no extra cost to you.</small>
+              <p>Search eBay for the exact item now, then print the StayTag so you never have to remember it again.</p>
+              <small>Affiliate link: StayTag may earn a commission, at no extra cost to you.</small>
             </div>
             <a className="buy-button" href={instantBuyUrl} target="_blank" rel="nofollow sponsored noopener">
               Find replacement now <ArrowRight aria-hidden="true" size={18} />
@@ -337,10 +346,10 @@ export function Generator({
           </aside>
         )}
         {draftError && <p className="wide" role="alert">{draftError}</p>}
-        <button className="primary-button wide" type="submit" disabled={!canGenerate || !draftUrl}>
-          {logging ? "Save care entry & create new QR" : reissuing ? "Create new label" : "Create care tag"} <ArrowRight aria-hidden="true" size={18} />
+        <button className="primary-button wide" type="submit" disabled={busy || !canGenerate || !draftUrl}>
+          {busy ? t("Creating…", "Skapar…") : logging ? t("Save care entry & create new QR", "Spara byte och skapa ny QR") : reissuing ? t("Create new label", "Skapa ny etikett") : t("Create a free label", "Skapa gratis etikett")} <ArrowRight aria-hidden="true" size={18} />
         </button>
-        <p className="form-trust wide"><CheckCircle2 aria-hidden="true" size={14} /> Generated entirely in your browser. Nothing is uploaded.</p>
+        <p className="form-trust wide"><CheckCircle2 aria-hidden="true" size={14} /> {t("QR contents stay in your browser. No account needed.", "QR-innehållet stannar i din webbläsare. Inget konto behövs.")}</p>
       </form>
 
       {!generated && toast}
@@ -371,19 +380,19 @@ export function Generator({
             </div>
             <p className="payload-warning">
               <ShieldCheck aria-hidden="true" size={14} />
-              Print, download, copy or share only if you are happy for this payload to be public. CycleTag has no account that could hide it later. A copy can also sit in My tags on this device — that list is not uploaded.
+              Print, download, copy or share only if you are happy for this payload to be public. StayTag has no account that could hide it later. A copy can also sit in My tags on this device — that list is not uploaded.
             </p>
             <div className="button-grid">
-              <button type="button" className="primary-button" onClick={printLabel}>Print on A4</button>
+              <button type="button" className="primary-button" onClick={printLabel}>{t("Print on A4", "Skriv ut på A4")}</button>
               <Link className="secondary-button" href={`/care-sheet#d=${encodeTag(generated.tag)}`}>12-up Care Sheet / PDF</Link>
-              <a className="secondary-button" href={generated.url}>Open care history</a>
-              <button type="button" className="secondary-button" onClick={downloadQr}>Download PNG</button>
-              <button type="button" className="secondary-button" onClick={downloadCalendar}>Add reminder</button>
-              <button type="button" className="secondary-button" onClick={copyLink}>Copy link</button>
+              <a className="secondary-button" href={generated.url}>{t("Open care history", "Öppna skötselhistorik")}</a>
+              <button type="button" className="secondary-button" onClick={downloadQr}>{t("Download PNG", "Ladda ner PNG")}</button>
+              <button type="button" className="secondary-button" onClick={downloadCalendar}>{t("Add reminder", "Lägg till påminnelse")}</button>
+              <button type="button" className="secondary-button" onClick={copyLink}>{t("Copy link", "Kopiera länk")}</button>
             </div>
             <p className="reissue-hint">
               {reissuing
-                ? "Cover or discard the previous sticker. Scanning it still opens the old part number because CycleTag cannot rewrite a printed QR."
+                ? "Cover or discard the previous sticker. Scanning it still opens the old part number because StayTag cannot rewrite a printed QR."
                 : "Typo in the part number? Change the fields above and create a new QR. Already-printed labels keep whatever was encoded in them."}
               {" "}
               <Link href="/#tags">View My tags on this device</Link>
@@ -392,7 +401,7 @@ export function Generator({
               <strong>No special printer required.</strong>
               <p>Use any home or office printer, cut around the border and attach with clear tape or sticker paper. For a mini label printer, download the PNG and import it into the printer app.</p>
               <a href={printerUrl} target="_blank" rel="sponsored nofollow noopener">Browse optional 50 mm label printers <ArrowRight aria-hidden="true" size={15} /></a>
-              <small>Affiliate link: CycleTag may earn a commission, at no extra cost to you.</small>
+              <small>Affiliate link: StayTag may earn a commission, at no extra cost to you.</small>
             </div>
           </div>
         </div>
@@ -408,3 +417,4 @@ function slug(value: string): string {
 function title(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
+

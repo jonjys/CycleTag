@@ -43,7 +43,7 @@ export function TagShelf() {
     setConfirmClear(false);
     setFlash(
       result.ok
-        ? { tone: "success", text: "Local list cleared. CycleTag never had a copy to delete." }
+        ? { tone: "success", text: "Local list cleared. StayTag never had a copy to delete." }
         : { tone: "error", text: "This browser could not clear the local list." }
     );
   }
@@ -55,7 +55,7 @@ export function TagShelf() {
           <div className="section-kicker">ON THIS DEVICE ONLY</div>
           <h2 id="shelf-title">My tags</h2>
         </div>
-        <p>A short list of labels created in this browser. CycleTag does not upload it, and there is still no account.</p>
+        <p>A short list of labels created in this browser. StayTag does not upload it, and there is still no account.</p>
       </div>
 
       <p className="payload-warning shelf-privacy">
@@ -66,7 +66,7 @@ export function TagShelf() {
       {storageBlocked && (
         <aside className="shelf-unavailable" aria-live="polite">
           <strong>This browser cannot keep a local list.</strong>
-          <p>Private mode, blocked storage or a full quota stops CycleTag from saving tags on this device. Print the label or copy the link instead — nothing is sent to CycleTag either way.</p>
+          <p>Private mode, blocked storage or a full quota stops StayTag from saving tags on this device. Print the label or copy the link instead — nothing is sent to StayTag either way.</p>
         </aside>
       )}
 
@@ -78,7 +78,7 @@ export function TagShelf() {
           <p>
             {storageBlocked
               ? "Create a tag as usual, then print or bookmark the public link."
-              : "Create a CycleTag and it will appear here automatically. The payload still lives in the QR, not in a CycleTag database."}
+              : "Create a StayTag and it will appear here automatically. The payload still lives in the QR, not in a StayTag database."}
           </p>
           {!storageBlocked && <a className="primary-button" href="#create">Create a tag</a>}
         </div>
@@ -135,3 +135,4 @@ function formatSavedAt(iso: string): string {
   if (Number.isNaN(date.getTime())) return "on this device";
   return new Intl.DateTimeFormat("en", { day: "numeric", month: "short", year: "numeric" }).format(date);
 }
+

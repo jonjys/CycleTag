@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/locale";
 import Link from "next/link";
 import { CircleAlert, ExternalLink, RefreshCcw, ShieldCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -18,6 +19,7 @@ const campaignId = process.env.NEXT_PUBLIC_EBAY_CAMPAIGN_ID || defaultCampaignId
 type Flash = { text: string; tone: ToastTone };
 
 export function TagView() {
+  const { t } = useLocale();
   const [encoded, setEncoded] = useState<string | null | undefined>(undefined);
   const tag = useMemo(() => encoded === undefined ? undefined : decodeTag(encoded), [encoded]);
   const [flash, setFlash] = useState<Flash | null>(null);
@@ -104,7 +106,7 @@ export function TagView() {
       <div className="tag-product">
         <div className="section-kicker">STAYTAG · ON THE MACHINE</div>
         <h1>{tag.n}</h1>
-        <p className="search-query">The sticker remembers the part, the date and the manual.</p>
+        <p className="search-query">{t("The exact part and its recorded care history.", "Rätt del och dess registrerade skötselhistorik.")}</p>
         <div className="tag-meta">
           <span>Every {tag.i} days</span>
           <span>Started {tag.s}</span>
@@ -113,15 +115,15 @@ export function TagView() {
       </div>
 
       <CareTimeline tag={tag} />
-      <a className="primary-button care-log" href={manualUrl} target="_blank" rel="noopener noreferrer">
-        Open manual <ExternalLink aria-hidden="true" size={18} />
+      <Link className="primary-button care-log" href={`/#log=${encoded}`}>{t("Log replacement · create new QR", "Logga byte · skapa ny QR")} <RefreshCcw size={18} aria-hidden="true" /></Link>
+      <p>{t("Logging creates a new sticker with the previous entries. The old sticker remains a snapshot.", "Ett nytt byte skapar en ny etikett med tidigare poster. Den gamla etiketten behåller sitt innehåll.")}</p>
+      <a className="secondary-button" href={manualUrl} target="_blank" rel="noopener noreferrer">
+        {t("Search manual", "Sök manual")} <ExternalLink aria-hidden="true" size={18} />
       </a>
-      <Link className="secondary-button" href={`/#log=${encoded}`}>Log replacement · create new QR <RefreshCcw size={18} aria-hidden="true" /></Link>
-      <p>Logging creates a new sticker with the previous entries. The old sticker remains a snapshot.</p>
       {buyUrl ? (
         <>
           <a className="secondary-button" href={buyUrl} target="_blank" rel="nofollow sponsored noopener">
-            Find replacement on {marketplaceName(tag.m)} <ExternalLink aria-hidden="true" size={18} />
+            {t("Find replacement on", "Sök ersättningsdel på")} {marketplaceName(tag.m)} <ExternalLink aria-hidden="true" size={18} />
           </a>
           <p className="affiliate-near-link">
             {affiliateActive
@@ -156,3 +158,4 @@ export function TagView() {
     </section>
   );
 }
+

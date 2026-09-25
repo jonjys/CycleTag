@@ -9,7 +9,7 @@ import {
 describe("public contact configuration", () => {
   it("uses official Nytto Labs inboxes, not a product-unique or Gmail address", () => {
     expect(contact).toMatchObject({
-      productName: "CycleTag",
+      productName: "StayTag",
       operatorName: "Nytto Labs",
       operatorWebsite: "https://nyttolabs.com",
       country: "Sweden",
@@ -57,3 +57,4 @@ describe("public contact configuration", () => {
     expect(contactLinks.billing).toBe(`mailto:${contact.email.billing}`);
   });
 });
+

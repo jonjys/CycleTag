@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       type: "website",
       url: canonical,
-      title: `${tool.title} · CycleTag`,
+      title: `${tool.title} · StayTag`,
       description: tool.description
     }
   };
@@ -59,7 +59,7 @@ export default async function ReorderToolPage({ params }: PageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
       <section className="tool-hero">
-        <Link className="tool-back" href="/"><ArrowLeft aria-hidden="true" size={16} /> All CycleTag tools</Link>
+        <Link className="tool-back" href="/"><ArrowLeft aria-hidden="true" size={16} /> All StayTag tools</Link>
         <div className="section-kicker">FREE STATELESS QR TOOL</div>
         <h1>{tool.title}</h1>
         <p>{tool.description}</p>
@@ -103,3 +103,4 @@ export default async function ReorderToolPage({ params }: PageProps) {
     </main>
   );
 }
+

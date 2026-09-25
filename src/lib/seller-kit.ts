@@ -2,9 +2,9 @@ export type KitLanguage = "en" | "sv" | "zh";
 export type SellerKit = { v: 1; seller: string; product: string; sku: string; language: KitLanguage; links: { region: string; url: string }[] };
 export const KIT_MAX_ENCODED = 2200;
 export const kitCopy = {
-  en: { scan: "SCAN TO REORDER", choose: "Choose your store", sku: "Item / SKU", open: "Open product", note: "Seller-provided links. CycleTag has not verified this seller, product, price or compatibility. Check the destination before buying.", privacy: "This QR is a fixed, public snapshot. No automatic purchase. Links may include the creator’s affiliate tracking.", create: "Create a card for your product" },
-  sv: { scan: "SKANNA FÖR ÅTERKÖP", choose: "Välj din butik", sku: "Artikelnummer", open: "Öppna produkt", note: "Länkarna är angivna av skaparen. CycleTag har inte verifierat säljaren, produkten, priset eller kompatibiliteten. Kontrollera adressen före köp.", privacy: "Denna QR-kod är en fast, offentlig kopia. Inget köps automatiskt. Länkar kan innehålla skaparens affiliatemärkning.", create: "Skapa ett kort för din produkt" },
-  zh: { scan: "扫码再次购买", choose: "选择商店", sku: "商品编号", open: "打开商品", note: "链接由创建者提供。CycleTag 未验证卖家、商品、价格或兼容性。购买前请检查目标网址。", privacy: "此二维码是固定的公开快照，不会自动购买。链接可能包含创建者的推广跟踪参数。", create: "为您的商品创建卡片" }
+  en: { scan: "SCAN TO REORDER", choose: "Choose your store", sku: "Item / SKU", open: "Open product", note: "Seller-provided links. StayTag has not verified this seller, product, price or compatibility. Check the destination before buying.", privacy: "This QR is a fixed, public snapshot. No automatic purchase. Links may include the creator’s affiliate tracking.", create: "Create a card for your product" },
+  sv: { scan: "SKANNA FÖR ÅTERKÖP", choose: "Välj din butik", sku: "Artikelnummer", open: "Öppna produkt", note: "Länkarna är angivna av skaparen. StayTag har inte verifierat säljaren, produkten, priset eller kompatibiliteten. Kontrollera adressen före köp.", privacy: "Denna QR-kod är en fast, offentlig kopia. Inget köps automatiskt. Länkar kan innehålla skaparens affiliatemärkning.", create: "Skapa ett kort för din produkt" },
+  zh: { scan: "扫码再次购买", choose: "选择商店", sku: "商品编号", open: "打开商品", note: "链接由创建者提供。StayTag 未验证卖家、商品、价格或兼容性。购买前请检查目标网址。", privacy: "此二维码是固定的公开快照，不会自动购买。链接可能包含创建者的推广跟踪参数。", create: "为您的商品创建卡片" }
 };
 function clean(value: unknown, max: number): string | null {
   if (typeof value !== "string") return null;
@@ -60,3 +60,4 @@ export function buildSellerKitUrl(origin: string, kit: SellerKit): string {
   url.hash = `kit=${encodeSellerKit(kit)}`;
   return url.href;
 }
+
