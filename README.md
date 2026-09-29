@@ -35,7 +35,7 @@ CycleTag turns a replacement item, interval and marketplace search into a printa
 5. The user deliberately clicks a disclosed eBay marketplace link.
 6. If a public EPN campaign ID is configured, a qualifying purchase can earn commission.
 
-The physical label and calendar event are the repeat-use loop: an output from the first visit creates future visits at the moment of recurring purchase intent. Every printed label also names `cycletag.eu`. The scan page can correct a typo and print a new label, or create another tag. Tags created in the browser can also be kept in a local “My tags” list so they can be reopened or reprinted on that device. The list never leaves the browser.
+The physical label and calendar event are the repeat-use loop: an output from the first visit creates future visits at the moment of recurring purchase intent. Every printed label also names `staytag.nyttolabs.com` (older labels name `cycletag.eu`, which redirects). The scan page can correct a typo and print a new label, or create another tag. Tags created in the browser can also be kept in a local “My tags” list so they can be reopened or reprinted on that device. The list never leaves the browser.
 
 Correcting a tag is a re-issue, not an in-place edit. CycleTag has no database, so an already-printed QR is a snapshot: scanning it still opens the original name, search and interval. The replacement QR is a new payload in a new URL fragment. Cover or discard the old sticker after you print the new one. Legacy `/#clone=…` builder links still prefill the same form as `/#edit=…`.
 
