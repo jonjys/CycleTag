@@ -1,5 +1,5 @@
-const siteUrl = "https://cycletag.eu";
-const host = "cycletag.eu";
+const siteUrl = "https://staytag.nyttolabs.com";
+const host = "staytag.nyttolabs.com";
 const key = "61d4a9fe5b3078c2e146f9a73bc580d1";
 const keyLocation = `${siteUrl}/${key}.txt`;
 const sitemapUrl = `${siteUrl}/sitemap.xml`;

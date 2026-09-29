@@ -1,8 +1,9 @@
 "use client";
+import { legacyHosts, siteHost } from "./site";
 import { measurementPayload, type FunnelEvent, type FunnelSource } from "./measurement";
 let budgetStart = 0, sent = 0;
 export function measure(event: FunnelEvent, source: FunnelSource) {
-  if (typeof window === "undefined" || !["cycletag.eu", "www.cycletag.eu"].includes(location.hostname)) return;
+  if (typeof window === "undefined" || ![siteHost, ...legacyHosts].includes(location.hostname as typeof siteHost)) return;
   try {
     if (new URLSearchParams(location.search).get("qa") === "1") sessionStorage.setItem("staytag-qa", "1");
     if (sessionStorage.getItem("staytag-qa") === "1") return;

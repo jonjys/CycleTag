@@ -15,7 +15,7 @@ import { triggerDownload } from "@/lib/download";
 import { createIcs } from "@/lib/ics";
 import { measure } from "@/lib/measure-client";
 import { saveShelfTag } from "@/lib/shelf";
-import { siteUrl } from "@/lib/site";
+import { siteHost, siteUrl } from "@/lib/site";
 import { builderEditHash, buildTagUrl, decodeTag, encodeTag, type TagPayload } from "@/lib/tag";
 import { AddToRelay } from "@/app/relay/add-to-relay";
 
@@ -252,7 +252,7 @@ function ReplaceNow({ tag, today, t, dateLocale, early }: { tag: TagPayload; tod
         <div>
           <span>SCAN FOR CARE HISTORY</span>
           <strong>{result.tag.n}</strong>
-          <small>{result.tag.care?.part && `Part ${result.tag.care.part} · `}Last replaced {result.tag.s} · Next due {due} · cycletag.eu</small>
+          <small>{result.tag.care?.part && `Part ${result.tag.care.part} · `}Last replaced {result.tag.s} · Next due {due} · {siteHost}</small>
         </div>
       </div>
       <ol className="replace-steps no-print">

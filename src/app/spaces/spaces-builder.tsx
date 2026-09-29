@@ -7,7 +7,7 @@ import { marketChoiceLabel } from "@/lib/affiliate";
 import { copyText } from "@/lib/clipboard";
 import { triggerDownload } from "@/lib/download";
 import { listShelf } from "@/lib/shelf";
-import { siteUrl } from "@/lib/site";
+import { siteHost, siteUrl } from "@/lib/site";
 import { measure } from "@/lib/measure-client";
 import { buildSpaceUrl, decodeSpace, SPACE_LIMIT, type SpacePayload } from "@/lib/space";
 import { decodeTag, markets, type Market, type TagPayload } from "@/lib/tag";
@@ -112,11 +112,11 @@ function SpaceForm({ initial, invalid }: { initial: SpacePayload | null; invalid
       <div className="space-print-label"><div className="space-label-top">STAYTAG SPACES <span>{result.space.items.length} ITEMS / ONE SCAN</span></div><h2>{result.space.name}</h2>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="space-qr" src={result.qr} alt={`QR for ${result.space.name}`} width={1200} height={1200} />
-        <p>SCAN. CHOOSE. REORDER.</p><small>cycletag.eu · No app. No account.</small></div>
+        <p>SCAN. CHOOSE. REORDER.</p><small>{siteHost} · No app. No account.</small></div>
       <div className="spaces-result-tools no-print"><h2>Your space is ready.</h2><p>Put one label on the cupboard. Give everyone the same refill list.</p><div className="spaces-actions">
         <a className="primary-button" href={result.url}>Preview Space <ArrowRight size={18} aria-hidden="true" /></a>
         <button type="button" className="secondary-button" onClick={share}><Share2 size={18} aria-hidden="true" /> Share space</button>
-        <button type="button" className="secondary-button" onClick={() => { triggerDownload(result.qr, "cycletag-space-qr.png"); setMessage("QR PNG download started. Keep it at least 10 cm wide when printing and test it with your phone."); }}><Download size={18} aria-hidden="true" /> Download QR PNG</button>
+        <button type="button" className="secondary-button" onClick={() => { triggerDownload(result.qr, "staytag-space-qr.png"); setMessage("QR PNG download started. Keep it at least 10 cm wide when printing and test it with your phone."); }}><Download size={18} aria-hidden="true" /> Download QR PNG</button>
         <button type="button" className="secondary-button" onClick={() => { window.print(); setMessage("Print dialog requested. Choose A4 and 100% scale, then test-scan the printed label."); }}><Printer size={18} aria-hidden="true" /> Print A4 label</button></div>
         <label>Space link<input readOnly value={result.url} onFocus={(e) => e.currentTarget.select()} /></label>
         <p className="spaces-note">Keep the QR at least 10 cm wide. Use the preview to check each model before sharing. Editing this space creates a new label; older labels stay unchanged.</p>

@@ -22,7 +22,7 @@ import { copyText } from "@/lib/clipboard";
 import { triggerDownload } from "@/lib/download";
 import { createIcs } from "@/lib/ics";
 import { presets, type Preset } from "@/lib/presets";
-import { siteUrl } from "@/lib/site";
+import { siteHost, siteUrl } from "@/lib/site";
 import { saveShelfTag } from "@/lib/shelf";
 import { buildTagUrl, encodeTag, categories, markets, type Market, type TagCategory, type TagPayload } from "@/lib/tag";
 
@@ -200,7 +200,7 @@ export function Generator({
   function downloadQr() {
     if (!generated) return;
     measure("png_downloaded", location.pathname === "/" ? "home" : "other");
-    triggerDownload(generated.qr, `${slug(generated.tag.n)}-cycletag.png`);
+    triggerDownload(generated.qr, `${slug(generated.tag.n)}-staytag.png`);
     setFlash({ tone: "success", text: "Label PNG downloaded. Import it into a printer app or attach it as a sticker." });
   }
 
@@ -363,7 +363,7 @@ export function Generator({
             <div>
               <span>SCAN FOR CARE HISTORY</span>
               <strong>{generated.tag.n}</strong>
-              <small>{generated.tag.care?.part && `Part ${generated.tag.care.part} · `}Last replaced {generated.tag.s} · Next due {careDue(generated.tag)} · cycletag.eu</small>
+              <small>{generated.tag.care?.part && `Part ${generated.tag.care.part} · `}Last replaced {generated.tag.s} · Next due {careDue(generated.tag)} · {siteHost}</small>
             </div>
           </div>
           <div className="result-actions">

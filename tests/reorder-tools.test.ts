@@ -16,6 +16,6 @@ describe("searchable reorder tools", () => {
   });
 
   it("uses the owned EU domain as the canonical origin", () => {
-    expect(siteUrl).toBe("https://cycletag.eu");
+    expect(siteUrl).toBe("https://staytag.nyttolabs.com");
   });
 });

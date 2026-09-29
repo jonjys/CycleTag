@@ -1,4 +1,6 @@
-# CycleTag / StayTag
+# StayTag (formerly CycleTag)
+
+**Live: https://staytag.nyttolabs.com** — the former domain `cycletag.eu` (and `www.`) permanently 308-redirects there, keeping path, query and `#fragment`, so every printed QR keeps working. Keep `cycletag.eu` registered indefinitely. `/api/*` is still served on the legacy host.
 
 **Put memory where the thing is.** Care labels for machines, a refill list, Spaces and a private Return Wallet — no account, no app, no tag database.
 
@@ -33,7 +35,7 @@ CycleTag turns a replacement item, interval and marketplace search into a printa
 5. The user deliberately clicks a disclosed eBay marketplace link.
 6. If a public EPN campaign ID is configured, a qualifying purchase can earn commission.
 
-The physical label and calendar event are the repeat-use loop: an output from the first visit creates future visits at the moment of recurring purchase intent. Every printed label also names `cycletag.eu`. The scan page can correct a typo and print a new label, or create another tag. Tags created in the browser can also be kept in a local “My tags” list so they can be reopened or reprinted on that device. The list never leaves the browser.
+The physical label and calendar event are the repeat-use loop: an output from the first visit creates future visits at the moment of recurring purchase intent. Every printed label also names `staytag.nyttolabs.com` (older labels name `cycletag.eu`, which redirects). The scan page can correct a typo and print a new label, or create another tag. Tags created in the browser can also be kept in a local “My tags” list so they can be reopened or reprinted on that device. The list never leaves the browser.
 
 Correcting a tag is a re-issue, not an in-place edit. CycleTag has no database, so an already-printed QR is a snapshot: scanning it still opens the original name, search and interval. The replacement QR is a new payload in a new URL fragment. Cover or discard the old sticker after you print the new one. Legacy `/#clone=…` builder links still prefill the same form as `/#edit=…`.
 
@@ -73,7 +75,7 @@ The tag payload is visible to anyone who has the URL or QR, but new tags keep it
 
 ## Configuration
 
-No environment variable is required. The production origin is the owned `https://cycletag.eu` domain and the public EPN campaign ID ships in the repository.
+No environment variable is required. The production origin is `https://staytag.nyttolabs.com` and the public EPN campaign ID ships in the repository.
 
 | Variable | Required | Secret | Purpose |
 | --- | --- | --- | --- |
