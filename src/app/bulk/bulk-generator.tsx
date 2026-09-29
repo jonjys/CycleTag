@@ -5,7 +5,7 @@ import { measure } from "@/lib/measure-client";
 import QRCode from "qrcode";
 import { FormEvent, useState } from "react";
 import { marketChoiceLabel } from "@/lib/affiliate";
-import { siteUrl } from "@/lib/site";
+import { siteHost, siteUrl } from "@/lib/site";
 import { buildTagUrl, categories, markets, type Market, type TagCategory, type TagPayload } from "@/lib/tag";
 
 type BulkLabel = { tag: TagPayload; url: string; qr: string };
@@ -111,7 +111,7 @@ export function BulkGenerator() {
                   <span>SCAN TO REORDER</span>
                   <strong>{label.tag.n}</strong>
                   <small>{label.tag.q}</small>
-                  <em>Every {label.tag.i} days · cycletag.eu</em>
+                  <em>Every {label.tag.i} days · {siteHost}</em>
                 </div>
               </article>
             ))}

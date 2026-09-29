@@ -1,4 +1,6 @@
-# CycleTag / StayTag
+# StayTag (formerly CycleTag)
+
+**Live: https://staytag.nyttolabs.com** — the former domain `cycletag.eu` (and `www.`) permanently 308-redirects there, keeping path, query and `#fragment`, so every printed QR keeps working. Keep `cycletag.eu` registered indefinitely. `/api/*` is still served on the legacy host.
 
 **Put memory where the thing is.** Care labels for machines, a refill list, Spaces and a private Return Wallet — no account, no app, no tag database.
 
@@ -73,7 +75,7 @@ The tag payload is visible to anyone who has the URL or QR, but new tags keep it
 
 ## Configuration
 
-No environment variable is required. The production origin is the owned `https://cycletag.eu` domain and the public EPN campaign ID ships in the repository.
+No environment variable is required. The production origin is `https://staytag.nyttolabs.com` and the public EPN campaign ID ships in the repository.
 
 | Variable | Required | Secret | Purpose |
 | --- | --- | --- | --- |

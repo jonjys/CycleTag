@@ -50,3 +50,7 @@ Inget företag, ingen app och ingen produkt med namnet StayTag hittades. staytag
 1. TMview: https://www.tmdn.org/tmview/welcome → sök `staytag`, sedan `stay tag`. Filtrera Nice-klass 9, 35, 42. Välj alla kontor.
 2. EUIPO eSearch plus: https://euipo.europa.eu/eSearch/ → Trade mark name, "contains" `staytag`.
 3. Om 0 träffar på exakt/nära namn i 9/35/42 och inget "STAY…"-märke för programvara/QR/etiketter: risken är låg och flytten kan göras.
+
+## Uppföljning (samma dag)
+
+Ägaren genomförde de manuella sökningarna: PRV `StayTag` och `Stay Tag` = 0 träffar; TMview exakt `StayTag` = inga träffar; bredare sökning utan uppenbart relevanta konflikter. Risken bedöms som låg och migreringen till `staytag.nyttolabs.com` genomfördes.

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { buildTagUrl, decodeTag, encodeTag, type TagPayload } from "@/lib/tag";
 import { careDue } from "@/lib/care";
 import { getShelfSnapshot, getServerShelfSnapshot, subscribeShelf } from "@/lib/shelf";
-import { siteUrl } from "@/lib/site";
+import { siteHost, siteUrl } from "@/lib/site";
 
 export function CareSheet() {
   const shelf = useSyncExternalStore(subscribeShelf, getShelfSnapshot, getServerShelfSnapshot);
@@ -45,7 +45,7 @@ export function CareSheet() {
         const row = rows.length === 1 ? rows[0] : rows[index];
         return <article className="care-cell" key={index}>{row ? <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={row.qr} alt={`Care QR for ${row.tag.n}`} /><strong>{row.tag.n}</strong><span>{row.tag.care?.part || "Care snapshot"}</span><small>Last {row.tag.s}<br />Due {careDue(row.tag)} · {row.tag.i} days<br />cycletag.eu</small>
+          <img src={row.qr} alt={`Care QR for ${row.tag.n}`} /><strong>{row.tag.n}</strong><span>{row.tag.care?.part || "Care snapshot"}</span><small>Last {row.tag.s}<br />Due {careDue(row.tag)} · {row.tag.i} days<br />{siteHost}</small>
         </> : <span>Unused label</span>}</article>;
       })}</section>
       <section className="care-duration"><h2>Care duration schedule</h2><p>StayTag · Nytto Labs · Self-reported snapshots. Dates do not confirm completed maintenance.</p>
