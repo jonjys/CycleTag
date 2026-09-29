@@ -3,6 +3,7 @@ import { SiteHeader } from "./site-header";
 import { FunnelEvents } from "./funnel-events";
 import Link from "next/link";
 import { siteUrl } from "@/lib/site";
+import { localeBootScript } from "@/lib/locale";
 import { contact, contactLinks, operatorLegalLine } from "@/lib/contact";
 import "./globals.css";
 import "./revenue.css";
@@ -42,7 +43,8 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: localeBootScript }} /></head>
       <body>
         <SiteHeader />
         <FunnelEvents />

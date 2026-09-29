@@ -9,6 +9,7 @@ import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { ActionToast, type ToastTone } from "./action-toast";
 import { CareTimeline } from "./care-timeline";
+import { SiblingProduct } from "./sibling-product";
 import {
   buildEbayLink,
   defaultCampaignId,
@@ -403,6 +404,7 @@ export function Generator({
               <a href={printerUrl} target="_blank" rel="sponsored nofollow noopener">Browse optional 50 mm label printers <ArrowRight aria-hidden="true" size={15} /></a>
               <small>Affiliate link: StayTag may earn a commission, at no extra cost to you.</small>
             </div>
+            <SiblingProduct />
           </div>
         </div>
       )}
