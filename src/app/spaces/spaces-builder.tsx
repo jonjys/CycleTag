@@ -8,6 +8,7 @@ import { copyText } from "@/lib/clipboard";
 import { triggerDownload } from "@/lib/download";
 import { listShelf } from "@/lib/shelf";
 import { siteUrl } from "@/lib/site";
+import { measure } from "@/lib/measure-client";
 import { buildSpaceUrl, decodeSpace, SPACE_LIMIT, type SpacePayload } from "@/lib/space";
 import { decodeTag, markets, type Market, type TagPayload } from "@/lib/tag";
 
@@ -59,6 +60,7 @@ function SpaceForm({ initial, invalid }: { initial: SpacePayload | null; invalid
       const QRCode = (await import("qrcode")).default;
       const qr = await QRCode.toDataURL(url, { errorCorrectionLevel: "M", margin: 4, width: 1200, color: { dark: "#171713", light: "#ffffff" } });
       setResult({ space, url, qr });
+      measure("space_created", "spaces");
       setMessage("Your space is ready. Test-scan the QR before printing a batch.");
       requestAnimationFrame(() => resultRef.current?.focus());
     } catch (err) { setError(true); setMessage(err instanceof Error ? err.message : "Could not create the QR. Please try again."); }

@@ -7,6 +7,7 @@ import { buildEbayLink, defaultCampaignId, marketChoiceLabel, marketplaceName, v
 import { copyText } from "@/lib/clipboard";
 import { buildRelayUrl, decodeRelay, getRelayServerSnapshot, getRelaySnapshot, parseRelay, relayItemKey, RELAY_LIMIT, subscribeRelay, validateRelay, writeRelay, type RelayItem, type RelayList } from "@/lib/relay";
 import { siteUrl } from "@/lib/site";
+import { measure } from "@/lib/measure-client";
 import { markets, type Market } from "@/lib/tag";
 
 const campaign = process.env.NEXT_PUBLIC_EBAY_CAMPAIGN_ID || defaultCampaignId;
@@ -65,6 +66,7 @@ function ListEditor({ initial, shared, isDemo, raw }: { initial: RelayList; shar
     try {
       const url = buildRelayUrl(siteUrl, { v: 1, items: pending });
       setShareUrl(url);
+      measure("relay_shared", "relay");
       if (!copyOnly && typeof navigator.share === "function") {
         await navigator.share({ title: "StayTag refill list", text: `${pending.length} refills to check. Exact searches and quantities inside.`, url });
         setMessage("Share dialog completed. Delivery and purchases are not tracked.");

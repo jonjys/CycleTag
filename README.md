@@ -1,4 +1,18 @@
-# CycleTag
+# CycleTag / StayTag
+
+**Put memory where the thing is.** Care labels for machines, a refill list, Spaces and a private Return Wallet — no account, no app, no tag database.
+
+## Return Wallet (`/returns`)
+
+Save return QR codes from any web shop once; show them full-screen at the counter. Screenshot upload (decoded on-device with jsQR, plus BarcodeDetector for 1D barcodes where available), paste, camera scan or typed code. Store, item, return-by date, amount, drop-off and note. Countdown (calm → “2 days left” → “Return today”), lifecycle Ready → Dropped off → Refund pending → Refunded (or Kept it), money-still-owed total, calendar reminder (.ics with 7/3/1-day and same-day alarms, no code in the file), JSON backup/import, history. Metadata lives in `localStorage` (`staytag.returns.v1`), screenshots in IndexedDB. Nothing is uploaded; links inside codes are only opened by an explicit tap and only for https.
+
+## One-tap replacement
+
+The scan page leads with status (“Overdue — 6 days”, “Replacement due in 3 days”, “Next replacement: 28 days”) and a single **I replaced it today** button. It issues the new QR in place with history carried over (oldest entries roll off only if the sticker is full, with a notice), saves to My tags, and offers print / PNG / reminder. `/#log=` links keep working.
+
+## Measurement
+
+Allowlisted action names only (`src/lib/measurement.ts`): page_view, label_started, label_created, tag_scanned, replacement_logged, refill_added, relay_shared, space_created, return_wallet_opened, return_added, return_code_opened, return_dropped_off, return_refunded, return_reminder_added, print/download/outbound counts. No names, codes, URLs, amounts or part numbers.
 
 **Care Proof: the care history that stays on the machine.**
 
@@ -97,6 +111,10 @@ Expected response:
 | `/reorder-label/[slug]` | Twelve indexable, prefilled QR tools for high-intent replacement searches |
 | `/tag#d=…` | Stateless scan/reorder page; legacy `/tag?d=…` links remain readable |
 | `/#edit=…` | Prefills the homepage builder to re-issue a corrected label; `/#clone=…` remains an alias |
+| `/returns` | Return Wallet (local-only) |
+| `/relay` | Refill Relay shopping list |
+| `/spaces`, `/space#d=…` | One QR for a room |
+| `/sellers`, `/reorder#kit=…` | Seller Kits |
 | `/privacy` | Privacy policy |
 | `/terms` | Terms of use |
 | `/affiliate` | Affiliate disclosure |

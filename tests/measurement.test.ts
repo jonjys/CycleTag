@@ -20,6 +20,17 @@ describe("minimal measurement boundary", () => {
     expect((await POST(request('{}', "https://elsewhere.test"))).status).toBe(403);
     expect(log).not.toHaveBeenCalled();
   });
+  it("accepts the new privacy-safe action names and rejects any added detail", () => {
+    for (const event of ["tag_scanned", "replacement_logged", "refill_added", "relay_shared", "space_created", "return_wallet_opened", "return_added", "return_code_opened", "return_dropped_off", "return_refunded", "return_reminder_added"]) {
+      expect(measurementPayload({ event, source: "returns" })).toEqual({ event, source: "returns" });
+    }
+    expect(measurementPayload({ event: "return_added", source: "returns", store: "Zalando" })).toBeNull();
+    expect(measurementPayload({ event: "return_added", source: "https://returns.example.com/ABC" })).toBeNull();
+  });
+  it("keeps every allowed payload under the 128-byte body limit", async () => {
+    const { funnelEvents, funnelSources } = await import("@/lib/measurement");
+    for (const event of funnelEvents) for (const source of funnelSources) expect(JSON.stringify({ event, source }).length).toBeLessThan(128);
+  });
   it("bounds bodies even without content-length", async () => {
     expect((await POST(request("x".repeat(129)))).status).toBe(413);
   });

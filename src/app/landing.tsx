@@ -6,18 +6,20 @@ import { HomeGenerator } from "./home-generator";
 import { TagShelf } from "./tag-shelf";
 import { ToolDirectory } from "./tool-directory";
 import { SupportNote } from "./support-note";
+import { ProductFamily } from "./product-family";
 
 export function Landing({ sampleUrl, qr }: { sampleUrl: string; qr: string }) {
   const { t } = useLocale();
   return <main className="staytag-home">
     <section className="launch-hero no-print">
       <div className="launch-copy">
-        <div className="section-kicker">NYTTO LABS / STAYTAG</div>
-        <h1>{t("A little label.", "En liten etikett.")}<br /><em>{t("A longer memory.", "Ett längre minne.")}</em></h1>
-        <p>{t("The right filter. The last change. The next one. Keep your machine’s care history on a QR label, ready whenever you scan.", "Rätt filter. Senaste bytet. Nästa datum. Samla maskinens skötselhistorik på en QR-etikett, redo när du skannar.")}</p>
-        <a className="primary-button" href="#create">{t("Create a free label", "Skapa gratis etikett")} <ArrowUpRight size={20} aria-hidden="true" /></a>
-        <div className="launch-promises"><span><Check size={14} />{t("No account", "Inget konto")}</span><span><Check size={14} />{t("No app", "Ingen app")}</span><span><Check size={14} />{t("Print at home", "Skriv ut hemma")}</span></div>
-        <a className="launch-text-link" href={sampleUrl}>{t("Open the working example", "Öppna det fungerande exemplet")} <ArrowUpRight size={16} /></a>
+        <div className="section-kicker">{t("STAYTAG · PUT MEMORY WHERE THE THING IS", "STAYTAG · MINNET SITTER PÅ SAKEN")}</div>
+        <h1>{t("Which filter was it again?", "Vilket filter var det nu?")}<br /><em>{t("Scan it next time.", "Skanna nästa gång.")}</em></h1>
+        <p>{t("A free QR label for the machine. It remembers the exact part, when you changed it and when it’s due.", "En gratis QR-etikett på maskinen. Den minns rätt del, när du bytte den och när det är dags igen.")}</p>
+        <a className="primary-button" href="#create">{t("Create your first label", "Skapa din första etikett")} <ArrowDown size={20} aria-hidden="true" /></a>
+        <div className="launch-promises"><span><Check size={14} />{t("60 seconds", "60 sekunder")}</span><span><Check size={14} />{t("No account", "Inget konto")}</span><span><Check size={14} />{t("No app", "Ingen app")}</span><span><Check size={14} />{t("Any printer", "Vilken skrivare som helst")}</span></div>
+        <a className="launch-text-link" href={sampleUrl}>{t("See what a scan shows", "Se vad en skanning visar")} <ArrowUpRight size={16} /></a>
+        <Link className="launch-new" href="/returns"><span>{t("NEW", "NYTT")}</span>{t("Return Wallet: your return QR codes, ready at the counter", "Returplånbok: dina retur-QR-koder, redo vid disken")} <ArrowUpRight size={16} aria-hidden="true" /></Link>
       </div>
       <div className="launch-demo" aria-label={t("Example: a label on a coffee machine opens its care record", "Exempel: etiketten på kaffemaskinen öppnar dess skötselpost")}>
         <div className="demo-caption"><span>{t("ON THE MACHINE", "PÅ MASKINEN")}</span><span>01 — 03</span></div>
@@ -44,7 +46,8 @@ export function Landing({ sampleUrl, qr }: { sampleUrl: string; qr: string }) {
           <div className="scan-result-top"><span>{t("YOUR CARE RECORD", "DIN SKÖTSELPOST")}</span><ArrowUpRight size={22} aria-hidden="true" /></div>
           <h2>{t("Coffee machine filter", "Filter till kaffemaskin")}</h2><p>DeLonghi · DLSC002</p>
           <div className="scan-dates"><div><small>{t("Last replaced", "Senast bytt")}</small><strong>01 SEP 2026</strong></div><div><small>{t("Next due", "Nästa byte")}</small><strong>31 OCT 2026</strong></div></div>
-          <span className="scan-card-footer"><span className="history-dot" />{t("2 care entries · open history", "2 skötselposter · öppna historik")}</span>
+          <span className="scan-card-cta" aria-hidden="true">{t("I replaced it today", "Jag bytte den i dag")}</span>
+          <span className="scan-card-footer"><span className="history-dot" />{t("2 care entries · tap to try the real scan page", "2 skötselposter · tryck för att prova skanningssidan")}</span>
         </a>
         <p className="demo-disclaimer">{t("Example record. Dates are entered by the owner, not verified by StayTag.", "Exempelpost. Ägaren anger datumen; de verifieras inte av StayTag.")}</p>
       </div>
@@ -54,13 +57,14 @@ export function Landing({ sampleUrl, qr }: { sampleUrl: string; qr: string }) {
     </section>
     <div className="launch-builder-lead no-print"><span>{t("TRY IT WITH YOUR OWN MACHINE", "TESTA MED DIN EGEN MASKIN")}</span><ArrowDown size={18} aria-hidden="true" /></div>
     <HomeGenerator />
-    <section id="sheet" className="launch-sheet no-print"><div><div className="section-kicker">{t("FREE TO PRINT", "GRATIS ATT SKRIVA UT")}</div><h2>{t("One machine? Or the whole room?", "En maskin? Eller hela rummet?")}</h2><p>{t("Single labels, a 12-label Care Sheet with a schedule, and bulk sheets for up to 50 replacements. All free. You provide the paper and printer.", "Enstaka etiketter, ett ark med 12 etiketter och skötselschema, eller upp till 50 ersättningsdelar i bulk. Allt är gratis. Du står för papper och skrivare.")}</p></div><div className="sheet-options"><Link href="/care-sheet">{t("12-label Care Sheet", "Ark med 12 etiketter")} <ArrowUpRight size={22} /></Link><Link href="/bulk">{t("Bulk: up to 50 labels", "Bulk: upp till 50 etiketter")} <ArrowUpRight size={22} /></Link></div></section>
+    <ProductFamily />
     <TagShelf />
     <section className="launch-faq no-print"><h2>{t("A few things to know.", "Bra att veta.")}</h2>
+      <details><summary>{t("Why a QR and not just a note?", "Varför en QR och inte bara en lapp?")}</summary><p>{t("A note fades and has no room. The QR opens the exact part number, every previous change, the next due date and a one-tap “I replaced it” — and anyone in the house can scan it. It still costs nothing but paper.", "En lapp bleknar och har ingen plats. QR-koden öppnar rätt artikelnummer, alla tidigare byten, nästa datum och ett ”Jag bytte den” med ett tryck — och alla i hushållet kan skanna den. Det kostar ändå bara papper.")}</p></details>
       <details><summary>{t("Do old stickers update?", "Uppdateras gamla etiketter?")}</summary><p>{t("Each QR is a fixed snapshot. Log a replacement to create a new QR with the previous care entries, then cover the old sticker. Nothing updates remotely.", "Varje QR är en ögonblicksbild. Logga ett byte för att skapa en ny QR med tidigare skötselposter och täck över den gamla etiketten. Inget uppdateras på distans.")}</p></details>
       <details><summary>{t("Where is my information saved?", "Var sparas min information?")}</summary><p>{t("In the QR link and, optionally, My tags in this browser. No account or tag database. Anyone with your link can read the care details. Never include private information. A photo fingerprint stays a fingerprint: the original photo is never uploaded.", "I QR-länken och, om webbläsaren tillåter, i Mina etiketter här på enheten. Inget konto eller etikettdatabas. Alla med länken kan läsa uppgifterna. Lägg aldrig in privat information. Ett fotofingeravtryck är bara ett fingeravtryck; bilden laddas aldrig upp.")}</p></details>
       <details><summary>{t("Does it include the manual?", "Ingår manualen?")}</summary><p>{t("The scan page offers a search for the manual using your item and part number. It does not attach, host or guarantee the correct document.", "Skannsidan erbjuder en sökning efter manualen med delens namn och nummer. Den bifogar eller lagrar ingen manual och garanterar inte rätt dokument.")}</p></details>
-      <details><summary>{t("How does StayTag earn money?", "Hur tjänar StayTag pengar?")}</summary><p>{t("You can choose an optional eBay replacement link. Eligible purchases may earn us a commission, at no extra cost to you. There is also voluntary support; it buys no extra features. Labels and printing remain free.", "Du kan välja en valfri eBay-länk för ersättningsdelen. Kvalificerade köp kan ge oss provision utan extra kostnad för dig. Du kan också ge frivilligt stöd, som inte köper några extrafunktioner. Etiketter och utskrift är gratis.")} <Link href="/affiliate">{t("Affiliate disclosure", "Om affiliatelänkar")}</Link></p></details>
+      <details><summary>{t("How does StayTag earn money?", "Hur tjänar StayTag pengar?")}</summary><p>{t("You can choose an optional eBay replacement link. Eligible purchases may earn us a commission, at no extra cost to you. Businesses can order custom label packs and seller packaging pilots from Nytto Labs, priced and agreed by email before any work. There is also voluntary support; it buys no extra features. Labels, printing and Return Wallet remain free.", "Du kan välja en valfri eBay-länk för ersättningsdelen. Kvalificerade köp kan ge oss provision utan extra kostnad för dig. Företag kan beställa anpassade etikettpaket och förpackningspiloter av Nytto Labs, med pris och omfattning avtalat via mejl innan arbetet börjar. Du kan också ge frivilligt stöd, som inte köper några extrafunktioner. Etiketter, utskrift och Returplånboken är gratis.")} <Link href="/affiliate">{t("Affiliate disclosure", "Om affiliatelänkar")}</Link></p></details>
     </section>
     <details className="launch-more no-print"><summary>{t("Browse all 24 replacement templates", "Visa alla 24 mallar för ersättningsdelar")}</summary><ToolDirectory /></details>
     <SupportNote />
