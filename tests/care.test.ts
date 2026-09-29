@@ -52,3 +52,37 @@ describe("care snapshots", () => {
     expect(decodeTag(result.records[0].encoded)).toEqual(care);
   });
 });
+
+describe("one-tap replacement", () => {
+  it("keeps item, part and interval, moves the date and carries history", async () => {
+    const { replacedOn } = await import("@/lib/care");
+    const next = replacedOn(care, "2024-03-05");
+    expect(next).toMatchObject({ n: care.n, q: care.q, i: 60, s: "2024-03-05", care: { part: "123", marketplace: false } });
+    expect(next.care?.photo).toBeUndefined();
+    expect(careEvents(next).map(e => e.s)).toEqual(["2024-01-01", "2024-03-05"]);
+    expect(careDue(next)).toBe("2024-05-04");
+  });
+  it("rolls the oldest entries off a full sticker instead of failing, and reports it", async () => {
+    const { replacedOn, droppedEntries } = await import("@/lib/care");
+    let chain: TagPayload = legacy;
+    for (const day of ["2024-02-01", "2024-03-01", "2024-04-01", "2024-05-01", "2024-06-01", "2024-07-01"]) chain = replacedOn(chain, day);
+    expect(careEvents(chain)).toHaveLength(6);
+    const next = replacedOn(chain, "2024-08-01");
+    expect(careEvents(next)).toHaveLength(6);
+    expect(careEvents(next)[0].s).toBe("2024-03-01");
+    expect(careEvents(next).at(-1)?.s).toBe("2024-08-01");
+    expect(droppedEntries(chain, next)).toBe(1);
+    expect(decodeTag(encodeTag(next))).toEqual(next);
+  });
+  it("rolls entries until very long multibyte chains fit a reliable QR", async () => {
+    const { replacedOn } = await import("@/lib/care");
+    let chain: TagPayload = { ...legacy, n: "水".repeat(80), care: { part: "水".repeat(60), history: [], marketplace: false } };
+    for (let month = 2; month <= 9; month++) chain = replacedOn(chain, `2024-0${month}-01`);
+    expect(encodeTag(chain).length).toBeLessThanOrEqual(2200);
+    expect(chain.s).toBe("2024-09-01");
+  });
+  it("refuses a replacement before the last one", async () => {
+    const { replacedOn } = await import("@/lib/care");
+    expect(() => replacedOn(care, "2023-12-31")).toThrow("before");
+  });
+});

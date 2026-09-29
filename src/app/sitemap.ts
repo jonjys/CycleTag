@@ -2,10 +2,11 @@ import type { MetadataRoute } from "next";
 import { reorderToolPath, reorderTools } from "@/lib/reorder-tools";
 import { siteLaunchDate, siteUrl } from "@/lib/site";
 
-const latestProductUpdate = "2026-09-15";
+const latestProductUpdate = "2026-09-29";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
+    { url: `${siteUrl}/returns`, lastModified: latestProductUpdate, changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteUrl}/sellers`, lastModified: latestProductUpdate, changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteUrl}/relay`, lastModified: latestProductUpdate, changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteUrl}/spaces`, lastModified: siteLaunchDate, changeFrequency: "monthly", priority: 0.9 },

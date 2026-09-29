@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: { default: "StayTag · Nytto Labs", template: "%s · StayTag" },
   description: "Print a QR label that remembers the exact part, last replacement and next due date. Search for a manual. No app. No account.",
   applicationName: "StayTag",
-  keywords: ["QR reorder label", "replacement reminder", "consumables", "maintenance tag"],
+  keywords: ["QR maintenance label", "filter replacement reminder", "return QR wallet", "refill list", "maintenance tag"],
   openGraph: {
     type: "website",
     url: siteUrl,
@@ -60,6 +60,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
             <Link href="/affiliate">Affiliate disclosure</Link>
+            <Link href="/returns">Return Wallet</Link>
+            <Link href="/care-sheet">Care Sheet</Link>
             <Link href="/bulk">Bulk</Link>
             <Link href="/spaces">Spaces</Link>
             <Link href="/relay">Refill Relay</Link>
