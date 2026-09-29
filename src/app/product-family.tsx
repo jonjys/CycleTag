@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowUpRight, Boxes, PackageOpen, RefreshCcw, ShoppingBasket, Undo2 } from "lucide-react";
 import { contact } from "@/lib/contact";
 import { useLocale } from "@/lib/locale";
+import { SiblingProduct } from "./sibling-product";
 
 const packsMail = `mailto:${contact.email.general}?subject=${encodeURIComponent("StayTag label pack enquiry")}&body=${encodeURIComponent("Hello Nytto Labs,\n\nWe would like a quote for StayTag label packs.\nType: landlord / workshop / office / other\nNumber of machines, apartments or spaces:\nBranding needed (logo, colours):\nLanguages:\n\nPlease confirm scope, price and delivery before starting.")}`;
 
@@ -40,6 +41,7 @@ export function ProductFamily() {
       <div className="business-options">
         <Link href="/sellers"><PackageOpen size={20} aria-hidden="true" /><span><strong>{t("Seller Kits", "Säljarkit")}</strong>{t("Free: a reorder card with your SKU and your own store links.", "Gratis: ett återköpskort med ditt artikelnummer och dina egna butikslänkar.")}</span><ArrowUpRight size={18} aria-hidden="true" /></Link>
         <a href={packsMail}><Boxes size={20} aria-hidden="true" /><span><strong>{t("Branded label packs", "Etikettpaket med er logga")}</strong>{t("For apartments, machine parks and workshops. Contact Nytto Labs — scope and price agreed first.", "För lägenheter, maskinparker och verkstäder. Kontakta Nytto Labs — omfattning och pris avtalas först.")}</span><ArrowUpRight size={18} aria-hidden="true" /></a>
+        <SiblingProduct />
       </div>
     </section>
   </>;
