@@ -62,6 +62,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
             <Link href="/affiliate">Affiliate disclosure</Link>
+            <Link href="/move">Moving box labels</Link>
             <Link href="/returns">Return Wallet</Link>
             <Link href="/care-sheet">Care Sheet</Link>
             <Link href="/bulk">Bulk</Link>

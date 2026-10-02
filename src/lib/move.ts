@@ -65,7 +65,7 @@ export function validateMove(input: unknown): Move | null {
     if (!box || boxes.some(existing => existing.n === box.n)) return null;
     boxes.push(box);
   }
-  return { v: 1, name: name || "My move", boxes };
+  return { v: 1, name, boxes };
 }
 
 export function emptyMove(): Move {
@@ -132,7 +132,7 @@ function toBase64Url(text: string): string {
 }
 
 export function boxLabel(move: Move, box: Box): BoxLabel {
-  return { move: move.name, n: box.n, room: box.room, items: box.items, fragile: box.fragile, heavy: box.heavy, ...(box.note ? { note: box.note } : {}) };
+  return { move: move.name || "My move", n: box.n, room: box.room, items: box.items, fragile: box.fragile, heavy: box.heavy, ...(box.note ? { note: box.note } : {}) };
 }
 
 export function encodeBox(label: BoxLabel): string {
