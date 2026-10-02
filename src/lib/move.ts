@@ -217,11 +217,48 @@ export function hasPass(raw: string | null | undefined): boolean {
   try { const data = JSON.parse(raw); return validSessionId(data?.session) && typeof data?.at === "string"; } catch { return false; }
 }
 
-export function savePass(session: string, store?: Store, now = new Date()): boolean {
+export function savePass(session: string, store?: Store, now = new Date(), verified = false): boolean {
   if (!validSessionId(session)) return false;
   const target = store ?? browserStore();
   if (!target) return false;
-  try { target.setItem(PASS_KEY, JSON.stringify({ session, at: now.toISOString() })); } catch { return false; }
+  try { target.setItem(PASS_KEY, JSON.stringify({ session, at: now.toISOString(), ...(verified ? { verifiedAt: now.toISOString() } : {}) })); } catch { return false; }
   if (!store && typeof window !== "undefined") window.dispatchEvent(new Event(MOVE_EVENT));
   return true;
+}
+
+export function readPass(raw: string | null | undefined): { session: string; verifiedAt?: string } | null {
+  if (!hasPass(raw)) return null;
+  const data = JSON.parse(raw as string);
+  return { session: data.session, ...(typeof data.verifiedAt === "string" ? { verifiedAt: data.verifiedAt } : {}) };
+}
+
+export function removePass(store?: Store): void {
+  const target = store ?? browserStore();
+  try { (target as Storage | null)?.removeItem?.(PASS_KEY); } catch { /* nothing stored */ }
+  if (!store && typeof window !== "undefined") window.dispatchEvent(new Event(MOVE_EVENT));
+}
+
+/** Re-check a stored pass at most weekly; unverified passes are re-checked on every visit. */
+export function needsRecheck(pass: { verifiedAt?: string } | null, now = new Date()): boolean {
+  if (!pass) return false;
+  if (!pass.verifiedAt) return true;
+  return now.getTime() - Date.parse(pass.verifiedAt) > 7 * 86_400_000;
+}
+
+export type ConfirmOutcome = "paid" | "rejected" | "unavailable";
+
+/**
+ * Ask our server to confirm the payment with Stripe. If the check itself is unavailable
+ * (network, missing key), a paying customer is never locked out: the pass is kept unverified
+ * and checked again on the next visit.
+ */
+export async function confirmPass(session: string, fetchImpl: typeof fetch = fetch): Promise<ConfirmOutcome> {
+  if (!validSessionId(session)) return "rejected";
+  try {
+    const response = await fetchImpl("/api/move/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ session }), credentials: "omit", cache: "no-store" });
+    const data = await response.json().catch(() => ({}));
+    if (data?.status === "paid") { savePass(session, undefined, new Date(), true); return "paid"; }
+    if (data?.status === "unavailable" || response.status >= 500) { savePass(session); return "unavailable"; }
+    return "rejected";
+  } catch { savePass(session); return "unavailable"; }
 }
