@@ -1,6 +1,6 @@
 # StayTag (formerly CycleTag)
 
-**Live: https://staytag.nyttolabs.com** — the former domain `cycletag.eu` (and `www.`) permanently 308-redirects there, keeping path, query and `#fragment`, so every printed QR keeps working. Keep `cycletag.eu` registered indefinitely. `/api/*` is still served on the legacy host.
+**Live: https://staytag.nyttolabs.com** — `cycletag.eu` permanently 308-redirects there, keeping path, query and `#fragment`, so every printed QR keeps working. `www.cycletag.eu` currently takes a 307 hop via the former apex first. Keep `cycletag.eu` registered indefinitely. `/api/*` is still served on the legacy host.
 
 **Put memory where the thing is.** Care labels for machines, a refill list, Spaces and a private Return Wallet — no account, no app, no tag database.
 
@@ -20,7 +20,17 @@ Allowlisted action names only (`src/lib/measurement.ts`): page_view, label_start
 
 The main landing, create and scan flows now lead with last replacement, exact item / optional part number, next due and an optional locally calculated photo hash. Log a replacement to issue a new QR containing the previous entries. Old stickers remain snapshots. No photo upload, account or database is added.
 
-`/care-sheet` provides a free 12-up A4 print preview plus a duration schedule, saved as PDF through the browser print dialog. The planned €19 / 12 tags + duration PDF package is marked coming soon, with no checkout. Marketplace search remains an optional secondary action with affiliate disclosure. See [Care Proof demo and limitations](docs/care-proof.md).
+`/care-sheet` provides a free 12-up A4 print preview plus a duration schedule, saved as PDF through the browser print dialog. There is no paid Care Sheet checkout. Marketplace search remains an optional secondary action with affiliate disclosure. See [Care Proof demo and limitations](docs/care-proof.md).
+
+## StayTag Move (`/move`)
+
+Create and print eight moving-box labels free. Move Pass costs SEK 79 once; foreign-currency amounts in the UI are estimates and Stripe shows the checkout total. The active Payment Link sells StayTag Move Pass, never a Care Sheet or voluntary support.
+
+New passes unlock only after the server confirms a completed, **paid** Stripe Checkout Session from the Move Pass link. Unpaid, wrong-product and `no_payment_required` sessions do not unlock. During an outage an existing verified pass stays usable; an unverified reference remains pending and is retried on the next visit. Existing move data and printable QR labels remain intact. A restricted Stripe key with Checkout Sessions: Read is recommended.
+
+The verification route stream-limits bodies to 512 bytes and uses a bounded per-instance rate limit without retaining raw IP addresses or session IDs. Distributed abuse protection still needs Vercel Firewall configuration. Local storage is device-local convenience, not tamper-proof DRM or a cross-device entitlement system.
+
+Required follow-up for reliable payment fulfillment: signed Stripe webhook handling for `checkout.session.completed` and `checkout.session.async_payment_succeeded`, gated on paid status, plus a recovery/entitlement design. Current on-demand Stripe checks reject pending payments and allow a later retry; they do not provide durable event-driven fulfillment if a buyer never returns. Do not describe that integration as complete or enable new asynchronous fulfillment until this is implemented.
 
 The sections below document the original reorder tools and infrastructure, which remain available for compatibility.
 
@@ -56,8 +66,8 @@ Example, not a guarantee: a qualifying €40 replacement at 1–6% produces €0
 
 - No database
 - No accounts or login
-- No cookies or analytics
-- No server-side secrets
+- No tracking cookies; allowlisted action counts contain no QR or personal fields
+- Care labels require no server-side secrets; paid Move Pass verification uses a server-only Stripe key
 - No product or identity API
 - No automatic orders
 - Optional on-device “My tags” list in the browser only; never uploaded
@@ -75,11 +85,12 @@ The tag payload is visible to anyone who has the URL or QR, but new tags keep it
 
 ## Configuration
 
-No environment variable is required. The production origin is `https://staytag.nyttolabs.com` and the public EPN campaign ID ships in the repository.
+Free labels require no environment variable. Move Pass verification requires `STRIPE_SECRET_KEY` in the server environment. The production origin is `https://staytag.nyttolabs.com` and the public EPN campaign ID ships in the repository.
 
 | Variable | Required | Secret | Purpose |
 | --- | --- | --- | --- |
 | `NEXT_PUBLIC_EBAY_CAMPAIGN_ID` | Optional override | No | Public EPN campaign ID; defaults to CycleTag campaign `5339198614` |
+| `STRIPE_SECRET_KEY` | For Move Pass | Yes | Prefer a restricted key with Checkout Sessions: Read; never expose it with a `NEXT_PUBLIC_` prefix |
 
 CycleTag ships with its public EPN campaign ID `5339198614`. An invalid override falls back to an ordinary marketplace search and clearly reports that affiliate tracking is inactive.
 
@@ -114,6 +125,8 @@ Expected response:
 | `/tag#d=…` | Stateless scan/reorder page; legacy `/tag?d=…` links remain readable |
 | `/#edit=…` | Prefills the homepage builder to re-issue a corrected label; `/#clone=…` remains an alias |
 | `/returns` | Return Wallet (local-only) |
+| `/move`, `/box#d=…` | Local moving-box planner and stateless box labels |
+| `/api/move/verify` | Same-origin, uncached Stripe payment verification |
 | `/relay` | Refill Relay shopping list |
 | `/spaces`, `/space#d=…` | One QR for a room |
 | `/sellers`, `/reorder#kit=…` | Seller Kits |
@@ -123,6 +136,8 @@ Expected response:
 | `/api/health` | Cacheable health response |
 
 ## Automatic discovery
+
+- The Verify GitHub Action runs lint, all unit tests and the production build for pull requests and main pushes. Configure `verify` as a required status check if branch protection should block merges automatically.
 
 - The homepage links to all twelve focused tools.
 - `/sitemap.xml` lists every public generator on the canonical domain.

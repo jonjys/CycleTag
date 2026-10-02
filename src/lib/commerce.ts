@@ -4,5 +4,5 @@ export const supportPaymentUrl = "https://buy.stripe.com/aFafZgculf7o8uA7aZ8og0r
 export const starterSheetPaymentUrl = supportPaymentUrl;
 export const starterSheetPrice = "from SEK 49 (voluntary support)";
 export const starterSheetPriceSek = "från 49 kr (frivilligt stöd)";
-/** StayTag Move Pass: one-time unlock (SEK 79, EUR 7, USD 8, GBP 6, NOK 79, DKK 55). Live Stripe Payment Link, approved by the owner 2026-10-01. */
+/** StayTag Move Pass: SEK 79 one-time. Other currencies are estimates; Stripe shows the final checkout amount. */
 export const movePassUrl = "https://buy.stripe.com/8x2bJ0amd7EWh1652R8og1j";

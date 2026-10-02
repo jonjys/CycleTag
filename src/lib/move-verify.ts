@@ -30,6 +30,6 @@ export async function verifyPassSession(session: unknown, key: string | undefine
   let data: { payment_status?: unknown; status?: unknown; payment_link?: unknown };
   try { data = await response.json(); } catch { return { status: "unavailable" }; }
   if (data.payment_link !== MOVE_PAYMENT_LINK) return { status: "wrong_product" };
-  if (data.status !== "complete" || (data.payment_status !== "paid" && data.payment_status !== "no_payment_required")) return { status: "unpaid" };
+  if (data.status !== "complete" || data.payment_status !== "paid") return { status: "unpaid" };
   return { status: "paid" };
 }

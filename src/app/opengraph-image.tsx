@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 export const alt = 'StayTag - the QR that stays on the machine'
 export const size = {
   width: 1200,
@@ -63,4 +63,3 @@ export default function Image() {
     }
   )
 }
-

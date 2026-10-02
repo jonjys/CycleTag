@@ -44,6 +44,7 @@ export function MovePlanner() {
         return;
       }
       void confirmPass(session).then(outcome => {
+        if (outcome === "unavailable") { setNotice({ tone: "error", text: t("Payment confirmation is temporarily unavailable, or this browser could not save your pass. Your receipt reference is kept when storage is available. Reload to retry; if it persists, email billing@nyttolabs.com. You do not need to pay again.", "Betalningen kunde inte bekräftas just nu, eller webbläsaren kunde inte spara passet. Kvittoreferensen sparas när lagring är tillgänglig. Ladda om för att försöka igen; kvarstår felet, mejla billing@nyttolabs.com. Du behöver inte betala igen.") }); return; }
         if (outcome === "rejected") { setNotice({ tone: "error", text: t("We could not find a completed Move Pass payment for that link. If you paid, email billing@nyttolabs.com with your receipt.", "Vi hittade ingen genomförd Move Pass-betalning för länken. Har du betalat, mejla billing@nyttolabs.com med kvittot.") }); return; }
         measure("move_pass_unlocked", "move");
         setNotice({ tone: "ok", text: t("Move Pass active on this device. Unlimited boxes. Thank you!", "Move Pass är aktivt på enheten. Obegränsat antal kartonger. Tack!") });
@@ -52,7 +53,11 @@ export function MovePlanner() {
     }
     // Quietly re-check a stored pass with Stripe; drop it only on a definite "not paid".
     const stored = readPass(getPassSnapshot());
-    if (stored && needsRecheck(stored)) void confirmPass(stored.session).then(outcome => { if (outcome === "rejected") removePass(); });
+    if (stored && needsRecheck(stored)) void confirmPass(stored.session).then(outcome => {
+      if (outcome === "rejected") removePass();
+      if (outcome === "paid" && !stored.verifiedAt) { measure("move_pass_unlocked", "move"); setNotice({ tone: "ok", text: t("Move Pass confirmed and active on this device.", "Move Pass bekräftat och aktivt på enheten.") }); }
+      if (outcome === "unavailable" && !stored.verifiedAt) setNotice({ tone: "error", text: t("Your payment confirmation is still pending. Reload to retry or email billing@nyttolabs.com. You do not need to pay again.", "Betalningsbekräftelsen väntar fortfarande. Ladda om för att försöka igen eller mejla billing@nyttolabs.com. Du behöver inte betala igen.") });
+    });
     // Read the redirect once on arrival.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -117,6 +122,7 @@ export function MovePlanner() {
         {(paywall || locked) && !pass && <Paywall t={t} onRestore={async session => {
           if (!validSessionId(session)) { setNotice({ tone: "error", text: t("Paste the full link you landed on after paying (it contains cs_live_…).", "Klistra in hela länken du kom till efter betalningen (den innehåller cs_live_…).") }); return; }
           const outcome = await confirmPass(session);
+          if (outcome === "unavailable") { setNotice({ tone: "error", text: t("We could not confirm and save your pass yet. Retry in a moment or email billing@nyttolabs.com. You do not need to pay again.", "Vi kunde inte bekräfta och spara passet ännu. Försök igen om en stund eller mejla billing@nyttolabs.com. Du behöver inte betala igen.") }); return; }
           if (outcome === "rejected") { setNotice({ tone: "error", text: t("That link is not a completed Move Pass payment.", "Länken är ingen genomförd Move Pass-betalning.") }); return; }
           measure("move_pass_unlocked", "move"); setPaywall(false); setNotice({ tone: "ok", text: t("Move Pass restored on this device.", "Move Pass återställt på enheten.") });
         }} />}
@@ -198,7 +204,7 @@ function Paywall({ t, onRestore }: { t: T; onRestore: (session: string) => void 
     <div className="section-kicker">MOVE PASS</div>
     <h3 id="mv-paywall-title">{t(`You've labelled ${FREE_BOXES} boxes. Keep going?`, `Du har märkt ${FREE_BOXES} kartonger. Fortsätta?`)}</h3>
     <p>{t("Unlimited boxes, labels and box index for your whole move. One payment, no subscription, no account. Unlocks on this device right after paying.", "Obegränsat antal kartonger, etiketter och kartonglista för hela flytten. En betalning, ingen prenumeration, inget konto. Låses upp på enheten direkt efter betalningen.")}</p>
-    <a className="primary-button mv-buy" href={movePassUrl} data-move-checkout="true" rel="noopener">{t("Get Move Pass · €7 / 79 kr", "Köp Move Pass · 79 kr")}</a>
+    <a className="primary-button mv-buy" href={movePassUrl} data-move-checkout="true" rel="noopener">{t("Get Move Pass · SEK 79 (about €7)", "Köp Move Pass · 79 kr")}</a>
     <p className="mv-fine">{t("Secure card payment by Stripe (Apple Pay / Google Pay where available). Receipt by email. Your box list is never sent to us or to Stripe.", "Säker kortbetalning via Stripe (Apple Pay / Google Pay där det finns). Kvitto via e-post. Din kartonglista skickas aldrig till oss eller till Stripe.")}</p>
     <details className="mv-restore"><summary>{t("Already paid on another device?", "Redan betalt på en annan enhet?")}</summary>
       <label htmlFor="mv-receipt">{t("Paste the link you landed on after paying", "Klistra in länken du kom till efter betalningen")}</label>
@@ -251,7 +257,7 @@ function MoveHero({ t }: { t: T }) {
       <div className="section-kicker">STAYTAG MOVE</div>
       <h1>{t("Moving? Never open the wrong box again.", "Flyttar du? Öppna aldrig fel kartong igen.")}</h1>
       <p>{t("A QR label on every box. Scan any box to see everything inside — you, your partner or the friend carrying it. No app, no account.", "En QR-etikett på varje kartong. Skanna valfri kartong och se allt som finns i den — du, din partner eller kompisen som bär. Ingen app, inget konto.")}</p>
-      <div className="mv-chips"><span>{t(`${FREE_BOXES} boxes free`, `${FREE_BOXES} kartonger gratis`)}</span><span>{t("Move Pass: unlimited, €7 / 79 kr once", "Move Pass: obegränsat, 79 kr en gång")}</span><span>{t("Prints on plain A4", "Skrivs ut på vanligt A4")}</span></div>
+      <div className="mv-chips"><span>{t(`${FREE_BOXES} boxes free`, `${FREE_BOXES} kartonger gratis`)}</span><span>{t("Move Pass: unlimited, SEK 79 once (about €7)", "Move Pass: obegränsat, 79 kr en gång")}</span><span>{t("Prints on plain A4", "Skrivs ut på vanligt A4")}</span></div>
     </header>
   </>;
 }

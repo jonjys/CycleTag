@@ -213,23 +213,30 @@ export function validSessionId(value: string | null): value is string {
 }
 
 export function hasPass(raw: string | null | undefined): boolean {
-  if (!raw) return false;
-  try { const data = JSON.parse(raw); return validSessionId(data?.session) && typeof data?.at === "string"; } catch { return false; }
+  return Boolean(readPass(raw)?.verifiedAt);
 }
 
 export function savePass(session: string, store?: Store, now = new Date(), verified = false): boolean {
   if (!validSessionId(session)) return false;
   const target = store ?? browserStore();
   if (!target) return false;
-  try { target.setItem(PASS_KEY, JSON.stringify({ session, at: now.toISOString(), ...(verified ? { verifiedAt: now.toISOString() } : {}) })); } catch { return false; }
+  // An interrupted check must never downgrade a previously verified pass.
+  try {
+    if (!verified && hasPass(target.getItem(PASS_KEY))) return true;
+    target.setItem(PASS_KEY, JSON.stringify({ session, at: now.toISOString(), ...(verified ? { verifiedAt: now.toISOString() } : {}) }));
+  } catch { return false; }
   if (!store && typeof window !== "undefined") window.dispatchEvent(new Event(MOVE_EVENT));
   return true;
 }
 
 export function readPass(raw: string | null | undefined): { session: string; verifiedAt?: string } | null {
-  if (!hasPass(raw)) return null;
-  const data = JSON.parse(raw as string);
-  return { session: data.session, ...(typeof data.verifiedAt === "string" ? { verifiedAt: data.verifiedAt } : {}) };
+  if (!raw) return null;
+  try {
+    const data = JSON.parse(raw);
+    if (!validSessionId(data?.session) || typeof data?.at !== "string" || !Number.isFinite(Date.parse(data.at))) return null;
+    const verifiedAt = typeof data.verifiedAt === "string" && Number.isFinite(Date.parse(data.verifiedAt)) ? data.verifiedAt : undefined;
+    return { session: data.session, ...(verifiedAt ? { verifiedAt } : {}) };
+  } catch { return null; }
 }
 
 export function removePass(store?: Store): void {
@@ -242,23 +249,23 @@ export function removePass(store?: Store): void {
 export function needsRecheck(pass: { verifiedAt?: string } | null, now = new Date()): boolean {
   if (!pass) return false;
   if (!pass.verifiedAt) return true;
-  return now.getTime() - Date.parse(pass.verifiedAt) > 7 * 86_400_000;
+  const age = now.getTime() - Date.parse(pass.verifiedAt);
+  return !Number.isFinite(age) || age < 0 || age > 7 * 86_400_000;
 }
 
 export type ConfirmOutcome = "paid" | "rejected" | "unavailable";
 
 /**
- * Ask our server to confirm the payment with Stripe. If the check itself is unavailable
- * (network, missing key), a paying customer is never locked out: the pass is kept unverified
- * and checked again on the next visit.
+ * Only a successful server response unlocks a new pass. Interrupted checks keep a pending
+ * reference for retry; an already verified pass is preserved during temporary outages.
  */
 export async function confirmPass(session: string, fetchImpl: typeof fetch = fetch): Promise<ConfirmOutcome> {
   if (!validSessionId(session)) return "rejected";
   try {
     const response = await fetchImpl("/api/move/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ session }), credentials: "omit", cache: "no-store" });
     const data = await response.json().catch(() => ({}));
-    if (data?.status === "paid") { savePass(session, undefined, new Date(), true); return "paid"; }
-    if (data?.status === "unavailable" || response.status >= 500) { savePass(session); return "unavailable"; }
+    if (response.ok && data?.status === "paid") return savePass(session, undefined, new Date(), true) ? "paid" : "unavailable";
+    if (data?.status === "unavailable" || response.status === 429 || response.status >= 500) { savePass(session); return "unavailable"; }
     return "rejected";
   } catch { savePass(session); return "unavailable"; }
 }
