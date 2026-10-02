@@ -10,7 +10,8 @@ import { measure } from "@/lib/measure-client";
 import { siteHost, siteUrl } from "@/lib/site";
 import {
   FREE_BOXES, MAX_ITEMS, boxLabel, buildBoxUrl, canAddBox, getMoveSnapshot, getPassSnapshot, getServerSnapshot, hasPass, moveStats, nextBoxNumber,
-  parseItems, parseMove, removeBox, roomColors, rooms, roomsSv, savePass, searchBoxes, subscribeMove, upsertBox, validSessionId, writeMove,
+  parseItems, parseMove, removeBox, roomColors, rooms, roomsSv, searchBoxes, subscribeMove, upsertBox, validSessionId, writeMove,
+  confirmPass, needsRecheck, readPass, removePass,
   type Box, type Move
 } from "@/lib/move";
 
@@ -36,14 +37,22 @@ export function MovePlanner() {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const session = params.get("pass");
-    if (session === null) return;
-    history.replaceState(null, "", "/move");
-    if (validSessionId(session) && savePass(session)) {
-      measure("move_pass_unlocked", "move");
-      queueMicrotask(() => setNotice({ tone: "ok", text: t("Move Pass active on this device. Unlimited boxes. Thank you!", "Move Pass är aktivt på enheten. Obegränsat antal kartonger. Tack!") }));
-    } else {
-      queueMicrotask(() => setNotice({ tone: "error", text: t("That receipt link could not be read. Paste the full link from your Stripe receipt below.", "Kvittolänken kunde inte läsas. Klistra in hela länken från Stripe-kvittot nedan.") }));
+    if (session !== null) {
+      history.replaceState(null, "", "/move");
+      if (!validSessionId(session)) {
+        queueMicrotask(() => setNotice({ tone: "error", text: t("That receipt link could not be read. Paste the full link from your Stripe receipt below.", "Kvittolänken kunde inte läsas. Klistra in hela länken från Stripe-kvittot nedan.") }));
+        return;
+      }
+      void confirmPass(session).then(outcome => {
+        if (outcome === "rejected") { setNotice({ tone: "error", text: t("We could not find a completed Move Pass payment for that link. If you paid, email billing@nyttolabs.com with your receipt.", "Vi hittade ingen genomförd Move Pass-betalning för länken. Har du betalat, mejla billing@nyttolabs.com med kvittot.") }); return; }
+        measure("move_pass_unlocked", "move");
+        setNotice({ tone: "ok", text: t("Move Pass active on this device. Unlimited boxes. Thank you!", "Move Pass är aktivt på enheten. Obegränsat antal kartonger. Tack!") });
+      });
+      return;
     }
+    // Quietly re-check a stored pass with Stripe; drop it only on a definite "not paid".
+    const stored = readPass(getPassSnapshot());
+    if (stored && needsRecheck(stored)) void confirmPass(stored.session).then(outcome => { if (outcome === "rejected") removePass(); });
     // Read the redirect once on arrival.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -105,9 +114,11 @@ export function MovePlanner() {
               }
             } catch (error) { setNotice({ tone: "error", text: error instanceof Error ? error.message : "Error" }); }
           }} />
-        {(paywall || locked) && !pass && <Paywall t={t} onRestore={session => {
-          if (savePass(session)) { measure("move_pass_unlocked", "move"); setPaywall(false); setNotice({ tone: "ok", text: t("Move Pass restored on this device.", "Move Pass återställt på enheten.") }); }
-          else setNotice({ tone: "error", text: t("Paste the full link you landed on after paying (it contains cs_live_…).", "Klistra in hela länken du kom till efter betalningen (den innehåller cs_live_…).") });
+        {(paywall || locked) && !pass && <Paywall t={t} onRestore={async session => {
+          if (!validSessionId(session)) { setNotice({ tone: "error", text: t("Paste the full link you landed on after paying (it contains cs_live_…).", "Klistra in hela länken du kom till efter betalningen (den innehåller cs_live_…).") }); return; }
+          const outcome = await confirmPass(session);
+          if (outcome === "rejected") { setNotice({ tone: "error", text: t("That link is not a completed Move Pass payment.", "Länken är ingen genomförd Move Pass-betalning.") }); return; }
+          measure("move_pass_unlocked", "move"); setPaywall(false); setNotice({ tone: "ok", text: t("Move Pass restored on this device.", "Move Pass återställt på enheten.") });
         }} />}
         {pass && <p className="mv-pass-active"><ShieldCheck size={16} aria-hidden="true" /> {t("Move Pass active: unlimited boxes on this device.", "Move Pass aktivt: obegränsat antal kartonger på enheten.")}</p>}
       </section>
@@ -181,7 +192,7 @@ function BoxForm({ t, locale, move, editing, locked, onSave, onCancel, onLocked 
   </form>;
 }
 
-function Paywall({ t, onRestore }: { t: T; onRestore: (session: string) => void }) {
+function Paywall({ t, onRestore }: { t: T; onRestore: (session: string) => void | Promise<void> }) {
   const [receipt, setReceipt] = useState("");
   return <aside className="mv-paywall" aria-labelledby="mv-paywall-title">
     <div className="section-kicker">MOVE PASS</div>
@@ -192,7 +203,7 @@ function Paywall({ t, onRestore }: { t: T; onRestore: (session: string) => void 
     <details className="mv-restore"><summary>{t("Already paid on another device?", "Redan betalt på en annan enhet?")}</summary>
       <label htmlFor="mv-receipt">{t("Paste the link you landed on after paying", "Klistra in länken du kom till efter betalningen")}</label>
       <div><input id="mv-receipt" value={receipt} onChange={e => setReceipt(e.target.value)} placeholder="https://staytag.nyttolabs.com/move?pass=cs_live_…" autoCapitalize="off" spellCheck={false} />
-        <button type="button" className="secondary-button" onClick={() => { const match = /cs_(?:live|test)_[A-Za-z0-9]+/.exec(receipt); onRestore(match ? match[0] : ""); }}>{t("Restore", "Återställ")}</button></div>
+        <button type="button" className="secondary-button" onClick={() => { const match = /cs_(?:live|test)_[A-Za-z0-9]+/.exec(receipt); void onRestore(match ? match[0] : ""); }}>{t("Restore", "Återställ")}</button></div>
       <small>{t("Lost it? Email billing@nyttolabs.com with your receipt.", "Tappat bort den? Mejla billing@nyttolabs.com med ditt kvitto.")}</small>
     </details>
   </aside>;
