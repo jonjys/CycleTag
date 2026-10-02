@@ -19,7 +19,7 @@ export function Landing({ sampleUrl, qr }: { sampleUrl: string; qr: string }) {
         <a className="primary-button" href="#create">{t("Create your first label", "Skapa din första etikett")} <ArrowDown size={20} aria-hidden="true" /></a>
         <div className="launch-promises"><span><Check size={14} />{t("60 seconds", "60 sekunder")}</span><span><Check size={14} />{t("No account", "Inget konto")}</span><span><Check size={14} />{t("No app", "Ingen app")}</span><span><Check size={14} />{t("Any printer", "Vilken skrivare som helst")}</span></div>
         <a className="launch-text-link" href={sampleUrl}>{t("See what a scan shows", "Se vad en skanning visar")} <ArrowUpRight size={16} /></a>
-        <Link className="launch-new" href="/returns"><span>{t("NEW", "NYTT")}</span>{t("Return Wallet: your return QR codes, ready at the counter", "Returplånbok: dina retur-QR-koder, redo vid disken")} <ArrowUpRight size={16} aria-hidden="true" /></Link>
+        <Link className="launch-new" href="/move"><span>{t("NEW", "NYTT")}</span>{t("Moving? QR box labels — scan any box to see what’s inside", "Ska du flytta? QR-etiketter för kartonger — skanna och se innehållet")} <ArrowUpRight size={16} aria-hidden="true" /></Link>
       </div>
       <div className="launch-demo" aria-label={t("Example: a label on a coffee machine opens its care record", "Exempel: etiketten på kaffemaskinen öppnar dess skötselpost")}>
         <div className="demo-caption"><span>{t("ON THE MACHINE", "PÅ MASKINEN")}</span><span>01 — 03</span></div>

@@ -26,6 +26,7 @@ export function FunnelEvents() {
         if (/^(www\.)?ebay\.(com|co\.uk|de|fr|it|es|com\.au|ca)$/.test(url.hostname)) measure("outbound_ebay", source);
         else if (anchor.dataset.storeLink === "true") measure("outbound_store", source);
         else if (anchor.dataset.supportLink === "true" && url.hostname === "buy.stripe.com") measure("support_checkout_opened", source);
+        else if (anchor.dataset.moveCheckout === "true" && url.hostname === "buy.stripe.com") measure("move_checkout_opened", source);
       } catch {}
     }
     const print = () => measure("print_requested", source);
