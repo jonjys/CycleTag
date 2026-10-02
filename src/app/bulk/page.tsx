@@ -1,19 +1,9 @@
-import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { BulkGenerator } from "./bulk-generator";
 
-export const metadata: Metadata = {
-  title: "StayTag Bulk Pack — print 50 reorder labels at once",
-  description: "Paste recurring replacement items and generate a printable A4 sheet of QR reorder labels. No account. No subscription.",
-  alternates: { canonical: "/bulk" },
-  openGraph: {
-    type: "website",
-    url: "/bulk",
-    title: "StayTag Bulk Pack",
-    description: "Print 50 reorder labels at once."
-  }
-};
+export const metadata = publicPageMetadata("/bulk", 'Free bulk QR labels — print up to 50 on A4', 'Paste recurring replacement items and generate free printable A4 QR labels for offices, workshops and stock rooms. Up to 50 items. No account or subscription.');
 
 export default function BulkPage() {
   return (

@@ -1,12 +1,9 @@
-import type { Metadata } from "next";
 import QRCode from "qrcode";
 import { siteUrl } from "@/lib/site";
 import { buildTagUrl, type TagPayload } from "@/lib/tag";
 import { Landing } from "./landing";
-export const metadata: Metadata = {
-  alternates: { canonical: "/" },
-  openGraph: { type: "website", url: "/", title: "StayTag · Nytto Labs", description: "Part numbers. Care dates. Free QR labels that stay with your machine." }
-};
+import { applicationSchema, jsonLd, publicPageMetadata, websiteSchema } from "@/lib/seo";
+export const metadata = publicPageMetadata("/", "Free QR maintenance labels & replacement reminders", "Create free printable QR maintenance labels. Save exact part numbers, replacement dates and care history on the machine. No account or app needed.");
 const sample: TagPayload = {
   v: 1,
   n: "Coffee machine water filter",
@@ -21,5 +18,5 @@ const sample: TagPayload = {
 export default async function Home() {
   const sampleUrl = buildTagUrl(siteUrl, sample);
   const qr = await QRCode.toDataURL(sampleUrl, { errorCorrectionLevel: "M", width: 560, margin: 4 });
-  return <Landing sampleUrl={sampleUrl} qr={qr} />;
+  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(websiteSchema) }} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(applicationSchema("/", "StayTag maintenance labels", "Free printable QR labels for parts, maintenance dates and care history.", ["Free maintenance labels", "Replacement reminders", "Local care history", "PNG and A4 printing"])) }} /><Landing sampleUrl={sampleUrl} qr={qr} /></>;
 }

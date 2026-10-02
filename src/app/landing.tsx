@@ -13,7 +13,7 @@ export function Landing({ sampleUrl, qr }: { sampleUrl: string; qr: string }) {
   return <main className="staytag-home">
     <section className="launch-hero no-print">
       <div className="launch-copy">
-        <div className="section-kicker">{t("STAYTAG · PUT MEMORY WHERE THE THING IS", "STAYTAG · MINNET SITTER PÅ SAKEN")}</div>
+        <div className="section-kicker">{t("STAYTAG · FREE QR MAINTENANCE LABELS", "STAYTAG · GRATIS QR-ETIKETTER FÖR UNDERHÅLL")}</div>
         <h1>{t("Which filter was it again?", "Vilket filter var det nu?")}<br /><em>{t("Scan it next time.", "Skanna nästa gång.")}</em></h1>
         <p>{t("A free QR label for the machine. It remembers the exact part, when you changed it and when it’s due.", "En gratis QR-etikett på maskinen. Den minns rätt del, när du bytte den och när det är dags igen.")}</p>
         <a className="primary-button" href="#create">{t("Create your first label", "Skapa din första etikett")} <ArrowDown size={20} aria-hidden="true" /></a>
@@ -68,5 +68,6 @@ export function Landing({ sampleUrl, qr }: { sampleUrl: string; qr: string }) {
     </section>
     <details className="launch-more no-print"><summary>{t("Browse all 24 replacement templates", "Visa alla 24 mallar för ersättningsdelar")}</summary><ToolDirectory /></details>
     <SupportNote />
+    <section className="launch-faq no-print" aria-label={t("Practical guides", "Praktiska guider")}><h2>{t("Make the label useful from day one.", "Gör etiketten användbar från första dagen.")}</h2><p><Link href="/guides/qr-maintenance-labels">{t("How to make a QR maintenance label", "Så gör du en QR-etikett för underhåll")} →</Link></p><p><Link href="/guides/qr-moving-box-labels">{t("How to label moving boxes with QR codes", "Så märker du flyttkartonger med QR-koder")} →</Link></p></section>
   </main>;
 }
