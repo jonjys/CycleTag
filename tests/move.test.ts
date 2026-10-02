@@ -118,6 +118,8 @@ describe("Move storage and pass", () => {
     expect(savePass("not-a-session", store)).toBe(false);
     expect(hasPass(store.getItem(PASS_KEY))).toBe(false);
     expect(savePass("cs_live_a1B2c3D4e5F6g7H8", store)).toBe(true);
+    expect(hasPass(store.getItem(PASS_KEY))).toBe(false);
+    expect(savePass("cs_live_a1B2c3D4e5F6g7H8", store, new Date(), true)).toBe(true);
     expect(hasPass(store.getItem(PASS_KEY))).toBe(true);
     expect(hasPass("{bad")).toBe(false);
   });
