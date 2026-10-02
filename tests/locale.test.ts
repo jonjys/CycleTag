@@ -30,3 +30,11 @@ describe("locale default", () => {
     expect(localeBootScript).not.toContain("navigator");
   });
 });
+
+describe("explicit language link", () => {
+  it("lets ?lang=sv or ?lang=en set the choice, and nothing else", () => {
+    expect(localeBootScript).toContain('get("lang")');
+    expect(localeBootScript).toContain('q==="sv"||q==="en"');
+    expect(localeBootScript).not.toContain("navigator");
+  });
+});

@@ -15,7 +15,8 @@ export function readLocale(storage?: Pick<Storage, "getItem">): Locale {
 }
 
 /** Inline, pre-hydration script: hides the page only for visitors who explicitly chose Swedish, until React renders Swedish. */
-export const localeBootScript = `try{if(localStorage.getItem(${JSON.stringify(LOCALE_KEY)})==="sv"){var d=document.documentElement;d.lang="sv";d.classList.add(${JSON.stringify(LOCALE_PENDING_CLASS)});setTimeout(function(){d.classList.remove(${JSON.stringify(LOCALE_PENDING_CLASS)})},1500)}}catch(e){}`;
+/** A link may carry an explicit choice (?lang=sv / ?lang=en), e.g. from a Swedish post; it is stored like a tap on the toggle. */
+export const localeBootScript = `try{var q=new URLSearchParams(location.search).get("lang");if(q==="sv"||q==="en")localStorage.setItem(${JSON.stringify(LOCALE_KEY)},q);if(localStorage.getItem(${JSON.stringify(LOCALE_KEY)})==="sv"){var d=document.documentElement;d.lang="sv";d.classList.add(${JSON.stringify(LOCALE_PENDING_CLASS)});setTimeout(function(){d.classList.remove(${JSON.stringify(LOCALE_PENDING_CLASS)})},1500)}}catch(e){}`;
 
 function subscribe(fn: () => void) {
   window.addEventListener("storage", fn); window.addEventListener("staytag-language", fn);
