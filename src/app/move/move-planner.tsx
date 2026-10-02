@@ -56,7 +56,8 @@ export function MovePlanner() {
     return () => { cancelAnimationFrame(id); window.removeEventListener("afterprint", done); };
   }, [printing]);
 
-  if (!parsed) return <p className="mv-loading" aria-live="polite">{t("Opening your move…", "Öppnar din flytt…")}</p>;
+  // Hero and explainer render on the server too, so search engines and slow phones see the pitch at once.
+  if (!parsed) return <><MoveHero t={t} /><p className="mv-loading" aria-live="polite">{t("Opening your move…", "Öppnar din flytt…")}</p><MoveHow t={t} /></>;
   const move = parsed.move;
   const stats = moveStats(move);
   const results = searchBoxes(move, query);
@@ -81,12 +82,7 @@ export function MovePlanner() {
   }
 
   return <>
-    <header className="mv-hero no-print">
-      <div className="section-kicker">STAYTAG MOVE</div>
-      <h1>{t("Moving? Never open the wrong box again.", "Flyttar du? Öppna aldrig fel kartong igen.")}</h1>
-      <p>{t("A QR label on every box. Scan any box to see everything inside — you, your partner or the friend carrying it. No app, no account.", "En QR-etikett på varje kartong. Skanna valfri kartong och se allt som finns i den — du, din partner eller kompisen som bär. Ingen app, inget konto.")}</p>
-      <div className="mv-chips"><span>{t(`${FREE_BOXES} boxes free`, `${FREE_BOXES} kartonger gratis`)}</span><span>{t("Move Pass: unlimited, €7 / 79 kr once", "Move Pass: obegränsat, 79 kr en gång")}</span><span>{t("Prints on plain A4", "Skrivs ut på vanligt A4")}</span></div>
-    </header>
+    <MoveHero t={t} />
 
     {notice && <p className={`mv-notice ${notice.tone} no-print`} role={notice.tone === "error" ? "alert" : "status"}>{notice.text}<button type="button" onClick={() => setNotice(null)} aria-label={t("Dismiss", "Stäng")}><X size={16} aria-hidden="true" /></button></p>}
     {parsed.damaged && <p className="mv-notice error no-print" role="alert">{t("Your saved move could not be read. Adding a box will start a new list.", "Den sparade flytten kunde inte läsas. Lägger du till en kartong startar en ny lista.")}</p>}
@@ -141,16 +137,7 @@ export function MovePlanner() {
       </section>
     </div>
 
-    <section className="mv-how no-print" aria-labelledby="mv-how-title">
-      <h2 id="mv-how-title">{t("Why it beats a marker pen", "Varför det slår en tuschpenna")}</h2>
-      <div className="mv-how-grid">
-        <article><h3>{t("“KITCHEN” isn't enough", "”KÖK” räcker inte")}</h3><p>{t("The label lists every item. Scan to see all of it without cutting the tape.", "Etiketten listar allt. Skanna och se innehållet utan att skära upp tejpen.")}</p></article>
-        <article><h3>{t("Find anything in seconds", "Hitta vad som helst på sekunder")}</h3><p>{t("Search “charger” on your phone and get the box number.", "Sök ”laddare” i telefonen och få kartongnumret.")}</p></article>
-        <article><h3>{t("Helpers know where it goes", "Hjälparna vet vart det ska")}</h3><p>{t("A colour band per room. Big numbers. Fragile and heavy flags.", "Ett färgband per rum. Stora nummer. Ömtåligt och tungt syns direkt.")}</p></article>
-        <article><h3>{t("Private, no account", "Privat, inget konto")}</h3><p>{t("Your list stays on this device. Each QR holds only that box's contents — no name, no address.", "Listan stannar på enheten. Varje QR innehåller bara den kartongens innehåll — inget namn, ingen adress.")}</p></article>
-      </div>
-      <p className="mv-fine">{t("Tip: print on plain A4, two labels per page, and tape one to the top and one to the side. Moving company or relocation service? ", "Tips: skriv ut på vanligt A4, två etiketter per sida, och tejpa en på locket och en på sidan. Flyttfirma? ")}<a href="mailto:hello@nyttolabs.com?subject=StayTag%20Move%20for%20movers">{t("Ask about branded label packs.", "Fråga om etiketter med er logga.")}</a> <Link href="/">{t("Labels for filters and machines →", "Etiketter för filter och maskiner →")}</Link></p>
-    </section>
+    <MoveHow t={t} />
 
     {printing && <PrintSheet t={t} locale={locale} move={move} mode={printing.mode} rows={printing.rows} />}
   </>;
@@ -245,4 +232,30 @@ function PrintSheet({ t, locale, move, mode, rows }: { t: T; locale: string; mov
       </div>
     </div>
   </article>)}</section>;
+}
+
+function MoveHero({ t }: { t: T }) {
+  return <>
+    <header className="mv-hero no-print">
+      <div className="section-kicker">STAYTAG MOVE</div>
+      <h1>{t("Moving? Never open the wrong box again.", "Flyttar du? Öppna aldrig fel kartong igen.")}</h1>
+      <p>{t("A QR label on every box. Scan any box to see everything inside — you, your partner or the friend carrying it. No app, no account.", "En QR-etikett på varje kartong. Skanna valfri kartong och se allt som finns i den — du, din partner eller kompisen som bär. Ingen app, inget konto.")}</p>
+      <div className="mv-chips"><span>{t(`${FREE_BOXES} boxes free`, `${FREE_BOXES} kartonger gratis`)}</span><span>{t("Move Pass: unlimited, €7 / 79 kr once", "Move Pass: obegränsat, 79 kr en gång")}</span><span>{t("Prints on plain A4", "Skrivs ut på vanligt A4")}</span></div>
+    </header>
+  </>;
+}
+
+function MoveHow({ t }: { t: T }) {
+  return <>
+    <section className="mv-how no-print" aria-labelledby="mv-how-title">
+      <h2 id="mv-how-title">{t("Why it beats a marker pen", "Varför det slår en tuschpenna")}</h2>
+      <div className="mv-how-grid">
+        <article><h3>{t("“KITCHEN” isn't enough", "”KÖK” räcker inte")}</h3><p>{t("The label lists every item. Scan to see all of it without cutting the tape.", "Etiketten listar allt. Skanna och se innehållet utan att skära upp tejpen.")}</p></article>
+        <article><h3>{t("Find anything in seconds", "Hitta vad som helst på sekunder")}</h3><p>{t("Search “charger” on your phone and get the box number.", "Sök ”laddare” i telefonen och få kartongnumret.")}</p></article>
+        <article><h3>{t("Helpers know where it goes", "Hjälparna vet vart det ska")}</h3><p>{t("A colour band per room. Big numbers. Fragile and heavy flags.", "Ett färgband per rum. Stora nummer. Ömtåligt och tungt syns direkt.")}</p></article>
+        <article><h3>{t("Private, no account", "Privat, inget konto")}</h3><p>{t("Your list stays on this device. Each QR holds only that box's contents — no name, no address.", "Listan stannar på enheten. Varje QR innehåller bara den kartongens innehåll — inget namn, ingen adress.")}</p></article>
+      </div>
+      <p className="mv-fine">{t("Tip: print on plain A4, two labels per page, and tape one to the top and one to the side. Moving company or relocation service? ", "Tips: skriv ut på vanligt A4, två etiketter per sida, och tejpa en på locket och en på sidan. Flyttfirma? ")}<a href="mailto:hello@nyttolabs.com?subject=StayTag%20Move%20for%20movers">{t("Ask about branded label packs.", "Fråga om etiketter med er logga.")}</a> <Link href="/">{t("Labels for filters and machines →", "Etiketter för filter och maskiner →")}</Link></p>
+    </section>
+  </>;
 }
