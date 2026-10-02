@@ -1,13 +1,8 @@
-import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/seo";
 import { ReturnWallet } from "./return-wallet";
 import "./returns.css";
 
-export const metadata: Metadata = {
-  title: "Return Wallet — Never print a return label again",
-  description: "Keep return QR codes from Zalando, Amazon, H&M and every web shop in one place. Deadlines, full-screen code at the counter, refund tracking. Saved on your phone. No account.",
-  alternates: { canonical: "/returns" },
-  openGraph: { url: "/returns", title: "StayTag Return Wallet", description: "Your returns. Ready when the cashier asks. No account, saved on your phone." }
-};
+export const metadata = publicPageMetadata("/returns", 'Return QR code wallet — deadlines & refund reminders', 'Keep retailer-issued return QR codes, deadlines and refund reminders together on your device. No account. Use the return method supplied by your shop.');
 
 export default function ReturnsPage() {
   return <main className="rw-page"><ReturnWallet /></main>;

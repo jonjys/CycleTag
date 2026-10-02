@@ -69,10 +69,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Link href="/spaces">Spaces</Link>
             <Link href="/relay">Refill Relay</Link>
             <Link href="/sellers">Seller Kits</Link>
+            <Link href="/guides/qr-moving-box-labels">Moving box guide</Link>
+            <Link href="/guides/qr-maintenance-labels">Maintenance label guide</Link>
           </nav>
         </footer>
       </body>
     </html>
   );
 }
-

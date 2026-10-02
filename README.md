@@ -139,7 +139,7 @@ Expected response:
 
 - The Verify GitHub Action runs lint, all unit tests and the production build for pull requests and main pushes. Configure `verify` as a required status check if branch protection should block merges automatically.
 
-- The homepage links to all twelve focused tools.
+- The homepage links to the focused label tools.
 - `/sitemap.xml` lists every public generator on the canonical domain.
 - `/robots.txt` advertises the sitemap while excluding private tag payload and API routes.
 - A secret-free GitHub Action reads the live sitemap after each production push and submits its URLs to IndexNow.
@@ -161,3 +161,7 @@ Expected response:
 The owner must apply to eBay Partner Network, receive a campaign ID and ensure CycleTag is an approved promotional method. Acceptance, attribution and earnings are controlled by eBay and are not guaranteed by this repository.
 
 No API key is needed. The campaign ID is a public tracking identifier embedded in outbound links.
+
+## Search discovery
+
+See [search-discovery.md](docs/search-discovery.md) for the canonical URLs, Search Console setup and the distinction between search clicks, app usage and actual payments.

@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Generator } from "@/app/generator";
 import { getReorderTool, reorderToolPath, reorderTools } from "@/lib/reorder-tools";
 import { siteUrl } from "@/lib/site";
+import { jsonLd, publicPageMetadata } from "@/lib/seo";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -20,17 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!tool) return {};
   const canonical = reorderToolPath(tool);
 
-  return {
-    title: tool.title,
-    description: tool.description,
-    alternates: { canonical },
-    openGraph: {
-      type: "website",
-      url: canonical,
-      title: `${tool.title} · StayTag`,
-      description: tool.description
-    }
-  };
+  return publicPageMetadata(canonical, tool.title, tool.description);
 }
 
 export default async function ReorderToolPage({ params }: PageProps) {
@@ -56,7 +47,7 @@ export default async function ReorderToolPage({ params }: PageProps) {
 
   return (
     <main className="tool-page">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
 
       <section className="tool-hero">
         <Link className="tool-back" href="/"><ArrowLeft aria-hidden="true" size={16} /> All StayTag tools</Link>
