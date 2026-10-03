@@ -125,9 +125,9 @@
   .mv-list { grid-template-columns: 1fr; }
 }
 @media print {
-  @page { size: A4 portrait; margin: 8mm; }
+  @page { size: auto; margin: 8mm; }
   .mv-print { display: block !important; }
-  .mv-label { height: 136mm; box-sizing: border-box; border: 0.6mm dashed #000; border-radius: 4mm; overflow: hidden; break-inside: avoid; margin-bottom: 8mm; display: flex; flex-direction: column; background: #fff; color: #000; }
+  .mv-label { height: 124mm; box-sizing: border-box; border: 0.6mm dashed #000; border-radius: 4mm; overflow: hidden; break-inside: avoid; margin-bottom: 6mm; display: flex; flex-direction: column; background: #fff; color: #000; }
   .mv-label:nth-child(2n) { break-after: page; margin-bottom: 0; }
   .mv-label-band { padding: 4mm 6mm; background: var(--room) !important; color: #fff !important; font: 900 22pt Arial, sans-serif; letter-spacing: .12em; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .mv-label-body { flex: 1; display: grid; grid-template-columns: 1fr 62mm; gap: 6mm; padding: 5mm 6mm; min-height: 0; }

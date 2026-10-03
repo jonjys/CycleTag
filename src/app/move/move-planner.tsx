@@ -263,7 +263,7 @@ function MoveHero({ t }: { t: T }) {
       <div className="section-kicker">STAYTAG MOVE</div>
       <h1>{t("Moving? Never open the wrong box again.", "Flyttar du? Öppna aldrig fel kartong igen.")}</h1>
       <p>{t("A QR label on every box. Scan any box to see everything inside — you, your partner or the friend carrying it. No app, no account.", "En QR-etikett på varje kartong. Skanna valfri kartong och se allt som finns i den — du, din partner eller kompisen som bär. Ingen app, inget konto.")}</p>
-      <div className="mv-chips"><span>{t(`${FREE_BOXES} boxes free`, `${FREE_BOXES} kartonger gratis`)}</span><span>{t("Move Pass: unlimited, SEK 79 once (about €7)", "Move Pass: obegränsat, 79 kr en gång")}</span><span>{t("Prints on plain A4", "Skrivs ut på vanligt A4")}</span></div>
+      <div className="mv-chips"><span>{t(`${FREE_BOXES} boxes free`, `${FREE_BOXES} kartonger gratis`)}</span><span>{t("Move Pass: unlimited, SEK 79 once (about €7)", "Move Pass: obegränsat, 79 kr en gång")}</span><span>{t("Prints on plain A4 or US Letter", "Skrivs ut på vanligt A4")}</span></div>
     </header>
   </>;
 }
@@ -278,7 +278,7 @@ function MoveHow({ t }: { t: T }) {
         <article><h3>{t("Helpers know where it goes", "Hjälparna vet vart det ska")}</h3><p>{t("A colour band per room. Big numbers. Fragile and heavy flags.", "Ett färgband per rum. Stora nummer. Ömtåligt och tungt syns direkt.")}</p></article>
         <article><h3>{t("Private, no account", "Privat, inget konto")}</h3><p>{t("Your list stays on this device. Each QR holds only that box's contents — no name, no address.", "Listan stannar på enheten. Varje QR innehåller bara den kartongens innehåll — inget namn, ingen adress.")}</p></article>
       </div>
-      <p className="mv-fine">{t("Tip: print on plain A4, two labels per page, and tape one to the top and one to the side. Moving company or relocation service? ", "Tips: skriv ut på vanligt A4, två etiketter per sida, och tejpa en på locket och en på sidan. Flyttfirma? ")}<a href="mailto:hello@nyttolabs.com?subject=StayTag%20Move%20for%20movers">{t("Ask about branded label packs.", "Fråga om etiketter med er logga.")}</a> <Link href="/">{t("Labels for filters and machines →", "Etiketter för filter och maskiner →")}</Link></p>
+      <p className="mv-fine">{t("Tip: print on plain A4 or US Letter, two labels per page, and tape one to the top and one to the side. Moving company or relocation service? ", "Tips: skriv ut på vanligt A4, två etiketter per sida, och tejpa en på locket och en på sidan. Flyttfirma? ")}<a href="mailto:hello@nyttolabs.com?subject=StayTag%20Move%20for%20movers">{t("Ask about branded label packs.", "Fråga om etiketter med er logga.")}</a> <Link href="/">{t("Labels for filters and machines →", "Etiketter för filter och maskiner →")}</Link></p>
     </section>
   </>;
 }
