@@ -203,9 +203,15 @@ function Paywall({ t, onRestore }: { t: T; onRestore: (session: string) => void 
   return <aside className="mv-paywall" aria-labelledby="mv-paywall-title">
     <div className="section-kicker">MOVE PASS</div>
     <h3 id="mv-paywall-title">{t(`You've labelled ${FREE_BOXES} boxes. Keep going?`, `Du har märkt ${FREE_BOXES} kartonger. Fortsätta?`)}</h3>
-    <p>{t("Unlimited boxes, labels and box index for your whole move. One payment, no subscription, no account. Unlocks on this device right after paying.", "Obegränsat antal kartonger, etiketter och kartonglista för hela flytten. En betalning, ingen prenumeration, inget konto. Låses upp på enheten direkt efter betalningen.")}</p>
-    <a className="primary-button mv-buy" href={movePassUrl} data-move-checkout="true" rel="noopener">{t("Get Move Pass · SEK 79 (about €7)", "Köp Move Pass · 79 kr")}</a>
-    <p className="mv-fine">{t("Secure card payment by Stripe (Apple Pay / Google Pay where available). Receipt by email. Your box list is never sent to us or to Stripe.", "Säker kortbetalning via Stripe (Apple Pay / Google Pay där det finns). Kvitto via e-post. Din kartonglista skickas aldrig till oss eller till Stripe.")}</p>
+    <p>{t("Your boxes are saved. One payment of SEK 79 (about €7, shown in your currency at checkout) unlocks the rest of this move.", "Dina kartonger är sparade. En betalning på 79 kr låser upp resten av flytten.")}</p>
+    <ul className="mv-gets" aria-label={t("What you get right after paying", "Det här får du direkt efter betalningen")}>
+      <li><Check size={16} aria-hidden="true" /> {t("Unlimited boxes for this move — keep adding right away", "Obegränsat antal kartonger för flytten — fortsätt direkt")}</li>
+      <li><Check size={16} aria-hidden="true" /> {t("Print every label plus the full box index", "Skriv ut alla etiketter plus hela kartonglistan")}</li>
+      <li><Check size={16} aria-hidden="true" /> {t("You land back here, unlocked on this device — no account, no app", "Du kommer tillbaka hit, upplåst på enheten — inget konto, ingen app")}</li>
+      <li><Check size={16} aria-hidden="true" /> {t("One payment, no subscription. Receipt by email.", "En betalning, ingen prenumeration. Kvitto via e-post.")}</li>
+    </ul>
+    <a className="primary-button mv-buy" href={movePassUrl} data-move-checkout="true" rel="noopener">{t("Unlock all boxes · SEK 79 (≈ €7)", "Lås upp alla kartonger · 79 kr")}</a>
+    <p className="mv-fine">{t("Secure card payment by Stripe (Apple Pay / Google Pay where available). Your box list stays on this device and is never sent to us or to Stripe.", "Säker kortbetalning via Stripe (Apple Pay / Google Pay där det finns). Kartonglistan stannar på enheten och skickas aldrig till oss eller till Stripe.")}</p>
     <details className="mv-restore"><summary>{t("Already paid on another device?", "Redan betalt på en annan enhet?")}</summary>
       <label htmlFor="mv-receipt">{t("Paste the link you landed on after paying", "Klistra in länken du kom till efter betalningen")}</label>
       <div><input id="mv-receipt" value={receipt} onChange={e => setReceipt(e.target.value)} placeholder="https://staytag.nyttolabs.com/move?pass=cs_live_…" autoCapitalize="off" spellCheck={false} />

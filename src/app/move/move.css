@@ -39,6 +39,9 @@
 .mv-paywall p { margin: 0; font-size: 14px; line-height: 1.55; color: #d6d8cc; }
 .mv-buy { justify-content: center; border-radius: 12px; min-height: 58px; font-size: 17px; background: var(--lime) !important; color: var(--ink) !important; }
 .mv-paywall .mv-fine { color: #b9bcae; }
+.mv-gets { display: grid; gap: 6px; margin: 2px 0 4px; padding: 0; list-style: none; font-size: 14px; line-height: 1.45; color: var(--white); }
+.mv-gets li { display: flex; gap: 8px; align-items: flex-start; }
+.mv-gets svg { flex: none; margin-top: 2px; color: var(--lime); }
 .mv-restore summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-size: 14px; font-weight: 700; }
 .mv-restore label { display: block; font-size: 13px; margin-bottom: 6px; }
 .mv-restore div { display: flex; gap: 6px; }
