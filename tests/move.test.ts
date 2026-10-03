@@ -30,7 +30,7 @@ describe("StayTag Move boxes", () => {
     expect(() => upsertBox(m, box(0))).toThrow();
   });
 
-  it("allows the first 8 boxes free and unlimited with a pass", () => {
+  it("allows the first 3 boxes free and unlimited with a pass", () => {
     const seven = move(Array.from({ length: FREE_BOXES - 1 }, (_, i) => box(i + 1)));
     const eight = move(Array.from({ length: FREE_BOXES }, (_, i) => box(i + 1)));
     expect(canAddBox(seven, false)).toBe(true);

@@ -23,6 +23,6 @@ export default function Insights() {
     <h2>Beslut efter ett avgränsat test</h2>
     <p>Testa i sju dagar med en tydlig målgrupp: personer som faktiskt sköter flera maskiner. Bestäm i förväg hur besök ska räknas över hela perioden. Utan tillräcklig relevant trafik går betalviljan inte att bedöma.</p>
     <p>Få besök: arbeta med distribution. Besök men få påbörjade etiketter: erbjudandet eller målgruppen brister. Många starter men få skapade: undersök formulärfel. Skapade etiketter utan butiksklick: det kan vara normal användning av skötselhistorik. Butiksklick utan EPN-klick: granska attribution. Ingen verifierad betalvilja efter testet: pausa vidare utveckling och behåll gratisverktyget.</p>
-    <p><strong>Det konkreta betalerbjudandet är Move Pass:</strong> fler än åtta kartonger i flyttplaneraren, med dess kapacitetsgräns på 300 kartonger. Testa det separat på personer som faktiskt ska flytta. Underhållsetiketter, Care Sheet och Bulk är gratis; sälj inte dessa som ett betalpaket. Klick och skapade etiketter är inte bevis på försäljning.</p>
+    <p><strong>Det konkreta betalerbjudandet är Move Pass:</strong> fler än tre kartonger i flyttplaneraren, med dess kapacitetsgräns på 300 kartonger. Testa det separat på personer som faktiskt ska flytta. Underhållsetiketter, Care Sheet och Bulk är gratis; sälj inte dessa som ett betalpaket. Klick och skapade etiketter är inte bevis på försäljning.</p>
   </article></main>;
 }

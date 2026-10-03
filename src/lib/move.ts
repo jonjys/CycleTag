@@ -6,7 +6,7 @@
 export const MOVE_KEY = "staytag.move.v1";
 export const PASS_KEY = "staytag.move.pass.v1";
 export const MOVE_EVENT = "staytag:move";
-export const FREE_BOXES = 8;
+export const FREE_BOXES = 3;
 export const MAX_BOXES = 300;
 export const MAX_ITEMS = 40;
 export const BOX_MAX_ENCODED = 1400;
