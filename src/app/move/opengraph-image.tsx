@@ -12,7 +12,7 @@ export default function Image() {
         <div style={{ display: "flex", fontSize: 24, letterSpacing: 3, marginBottom: 30 }}>NYTTO LABS / STAYTAG</div>
         <div style={{ display: "flex", fontSize: 64, fontWeight: 700, lineHeight: 1.1 }}>QR moving box labels.</div>
         <div style={{ display: "flex", fontSize: 34, marginTop: 28 }}>Print. Scan. Find your things.</div>
-        <div style={{ display: "flex", fontSize: 25, marginTop: 32 }}>8 boxes free · No app or account</div>
+        <div style={{ display: "flex", fontSize: 25, marginTop: 32 }}>3 boxes free · No app or account</div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", background: "white", width: "330px", border: "3px solid #183e2c", borderRadius: 20, padding: 30 }}>
         <div style={{ display: "flex", fontSize: 24 }}>KITCHEN</div>
