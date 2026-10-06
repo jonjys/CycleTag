@@ -72,6 +72,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Link href="/guides/qr-moving-box-labels">Moving box guide</Link>
             <Link href="/guides/moving-box-inventory">Moving box inventory</Link>
             <Link href="/guides/printable-moving-box-labels">Printable moving labels</Link>
+            <Link href="/movers">For moving companies</Link>
             <Link href="/guides/qr-maintenance-labels">Maintenance label guide</Link>
           </nav>
         </footer>
