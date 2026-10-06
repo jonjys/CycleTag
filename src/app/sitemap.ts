@@ -8,6 +8,7 @@ const latestProductUpdate = "2026-09-29";
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     { url: `${siteUrl}/move`, lastModified: guideUpdated, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${siteUrl}/movers`, lastModified: guideUpdated, changeFrequency: "monthly", priority: 0.7 },
     { url: `${siteUrl}/returns`, lastModified: latestProductUpdate, changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteUrl}/sellers`, lastModified: latestProductUpdate, changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteUrl}/relay`, lastModified: latestProductUpdate, changeFrequency: "monthly", priority: 0.9 },
