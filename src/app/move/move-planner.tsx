@@ -203,14 +203,14 @@ function Paywall({ t, onRestore }: { t: T; onRestore: (session: string) => void 
   return <aside className="mv-paywall" aria-labelledby="mv-paywall-title">
     <div className="section-kicker">MOVE PASS</div>
     <h3 id="mv-paywall-title">{t(`You've labelled ${FREE_BOXES} boxes. Keep going?`, `Du har märkt ${FREE_BOXES} kartonger. Fortsätta?`)}</h3>
-    <p>{t("Your boxes are saved. One payment of SEK 79 (about €7, shown in your currency at checkout) unlocks the rest of this move.", "Dina kartonger är sparade. En betalning på 79 kr låser upp resten av flytten.")}</p>
+    <p>{t("Your boxes are saved. One payment of 79 kr (≈ $8 / €7) unlocks the rest of this move. Stripe shows the price in your currency at checkout.", "Dina kartonger är sparade. En betalning på 79 kr låser upp resten av flytten.")}</p>
     <ul className="mv-gets" aria-label={t("What you get right after paying", "Det här får du direkt efter betalningen")}>
       <li><Check size={16} aria-hidden="true" /> {t("Unlimited boxes for this move — keep adding right away", "Obegränsat antal kartonger för flytten — fortsätt direkt")}</li>
       <li><Check size={16} aria-hidden="true" /> {t("Print every label plus the full box index", "Skriv ut alla etiketter plus hela kartonglistan")}</li>
       <li><Check size={16} aria-hidden="true" /> {t("You land back here, unlocked on this device — no account, no app", "Du kommer tillbaka hit, upplåst på enheten — inget konto, ingen app")}</li>
       <li><Check size={16} aria-hidden="true" /> {t("One payment, no subscription. Receipt by email.", "En betalning, ingen prenumeration. Kvitto via e-post.")}</li>
     </ul>
-    <a className="primary-button mv-buy" href={movePassUrl} data-move-checkout="true" rel="noopener">{t("Unlock all boxes · SEK 79 (≈ €7)", "Lås upp alla kartonger · 79 kr")}</a>
+    <a className="primary-button mv-buy" href={movePassUrl} data-move-checkout="true" rel="noopener">{t("Unlock all boxes · 79 kr (≈ $8 / €7)", "Lås upp alla kartonger · 79 kr")}</a>
     <p className="mv-fine">{t("Secure card payment by Stripe (Apple Pay / Google Pay where available). Your box list stays on this device and is never sent to us or to Stripe.", "Säker kortbetalning via Stripe (Apple Pay / Google Pay där det finns). Kartonglistan stannar på enheten och skickas aldrig till oss eller till Stripe.")}</p>
     <details className="mv-restore"><summary>{t("Already paid on another device?", "Redan betalt på en annan enhet?")}</summary>
       <label htmlFor="mv-receipt">{t("Paste the link you landed on after paying", "Klistra in länken du kom till efter betalningen")}</label>
@@ -263,7 +263,7 @@ function MoveHero({ t }: { t: T }) {
       <div className="section-kicker">STAYTAG MOVE</div>
       <h1>{t("Moving? Never open the wrong box again.", "Flyttar du? Öppna aldrig fel kartong igen.")}</h1>
       <p>{t("A QR label on every box. Scan any box to see everything inside — you, your partner or the friend carrying it. No app, no account.", "En QR-etikett på varje kartong. Skanna valfri kartong och se allt som finns i den — du, din partner eller kompisen som bär. Ingen app, inget konto.")}</p>
-      <div className="mv-chips"><span>{t(`${FREE_BOXES} boxes free`, `${FREE_BOXES} kartonger gratis`)}</span><span>{t("Move Pass: unlimited, SEK 79 once (about €7)", "Move Pass: obegränsat, 79 kr en gång")}</span><span>{t("Prints on plain A4 or US Letter", "Skrivs ut på vanligt A4")}</span></div>
+      <div className="mv-chips"><span>{t(`${FREE_BOXES} boxes free`, `${FREE_BOXES} kartonger gratis`)}</span><span>{t("Move Pass: unlimited, 79 kr once (≈ $8 / €7)", "Move Pass: obegränsat, 79 kr en gång")}</span><span>{t("Prints on plain A4 or US Letter", "Skrivs ut på vanligt A4")}</span></div>
     </header>
   </>;
 }
