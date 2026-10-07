@@ -1,0 +1,26 @@
+.mvp-page { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; }
+.mvp-hero { max-width: 760px; }
+.mvp-hero h1 { margin: 10px 0 0; font-size: clamp(34px, 6vw, 58px); line-height: 1; letter-spacing: -0.04em; }
+.mvp-hero p { margin: 18px 0 0; font-size: 18px; line-height: 1.55; color: var(--muted); }
+.mvp-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.mvp-how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 40px; }
+.mvp-how > div { padding: 18px; border: 1px solid var(--ink); border-radius: 18px; background: var(--white); }
+.mvp-how h2 { margin: 10px 0 0; font-size: 19px; }
+.mvp-how p { margin: 8px 0 0; font-size: 15px; line-height: 1.5; color: var(--muted); }
+.mvp-packs { margin-top: 44px; padding: 24px; border-radius: 22px; background: var(--ink); color: var(--white); }
+.mvp-packs h2 { margin: 0; font-size: 30px; letter-spacing: -0.03em; }
+.mvp-lead { margin: 10px 0 0; max-width: 720px; font-size: 16px; line-height: 1.55; color: #d6d8cc; }
+.mvp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 20px; }
+.mvp-grid article { display: grid; gap: 8px; padding: 18px; border: 1px solid #45463d; border-radius: 18px; }
+.mvp-grid h3 { margin: 0; font-size: 15px; letter-spacing: .12em; text-transform: uppercase; color: var(--lime); }
+.mvp-price { font-size: 40px; font-weight: 900; letter-spacing: -0.03em; }
+.mvp-grid p { margin: 0; color: #d6d8cc; }
+.mvp-grid .primary-button { justify-content: center; margin-top: 6px; }
+.mvp-terms { display: grid; gap: 8px; margin: 20px 0 0; padding: 0; list-style: none; font-size: 15px; line-height: 1.45; }
+.mvp-terms li { display: flex; gap: 8px; align-items: flex-start; }
+.mvp-terms svg { flex: none; margin-top: 2px; color: var(--lime); }
+.mvp-fine { margin: 18px 0 0; font-size: 14px; color: #b9bcae; }
+.mvp-fine a { color: var(--lime); font-weight: 700; }
+@media (max-width: 720px) { .mvp-how, .mvp-grid { grid-template-columns: 1fr; } }
+.mvp-snippet { margin: 16px 0 0; padding: 16px; border-left: 4px solid var(--lime); border-radius: 8px; background: #26271f; font-size: 15px; line-height: 1.55; color: var(--white); }
+.mvp-fine a { display: inline-flex; gap: 6px; align-items: center; }

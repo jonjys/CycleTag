@@ -278,7 +278,7 @@ function MoveHow({ t }: { t: T }) {
         <article><h3>{t("Helpers know where it goes", "Hjälparna vet vart det ska")}</h3><p>{t("A colour band per room. Big numbers. Fragile and heavy flags.", "Ett färgband per rum. Stora nummer. Ömtåligt och tungt syns direkt.")}</p></article>
         <article><h3>{t("Private, no account", "Privat, inget konto")}</h3><p>{t("Your list stays on this device. Each QR holds only that box's contents — no name, no address.", "Listan stannar på enheten. Varje QR innehåller bara den kartongens innehåll — inget namn, ingen adress.")}</p></article>
       </div>
-      <p className="mv-fine">{t("Tip: print on plain A4 or US Letter, two labels per page, and tape one to the top and one to the side. Moving company or relocation service? ", "Tips: skriv ut på vanligt A4, två etiketter per sida, och tejpa en på locket och en på sidan. Flyttfirma? ")}<a href="mailto:hello@nyttolabs.com?subject=StayTag%20Move%20for%20movers">{t("Ask about branded label packs.", "Fråga om etiketter med er logga.")}</a> <Link href="/">{t("Labels for filters and machines →", "Etiketter för filter och maskiner →")}</Link></p>
+      <p className="mv-fine">{t("Tip: print on plain A4 or US Letter, two labels per page, and tape one to the top and one to the side. Moving company or relocation service? ", "Tips: skriv ut på vanligt A4, två etiketter per sida, och tejpa en på locket och en på sidan. Flyttfirma? ")}<Link href="/movers">{t("Free for your customers: see how.", "Gratis för era kunder: så funkar det.")}</Link> <Link href="/">{t("Labels for filters and machines →", "Etiketter för filter och maskiner →")}</Link></p>
     </section>
   </>;
 }
