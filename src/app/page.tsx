@@ -1,22 +1,20 @@
-import QRCode from "qrcode";
-import { siteUrl } from "@/lib/site";
-import { buildTagUrl, type TagPayload } from "@/lib/tag";
-import { Landing } from "./landing";
 import { applicationSchema, jsonLd, publicPageMetadata, websiteSchema } from "@/lib/seo";
-export const metadata = publicPageMetadata("/", "Free QR maintenance labels & replacement reminders", "Create free printable QR maintenance labels. Save exact part numbers, replacement dates and care history on the machine. No account or app needed.");
-const sample: TagPayload = {
-  v: 1,
-  n: "Coffee machine water filter",
-  q: "DeLonghi DLSC002 water filter",
-  c: "coffee",
-  i: 60,
-  s: "2026-09-01",
-  m: "DE",
-  care: { part: "DLSC002", marketplace: true, history: [{ n: "Coffee machine water filter", part: "DLSC002", s: "2026-07-03", i: 60 }] }
-};
+import { moveFaq } from "@/lib/move-faq";
+import { MovePlanner } from "./move/move-planner";
+import { MoveSeo } from "./move/move-seo";
+import { HashForward } from "./hash-forward";
+import "./move/move.css";
 
-export default async function Home() {
-  const sampleUrl = buildTagUrl(siteUrl, sample);
-  const qr = await QRCode.toDataURL(sampleUrl, { errorCorrectionLevel: "M", width: 560, margin: 4 });
-  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(websiteSchema) }} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(applicationSchema("/", "StayTag maintenance labels", "Free printable QR labels for parts, maintenance dates and care history.", ["Free maintenance labels", "Replacement reminders", "Local care history", "PNG and A4 printing"])) }} /><Landing sampleUrl={sampleUrl} qr={qr} /></>;
+export const metadata = publicPageMetadata("/", "QR moving box labels – print, scan & find anything", "Printable QR labels for moving boxes: list the contents, colour-code rooms and scan any box to see what's inside. Search your phone for any item. 3 boxes free, no app or account.", "/move/opengraph-image");
+
+const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: moveFaq.map(f => ({ "@type": "Question", name: f.q[0], acceptedAnswer: { "@type": "Answer", text: f.a[0] } })) };
+const app = applicationSchema("/", "StayTag Move", "Printable QR moving box labels and a searchable box inventory. Three boxes free; Move Pass costs SEK 79 once.", ["QR box contents readable by any phone", "Colour-coded rooms", "Searchable box inventory", "A4 or Letter labels and packing index"]);
+
+export default function Home() {
+  return <main className="mv-page">
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd([websiteSchema, app, faqSchema]) }} />
+    <HashForward />
+    <MovePlanner />
+    <MoveSeo />
+  </main>;
 }

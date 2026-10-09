@@ -81,7 +81,7 @@ function SpaceForm({ initial, invalid }: { initial: SpacePayload | null; invalid
 
   return <>
     <header className="spaces-heading no-print">
-      <Link href="/">← StayTag home</Link>
+      <Link href="/labels">← StayTag tools</Link>
       <div className="section-kicker">NEW / STAYTAG SPACES</div>
       <h1>One QR.<br /><em>Every refill.</em></h1>
       <p>Your coffee corner, office or workshop. Put up to six replacements behind one QR. Anyone who scans it gets the same list — no account needed.</p>

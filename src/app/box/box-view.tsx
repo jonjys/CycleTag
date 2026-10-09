@@ -49,6 +49,6 @@ export function BoxView() {
       {mine && <button type="button" className={mine.unpacked ? "secondary-button" : "primary-button"} onClick={() => owned && writeMove(upsertBox(owned, { ...mine, unpacked: !mine.unpacked }))}><Check size={18} aria-hidden="true" /> {mine.unpacked ? t("Unpacked ✓ (tap to undo)", "Uppackad ✓ (tryck för att ångra)") : t("Mark as unpacked", "Markera som uppackad")}</button>}
       <p className="mv-fine">{t("The contents list is stored in this QR code itself. No account, no database, no owner details.", "Innehållslistan finns i själva QR-koden. Inget konto, ingen databas, inga ägaruppgifter.")}</p>
     </div>
-    <aside className="box-cta"><strong>{t("Moving too?", "Ska du också flytta?")}</strong> <Link href="/move">{t("Label your boxes — 3 free →", "Märk dina kartonger — 3 gratis →")}</Link></aside>
+    <aside className="box-cta" aria-label={t("Make labels like this", "Gör egna etiketter")}><strong>{t("Helping someone move? When it's your turn, make labels like this.", "Hjälper du någon att flytta? När det är din tur kan du göra likadana etiketter.")}</strong> <span>{t("Scan a box, see what's inside. No app, no account.", "Skanna kartongen, se vad som finns i den. Ingen app, inget konto.")}</span> <Link className="primary-button" href="/">{t("Label your first 3 boxes free →", "Märk dina första 3 kartonger gratis →")}</Link></aside>
   </section>;
 }

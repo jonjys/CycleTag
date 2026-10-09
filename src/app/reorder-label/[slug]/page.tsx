@@ -50,7 +50,7 @@ export default async function ReorderToolPage({ params }: PageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
 
       <section className="tool-hero">
-        <Link className="tool-back" href="/"><ArrowLeft aria-hidden="true" size={16} /> All StayTag tools</Link>
+        <Link className="tool-back" href="/labels"><ArrowLeft aria-hidden="true" size={16} /> All StayTag tools</Link>
         <div className="section-kicker">FREE STATELESS QR TOOL</div>
         <h1>{tool.title}</h1>
         <p>{tool.description}</p>

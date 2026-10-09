@@ -9,7 +9,7 @@ export default function BulkPage() {
   return (
     <main className="tool-page bulk-page">
       <section className="tool-hero bulk-hero">
-        <Link className="tool-back" href="/"><ArrowLeft aria-hidden="true" size={16} /> Back to StayTag</Link>
+        <Link className="tool-back" href="/labels"><ArrowLeft aria-hidden="true" size={16} /> Back to StayTag</Link>
         <div className="section-kicker">STAYTAG BULK PACK</div>
         <h1>Print 50 reorder labels at once.</h1>
         <p>For offices, workshops, cleaners, landlords and stock rooms. Paste up to 50 recurring replacements and print them across A4 pages. Use ordinary paper, cut out the labels and attach them.</p>
