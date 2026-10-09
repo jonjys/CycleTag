@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { SiteHeader } from "./site-header";
 import { FunnelEvents } from "./funnel-events";
+import { WebAnalytics } from "./web-analytics";
 import Link from "next/link";
 import { siteUrl } from "@/lib/site";
 import { localeBootScript } from "@/lib/locale";
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <SiteHeader />
         <FunnelEvents />
+        <WebAnalytics />
         {children}
         <footer className="site-footer no-print">
           <div className="footer-about">
