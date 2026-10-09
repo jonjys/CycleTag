@@ -37,7 +37,7 @@ export function CareSheet() {
       {shelf.length > 0 && <fieldset><legend>Tags on this device</legend>{shelf.map(record => <label key={record.encoded} className="care-sheet-choice"><input type="checkbox" checked={selected.includes(record.encoded)} disabled={!selected.includes(record.encoded) && selected.length >= 12} onChange={e => setSelected(e.target.checked ? [...selected, record.encoded] : selected.filter(value => value !== record.encoded))} />{record.name} · {record.lastReplaced}</label>)}</fieldset>}
       <p>Anyone with a printed QR can read its encoded fields. Records are self-reported; no photo is uploaded.</p>
       {error && <p role="alert">{error}</p>}
-      <button className="primary-button" disabled={busy || !rows.length || Boolean(error)} onClick={() => window.print()}>{busy ? "Preparing QR codes…" : "Print 12-up sheet + duration PDF"}</button>{" "}<Link href="/#create">Create a care tag</Link>
+      <button className="primary-button" disabled={busy || !rows.length || Boolean(error)} onClick={() => window.print()}>{busy ? "Preparing QR codes…" : "Print 12-up sheet + duration PDF"}</button>{" "}<Link href="/labels#create">Create a care tag</Link>
       <button className="secondary-button" onClick={() => setSelected([])}>Clear selection</button>
     </section>
     {rows.length > 0 && <div className="care-print-root">

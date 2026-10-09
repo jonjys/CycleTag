@@ -396,7 +396,7 @@ export function Generator({
                 ? "Cover or discard the previous sticker. Scanning it still opens the old part number because StayTag cannot rewrite a printed QR."
                 : "Typo in the part number? Change the fields above and create a new QR. Already-printed labels keep whatever was encoded in them."}
               {" "}
-              <Link href="/#tags">View My tags on this device</Link>
+              <Link href="/labels#tags">View My tags on this device</Link>
             </p>
             <div className="print-help">
               <strong>No special printer required.</strong>

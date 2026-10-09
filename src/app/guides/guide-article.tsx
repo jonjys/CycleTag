@@ -11,7 +11,7 @@ export function GuideArticle({ guide, related }: { guide: Guide; related: Guide 
       <header><div className="section-kicker">{t("PRACTICAL GUIDE · NYTTO LABS", "PRAKTISK GUIDE · NYTTO LABS")}</div><h1>{t(...guide.title)}</h1><p className="guide-intro">{t(...guide.intro)}</p><Link className="primary-button" href={guide.destination}>{t(...guide.cta)} →</Link></header>
       {guide.sections.map(section => <section key={section.title[0]}><h2>{t(...section.title)}</h2><p>{t(...section.body)}</p></section>)}
       <section><h2>{t("Common questions", "Vanliga frågor")}</h2>{guide.questions.map(entry => <details key={entry.question[0]}><summary>{t(...entry.question)}</summary><p>{t(...entry.answer)}</p></details>)}</section>
-      <footer><Link className="primary-button" href={guide.destination}>{t(...guide.cta)} →</Link><p><Link href={guidePath(related)}>{t(...related.title)} →</Link></p>{guide.destination === "/#create" && <p><Link href="/bulk">{t("Free bulk label printing", "Gratis utskrift av flera etiketter")}</Link> · <Link href="/care-sheet">{t("Free 12-label Care Sheet", "Gratis Care Sheet med tolv etiketter")}</Link></p>}</footer>
+      <footer><Link className="primary-button" href={guide.destination}>{t(...guide.cta)} →</Link><p><Link href={guidePath(related)}>{t(...related.title)} →</Link></p>{guide.destination === "/labels#create" && <p><Link href="/bulk">{t("Free bulk label printing", "Gratis utskrift av flera etiketter")}</Link> · <Link href="/care-sheet">{t("Free 12-label Care Sheet", "Gratis Care Sheet med tolv etiketter")}</Link></p>}</footer>
     </article>
   </main>;
 }

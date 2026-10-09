@@ -81,7 +81,7 @@ export function TagView() {
         <span className="status-dot"><CircleAlert aria-hidden="true" size={22} /></span>
         <h1>{t("This tag cannot be read.", "Etiketten kan inte läsas.")}</h1>
         <p>{t("It may be incomplete or damaged. Create a fresh StayTag in under a minute.", "Den kan vara ofullständig eller skadad. Skapa en ny StayTag på under en minut.")}</p>
-        <Link className="primary-button" href="/">{t("Create a new tag", "Skapa en ny etikett")}</Link>
+        <Link className="primary-button" href="/labels">{t("Create a new tag", "Skapa en ny etikett")}</Link>
       </section>
     );
   }
@@ -193,12 +193,12 @@ export function TagView() {
         <a href={manualUrl} target="_blank" rel="noopener noreferrer">{t("Search the manual", "Sök manualen")} ↗</a>
         <Link href={`/care-sheet#d=${encoded}`}>{t("Print Care Sheet / PDF", "Skriv ut skötselark / PDF")}</Link>
         <button type="button" onClick={share}>{t("Share this tag", "Dela etiketten")}</button>
-        <Link href={`/${builderEditHash(encoded)}`}>{t("Correct this tag", "Rätta etiketten")}</Link>
-        <Link href="/">{t("Create a different tag", "Skapa en annan etikett")}</Link>
+        <Link href={`/labels${builderEditHash(encoded)}`}>{t("Correct this tag", "Rätta etiketten")}</Link>
+        <Link href="/labels">{t("Create a different tag", "Skapa en annan etikett")}</Link>
         <Link href="/returns">{t("Return Wallet", "Returplånbok")}</Link>
       </div>
       <p className="tag-edit-note">
-        {t("Wrong part number?", "Fel artikelnummer?")} <Link href={`/${builderEditHash(encoded)}`}>{t("Correct this tag", "Rätta etiketten")}</Link> {t("to print a new QR. This sticker stays as it is — StayTag has no database that could update it.", "för att skriva ut en ny QR. Den här etiketten ändras inte — StayTag har ingen databas som kan uppdatera den.")}
+        {t("Wrong part number?", "Fel artikelnummer?")} <Link href={`/labels${builderEditHash(encoded)}`}>{t("Correct this tag", "Rätta etiketten")}</Link> {t("to print a new QR. This sticker stays as it is — StayTag has no database that could update it.", "för att skriva ut en ny QR. Den här etiketten ändras inte — StayTag har ingen databas som kan uppdatera den.")}
       </p>
 
       <div className="tag-privacy"><ShieldCheck aria-hidden="true" size={18} /><p><strong>{t("No tag database.", "Ingen etikettdatabas.")}</strong> {t("This page was rebuilt from the QR itself. Anyone with the QR or link can read the information encoded in it.", "Sidan byggdes upp från själva QR-koden. Alla med QR-koden eller länken kan läsa innehållet.")}</p></div>
