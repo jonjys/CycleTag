@@ -157,3 +157,6 @@
 .mv-seo-faq details:first-child { border-top: 0; }
 .mv-seo-faq summary { cursor: pointer; font-weight: 700; }
 .mv-seo-faq p { margin-top: 8px; }
+.mv-photo { display: grid; gap: 6px; margin: 4px 0 8px; }
+.mv-photo .secondary-button { justify-content: center; }
+.mv-photo small { font-size: 13px; line-height: 1.4; color: #69675f; }
