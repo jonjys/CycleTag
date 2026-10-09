@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import QRCode from "qrcode";
-import { Check, Lock, PackageOpen, Pencil, Plus, Printer, Search, ShieldCheck, Trash2, X } from "lucide-react";
+import { Camera, Check, Lock, PackageOpen, Pencil, Plus, Printer, Search, ShieldCheck, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type FormEvent } from "react";
 import { movePassUrl } from "@/lib/commerce";
 import { useLocale } from "@/lib/locale";
@@ -168,7 +168,28 @@ function BoxForm({ t, locale, move, editing, locked, onSave, onCancel, onLocked 
   const [heavy, setHeavy] = useState(editing?.heavy ?? false);
   const [note, setNote] = useState(editing?.note ?? "");
   const itemsRef = useRef<HTMLTextAreaElement>(null);
+  const photoRef = useRef<HTMLInputElement>(null);
+  const photoEnabled = usePhotoEnabled();
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoMessage, setPhotoMessage] = useState("");
   const n = editing?.n ?? nextBoxNumber(move);
+
+  async function readPhoto(file: File | undefined) {
+    if (!file) return;
+    setPhotoBusy(true); setPhotoMessage("");
+    try {
+      const image = await shrinkPhoto(file);
+      const response = await fetch("/api/move/photo", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ image, type: "image/jpeg", lang: locale === "sv" ? "sv" : "en" }) });
+      const result = await response.json().catch(() => ({})) as { status?: string; items?: string[] };
+      if (result.status === "ok" && result.items?.length) {
+        setItems(current => { const merged = [...parseItems(current), ...result.items!].filter((item, i, all) => all.findIndex(x => x.toLowerCase() === item.toLowerCase()) === i).slice(0, MAX_ITEMS); return merged.join("\n"); });
+        setPhotoMessage(t(`Added ${result.items.length} items. Check and edit before saving.`, `La till ${result.items.length} saker. Kolla och ändra innan du sparar.`));
+        measure("move_photo_read", "move");
+      } else if (result.status === "ok") setPhotoMessage(t("No items found in the photo. Try closer, with the box open and lit.", "Hittade inga saker i bilden. Försök närmare, med kartongen öppen och bra ljus."));
+      else setPhotoMessage(t("Could not read the photo right now. Type the items instead.", "Kunde inte läsa bilden just nu. Skriv sakerna i stället."));
+    } catch { setPhotoMessage(t("Could not read the photo right now. Type the items instead.", "Kunde inte läsa bilden just nu. Skriv sakerna i stället.")); }
+    finally { setPhotoBusy(false); if (photoRef.current) photoRef.current.value = ""; }
+  }
   const count = parseItems(items).length;
 
   function submit(event: FormEvent) {
@@ -184,6 +205,11 @@ function BoxForm({ t, locale, move, editing, locked, onSave, onCancel, onLocked 
       {rooms.map(value => <label key={value} style={{ ["--room" as string]: roomColors[value] }}><input type="radio" name="room" checked={room === value} onChange={() => setRoom(value)} /><span>{roomName(value, locale)}</span></label>)}
     </fieldset>
     <label className="mv-field" htmlFor="mv-items">{t("What's inside?", "Vad finns i den?")} <small>{t(`${count}/${MAX_ITEMS} · one per line or comma`, `${count}/${MAX_ITEMS} · en per rad eller kommatecken`)}</small></label>
+    {photoEnabled && <div className="mv-photo">
+      <button type="button" className="secondary-button" disabled={photoBusy} onClick={() => photoRef.current?.click()}><Camera size={18} aria-hidden="true" /> {photoBusy ? t("Reading photo…", "Läser bilden…") : t("Snap the open box — AI lists it", "Fota kartongen — AI listar innehållet")}</button>
+      <input ref={photoRef} type="file" accept="image/*" capture="environment" hidden onChange={e => void readPhoto(e.target.files?.[0])} />
+      <small>{photoMessage || t("The photo is sent once to Anthropic's AI to read item names. It is not stored.", "Bilden skickas en gång till Anthropics AI för att läsa vad som syns. Den sparas inte.")}</small>
+    </div>}
     <textarea id="mv-items" ref={itemsRef} rows={5} value={items} onChange={e => setItems(e.target.value)} placeholder={t("Kettle, coffee maker, mugs, cutlery, tea towels", "Vattenkokare, kaffebryggare, muggar, bestick, kökshanddukar")} />
     <div className="mv-toggles">
       <label><input type="checkbox" checked={fragile} onChange={e => setFragile(e.target.checked)} /> {t("Fragile", "Ömtåligt")}</label>
@@ -281,4 +307,26 @@ function MoveHow({ t }: { t: T }) {
       <p className="mv-fine">{t("Tip: print on plain A4 or US Letter, two labels per page, and tape one to the top and one to the side. Moving company or relocation service? ", "Tips: skriv ut på vanligt A4, två etiketter per sida, och tejpa en på locket och en på sidan. Flyttfirma? ")}<Link href="/movers">{t("Free for your customers: see how.", "Gratis för era kunder: så funkar det.")}</Link> <Link href="/labels">{t("Labels for filters and machines →", "Etiketter för filter och maskiner →")}</Link></p>
     </section>
   </>;
+}
+
+/** Shows the photo button only when the server has the AI configured. */
+function usePhotoEnabled() {
+  const [enabled, setEnabled] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/move/photo", { cache: "no-store" }).then(r => r.json()).then((d: { enabled?: boolean }) => { if (alive) setEnabled(d.enabled === true); }).catch(() => {});
+    return () => { alive = false; };
+  }, []);
+  return enabled;
+}
+
+/** Downscale on the phone so the upload stays small (≈150 kB) and EXIF/location is dropped. */
+async function shrinkPhoto(file: File, max = 1280): Promise<string> {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, max / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bitmap.width * scale); canvas.height = Math.round(bitmap.height * scale);
+  canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+  return canvas.toDataURL("image/jpeg", 0.75).split(",")[1];
 }
