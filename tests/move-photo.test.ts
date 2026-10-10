@@ -1,3 +1,4 @@
+import Anthropic from "@anthropic-ai/sdk";
 import { describe, expect, it, vi } from "vitest";
 import { cleanItems, readItemsFromPhoto } from "@/lib/move-photo";
 
@@ -18,5 +19,14 @@ describe("photo to box contents", () => {
     const broken = { beta: { messages: { create: vi.fn(async () => { throw new Error("network"); }) } } } as never;
     expect(await readItemsFromPhoto("AAAA", "image/jpeg", "en", broken)).toEqual({ status: "unavailable" });
     expect(await readItemsFromPhoto("AAAA", "image/jpeg", "en", null)).toEqual({ status: "unavailable" });
+  });
+  it("retries as a plain request when the beta request is rejected", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const rejected = () => { throw new Anthropic.BadRequestError(400, { error: { message: "unsupported" } }, "unsupported", new Headers()); };
+    const plain = vi.fn(async () => ({ stop_reason: "end_turn", content: [{ type: "text", text: JSON.stringify({ items: ["Laptop"] }) }] }));
+    const client = { beta: { messages: { create: vi.fn(async () => rejected()) } }, messages: { create: plain } } as never;
+    expect(await readItemsFromPhoto("AAAA", "image/jpeg", "en", client)).toEqual({ status: "ok", items: ["Laptop"] });
+    const bothRejected = { beta: { messages: { create: vi.fn(async () => rejected()) } }, messages: { create: vi.fn(async () => rejected()) } } as never;
+    expect(await readItemsFromPhoto("AAAA", "image/jpeg", "en", bothRejected)).toEqual({ status: "invalid" });
   });
 });
