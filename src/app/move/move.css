@@ -42,6 +42,9 @@
 .mv-gets { display: grid; gap: 6px; margin: 2px 0 4px; padding: 0; list-style: none; font-size: 14px; line-height: 1.45; color: var(--white); }
 .mv-gets li { display: flex; gap: 8px; align-items: flex-start; }
 .mv-gets svg { flex: none; margin-top: 2px; color: var(--lime); }
+.mv-paywall .mv-restore-error { margin: 8px 0 0; padding: 10px 12px; border-radius: 10px; background: #fbe4dc; color: #6b2414; font-size: 14px; line-height: 1.45; }
+.mv-locked-note { margin: 10px 0 0; display: flex; gap: 8px; align-items: flex-start; padding: 10px 12px; border-radius: 10px; background: #fbe4dc; border: 1px solid #efb7a4; color: #6b2414; font-size: 14px; line-height: 1.45; }
+.mv-locked-note svg { flex: none; margin-top: 2px; }
 .mv-restore summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-size: 14px; font-weight: 700; }
 .mv-restore label { display: block; font-size: 13px; margin-bottom: 6px; }
 .mv-restore div { display: flex; gap: 6px; }

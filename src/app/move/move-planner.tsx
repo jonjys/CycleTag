@@ -40,7 +40,7 @@ export function MovePlanner() {
     if (session !== null) {
       history.replaceState(null, "", "/move");
       if (!validSessionId(session)) {
-        queueMicrotask(() => setNotice({ tone: "error", text: t("That receipt link could not be read. Paste the full link from your Stripe receipt below.", "Kvittolänken kunde inte läsas. Klistra in hela länken från Stripe-kvittot nedan.") }));
+        queueMicrotask(() => setNotice({ tone: "error", text: t("That payment link could not be read. Paste the full link you landed on after paying below.", "Betalningslänken kunde inte läsas. Klistra in hela länken du kom till efter betalningen nedan.") }));
         return;
       }
       void confirmPass(session).then(outcome => {
@@ -108,7 +108,7 @@ export function MovePlanner() {
           <input id="mv-name" value={move.name} maxLength={40} onChange={e => save({ ...move, name: e.target.value })} placeholder={t("e.g. Andersson → Uppsala", "t.ex. Andersson → Uppsala")} />
         </div>
         <BoxForm key={editing ? `edit-${editing.n}` : `new-${nextBoxNumber(move)}`} t={t} locale={locale} move={move} editing={editing} locked={!editing && locked}
-          onLocked={() => { setPaywall(true); measure("move_paywall_shown", "move"); }}
+          onLocked={() => { setPaywall(true); measure("move_paywall_shown", "move"); requestAnimationFrame(() => document.getElementById("mv-paywall-title")?.scrollIntoView({ behavior: "smooth", block: "center" })); }}
           onCancel={() => setEditing(null)}
           onSave={box => {
             try {
@@ -120,10 +120,10 @@ export function MovePlanner() {
             } catch (error) { setNotice({ tone: "error", text: error instanceof Error ? error.message : "Error" }); }
           }} />
         {(paywall || locked) && !pass && <Paywall t={t} onRestore={async session => {
-          if (!validSessionId(session)) { setNotice({ tone: "error", text: t("Paste the full link you landed on after paying (it contains cs_live_…).", "Klistra in hela länken du kom till efter betalningen (den innehåller cs_live_…).") }); return; }
+          if (!validSessionId(session)) return t("Paste the full link you landed on after paying (it contains cs_live_…).", "Klistra in hela länken du kom till efter betalningen (den innehåller cs_live_…).");
           const outcome = await confirmPass(session);
-          if (outcome === "unavailable") { setNotice({ tone: "error", text: t("We could not confirm and save your pass yet. Retry in a moment or email billing@nyttolabs.com. You do not need to pay again.", "Vi kunde inte bekräfta och spara passet ännu. Försök igen om en stund eller mejla billing@nyttolabs.com. Du behöver inte betala igen.") }); return; }
-          if (outcome === "rejected") { setNotice({ tone: "error", text: t("That link is not a completed Move Pass payment.", "Länken är ingen genomförd Move Pass-betalning.") }); return; }
+          if (outcome === "unavailable") return t("We could not confirm and save your pass yet. Retry in a moment or email billing@nyttolabs.com. You do not need to pay again.", "Vi kunde inte bekräfta och spara passet ännu. Försök igen om en stund eller mejla billing@nyttolabs.com. Du behöver inte betala igen.");
+          if (outcome === "rejected") return t("That link is not a completed Move Pass payment.", "Länken är ingen genomförd Move Pass-betalning.");
           measure("move_pass_unlocked", "move"); setPaywall(false); setNotice({ tone: "ok", text: t("Move Pass restored on this device.", "Move Pass återställt på enheten.") });
         }} />}
         {pass && <p className="mv-pass-active"><ShieldCheck size={16} aria-hidden="true" /> {t("Move Pass active: unlimited boxes on this device.", "Move Pass aktivt: obegränsat antal kartonger på enheten.")}</p>}
@@ -172,6 +172,7 @@ function BoxForm({ t, locale, move, editing, locked, onSave, onCancel, onLocked 
   const photoEnabled = usePhotoEnabled();
   const [photoBusy, setPhotoBusy] = useState(false);
   const [photoMessage, setPhotoMessage] = useState("");
+  const [lockedHit, setLockedHit] = useState(false);
   const n = editing?.n ?? nextBoxNumber(move);
 
   async function readPhoto(file: File | undefined) {
@@ -194,7 +195,7 @@ function BoxForm({ t, locale, move, editing, locked, onSave, onCancel, onLocked 
 
   function submit(event: FormEvent) {
     event.preventDefault();
-    if (locked) { onLocked(); return; }
+    if (locked) { setLockedHit(true); onLocked(); return; }
     onSave({ n, room, items: parseItems(items), fragile, heavy, ...(note.trim() ? { note: note.trim().slice(0, 80) } : {}), ...(editing?.unpacked ? { unpacked: true } : {}) });
     itemsRef.current?.focus();
   }
@@ -221,11 +222,14 @@ function BoxForm({ t, locale, move, editing, locked, onSave, onCancel, onLocked 
       <button type="submit" className="primary-button">{locked ? <Lock size={18} aria-hidden="true" /> : editing ? <Check size={18} aria-hidden="true" /> : <Plus size={18} aria-hidden="true" />} {editing ? t("Save box", "Spara kartong") : t(`Add box ${n}`, `Lägg till kartong ${n}`)}</button>
       {editing && <button type="button" className="secondary-button" onClick={onCancel}>{t("Cancel", "Avbryt")}</button>}
     </div>
+    {locked && lockedHit && <p className="mv-locked-note" role="alert"><Lock size={16} aria-hidden="true" /> {t(`The free plan covers ${FREE_BOXES} boxes, and they're saved. Unlock the Move Pass below to add box ${n}.`, `Gratisversionen räcker till ${FREE_BOXES} kartonger, och de är sparade. Lås upp Move Pass nedan för att lägga till kartong ${n}.`)}</p>}
   </form>;
 }
 
-function Paywall({ t, onRestore }: { t: T; onRestore: (session: string) => void | Promise<void> }) {
+function Paywall({ t, onRestore }: { t: T; onRestore: (session: string) => Promise<string | undefined> }) {
   const [receipt, setReceipt] = useState("");
+  const [restoreError, setRestoreError] = useState("");
+  const [restoring, setRestoring] = useState(false);
   return <aside className="mv-paywall" aria-labelledby="mv-paywall-title">
     <div className="section-kicker">MOVE PASS</div>
     <h3 id="mv-paywall-title">{t(`You've labelled ${FREE_BOXES} boxes. Keep going?`, `Du har märkt ${FREE_BOXES} kartonger. Fortsätta?`)}</h3>
@@ -241,7 +245,12 @@ function Paywall({ t, onRestore }: { t: T; onRestore: (session: string) => void 
     <details className="mv-restore"><summary>{t("Already paid on another device?", "Redan betalt på en annan enhet?")}</summary>
       <label htmlFor="mv-receipt">{t("Paste the link you landed on after paying", "Klistra in länken du kom till efter betalningen")}</label>
       <div><input id="mv-receipt" value={receipt} onChange={e => setReceipt(e.target.value)} placeholder="https://staytag.nyttolabs.com/move?pass=cs_live_…" autoCapitalize="off" spellCheck={false} />
-        <button type="button" className="secondary-button" onClick={() => { const match = /cs_(?:live|test)_[A-Za-z0-9]+/.exec(receipt); void onRestore(match ? match[0] : ""); }}>{t("Restore", "Återställ")}</button></div>
+        <button type="button" className="secondary-button" disabled={restoring} onClick={async () => {
+          const match = /cs_(?:live|test)_[A-Za-z0-9]+/.exec(receipt);
+          setRestoring(true); setRestoreError("");
+          try { setRestoreError(await onRestore(match ? match[0] : "") ?? ""); } finally { setRestoring(false); }
+        }}>{restoring ? t("Checking…", "Kontrollerar…") : t("Restore", "Återställ")}</button></div>
+      {restoreError && <p className="mv-restore-error" role="alert">{restoreError}</p>}
       <small>{t("Lost it? Email billing@nyttolabs.com with your receipt.", "Tappat bort den? Mejla billing@nyttolabs.com med ditt kvitto.")}</small>
     </details>
   </aside>;
