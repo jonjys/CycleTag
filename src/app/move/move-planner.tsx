@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { MoveChecklist } from "./move-checklist";
 import QRCode from "qrcode";
 import { Camera, Check, Lock, PackageOpen, Pencil, Plus, Printer, Search, ShieldCheck, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type FormEvent } from "react";
@@ -100,6 +101,8 @@ export function MovePlanner() {
 
     {notice && <p className={`mv-notice ${notice.tone} no-print`} role={notice.tone === "error" ? "alert" : "status"}>{notice.text}<button type="button" onClick={() => setNotice(null)} aria-label={t("Dismiss", "Stäng")}><X size={16} aria-hidden="true" /></button></p>}
     {parsed.damaged && <p className="mv-notice error no-print" role="alert">{t("Your saved move could not be read. Adding a box will start a new list.", "Den sparade flytten kunde inte läsas. Lägger du till en kartong startar en ny lista.")}</p>}
+
+    <details className="mv-checklist-disclosure no-print"><summary>{t("Moving house checklist — plan before you pack", "Checklista för flytten — planera innan du packar")}</summary><MoveChecklist /></details>
 
     <div className="mv-layout no-print" id="start">
       <section className="mv-panel" aria-labelledby="mv-add-title">
@@ -299,6 +302,7 @@ function MoveHero({ t }: { t: T }) {
       <h1>{t("Moving? Never open the wrong box again.", "Flyttar du? Öppna aldrig fel kartong igen.")}</h1>
       <p>{t("A QR label on every box. Scan any box to see everything inside — you, your partner or the friend carrying it. No app, no account.", "En QR-etikett på varje kartong. Skanna valfri kartong och se allt som finns i den — du, din partner eller kompisen som bär. Ingen app, inget konto.")}</p>
       <div className="mv-chips"><span>{t(`${FREE_BOXES} boxes free`, `${FREE_BOXES} kartonger gratis`)}</span><span>{t("Move Pass: unlimited, 79 kr once (≈ $8 / €7)", "Move Pass: obegränsat, 79 kr en gång")}</span><span>{t("Prints on plain A4 or US Letter", "Skrivs ut på vanligt A4")}</span></div>
+      <p className="mv-fine"><Link href="/moving-house-checklist">{t("Start with a free moving house checklist →", "Börja med en gratis checklista för flytten →")}</Link></p>
     </header>
   </>;
 }

@@ -1,4 +1,34 @@
 .mv-page { max-width: 1180px; margin: 0 auto; padding: 28px 16px calc(64px + env(safe-area-inset-bottom)); }
+.mv-checklist-disclosure { margin: 0 0 24px; border: 1px solid var(--line); border-radius: 16px; background: var(--white); }
+.mv-checklist-disclosure > summary { padding: 18px; min-height: 48px; cursor: pointer; font-weight: 800; }
+.mv-checklist-disclosure > summary:focus-visible { outline: 3px solid var(--orange); border-radius: 16px; }
+.mv-checklist { padding: 0 18px 18px; }
+.mv-checklist-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+.mv-checklist h2 { margin: 0 0 8px; font-size: clamp(23px, 4vw, 32px); letter-spacing: -.03em; }
+.mv-checklist p { line-height: 1.5; }
+.mv-checklist-head p { margin: 0; max-width: 550px; }
+.mv-checklist-date, .mv-checklist-add > label { display: grid; gap: 6px; font-size: 14px; font-weight: 700; min-width: 0; }
+.mv-checklist-progress { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 20px 0; font-size: 14px; font-weight: 700; }
+.mv-checklist-progress progress { flex: 1; min-width: 100px; height: 12px; accent-color: var(--green); }
+.mv-checklist-filter { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.mv-checklist input[type=checkbox] { width: 20px; height: 20px; flex: none; accent-color: var(--green); }
+.mv-checklist-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.mv-checklist-group { padding: 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; min-width: 0; }
+.mv-checklist-group h3 { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin: 0 0 10px; font-size: 17px; }
+.mv-checklist-group time { font-size: 13px; color: var(--muted); font-weight: 400; }
+.mv-checklist-group ul { list-style: none; margin: 0; padding: 0; }
+.mv-checklist-group li { display: flex; align-items: flex-start; gap: 4px; }
+.mv-checklist-group li > label { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; min-height: 44px; flex: 1; cursor: pointer; line-height: 1.45; overflow-wrap: anywhere; }
+.mv-checklist-group input { margin-top: 2px; }
+.mv-checklist .is-done span { text-decoration: line-through; color: var(--muted); }
+.mv-checklist-group button { min-width: 44px; min-height: 44px; border: 0; background: transparent; color: var(--ink); font-size: 24px; cursor: pointer; }
+.mv-checklist-add { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: end; gap: 10px; margin-top: 18px; }
+.mv-checklist-add select { max-width: 100%; min-height: 48px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; font: inherit; background: var(--white); color: var(--ink); }
+.mv-checklist-add button { min-height: 48px; border-radius: 10px; }
+@media (max-width: 640px) {
+  .mv-checklist-grid, .mv-checklist-add { grid-template-columns: minmax(0, 1fr); }
+  .mv-checklist-date { width: 100%; }
+}
 .mv-loading { padding: 80px 0; text-align: center; color: var(--muted); }
 .mv-hero { max-width: 760px; padding: 12px 0 26px; }
 .mv-hero h1 { margin: 14px 0 12px; font-size: clamp(34px, 7.4vw, 66px); line-height: 1.02; letter-spacing: -.05em; text-wrap: balance; }
