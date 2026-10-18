@@ -24,6 +24,8 @@ The main landing, create and scan flows now lead with last replacement, exact it
 
 ## StayTag Move (`/move`)
 
+The expandable moving-house checklist includes 16 tasks across four phases, an optional moving date with suggested planning dates, completion progress, a remaining-only filter and up to 50 custom tasks. English and Swedish labels follow the site language. It is free and stored separately in `staytag.move-checklist.v1`, only in the current browser; clearing browser data removes it. It does not modify the box inventory or Move Pass and makes no AI or server requests.
+
 Create and print eight moving-box labels free. Move Pass costs SEK 79 once; foreign-currency amounts in the UI are estimates and Stripe shows the checkout total. The active Payment Link sells StayTag Move Pass, never a Care Sheet or voluntary support.
 
 New passes unlock only after the server confirms a completed, **paid** Stripe Checkout Session from the Move Pass link. Unpaid, wrong-product and `no_payment_required` sessions do not unlock. During an outage an existing verified pass stays usable; an unverified reference remains pending and is retried on the next visit. Existing move data and printable QR labels remain intact. A restricted Stripe key with Checkout Sessions: Read is recommended.

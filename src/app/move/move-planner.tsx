@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { MoveChecklist } from "./move-checklist";
 import QRCode from "qrcode";
 import { Camera, Check, Lock, PackageOpen, Pencil, Plus, Printer, Search, ShieldCheck, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type FormEvent } from "react";
@@ -100,6 +101,8 @@ export function MovePlanner() {
 
     {notice && <p className={`mv-notice ${notice.tone} no-print`} role={notice.tone === "error" ? "alert" : "status"}>{notice.text}<button type="button" onClick={() => setNotice(null)} aria-label={t("Dismiss", "Stäng")}><X size={16} aria-hidden="true" /></button></p>}
     {parsed.damaged && <p className="mv-notice error no-print" role="alert">{t("Your saved move could not be read. Adding a box will start a new list.", "Den sparade flytten kunde inte läsas. Lägger du till en kartong startar en ny lista.")}</p>}
+
+    <details className="mv-checklist-disclosure no-print"><summary>{t("Moving house checklist — plan before you pack", "Checklista för flytten — planera innan du packar")}</summary><MoveChecklist /></details>
 
     <div className="mv-layout no-print" id="start">
       <section className="mv-panel" aria-labelledby="mv-add-title">
