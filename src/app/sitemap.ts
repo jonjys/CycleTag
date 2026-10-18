@@ -7,13 +7,14 @@ const latestProductUpdate = "2026-09-29";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
+    { url: `${siteUrl}/moving-house-checklist`, lastModified: "2026-10-18", changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteUrl}/labels`, lastModified: guideUpdated, changeFrequency: "monthly", priority: 0.6 },
     { url: `${siteUrl}/movers`, lastModified: guideUpdated, changeFrequency: "monthly", priority: 0.7 },
     { url: `${siteUrl}/returns`, lastModified: latestProductUpdate, changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteUrl}/sellers`, lastModified: latestProductUpdate, changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteUrl}/relay`, lastModified: latestProductUpdate, changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteUrl}/spaces`, lastModified: siteLaunchDate, changeFrequency: "monthly", priority: 0.9 },
-    { url: siteUrl, lastModified: guideUpdated, changeFrequency: "weekly", priority: 1 },
+    { url: siteUrl, lastModified: "2026-10-18", changeFrequency: "weekly", priority: 1 },
     { url: `${siteUrl}/bulk`, lastModified: siteLaunchDate, changeFrequency: "weekly", priority: 0.9 },
     { url: `${siteUrl}/privacy`, lastModified: siteLaunchDate, changeFrequency: "yearly", priority: 0.2 },
     { url: `${siteUrl}/terms`, lastModified: siteLaunchDate, changeFrequency: "yearly", priority: 0.2 },

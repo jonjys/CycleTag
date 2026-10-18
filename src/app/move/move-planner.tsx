@@ -302,6 +302,7 @@ function MoveHero({ t }: { t: T }) {
       <h1>{t("Moving? Never open the wrong box again.", "Flyttar du? Öppna aldrig fel kartong igen.")}</h1>
       <p>{t("A QR label on every box. Scan any box to see everything inside — you, your partner or the friend carrying it. No app, no account.", "En QR-etikett på varje kartong. Skanna valfri kartong och se allt som finns i den — du, din partner eller kompisen som bär. Ingen app, inget konto.")}</p>
       <div className="mv-chips"><span>{t(`${FREE_BOXES} boxes free`, `${FREE_BOXES} kartonger gratis`)}</span><span>{t("Move Pass: unlimited, 79 kr once (≈ $8 / €7)", "Move Pass: obegränsat, 79 kr en gång")}</span><span>{t("Prints on plain A4 or US Letter", "Skrivs ut på vanligt A4")}</span></div>
+      <p className="mv-fine"><Link href="/moving-house-checklist">{t("Start with a free moving house checklist →", "Börja med en gratis checklista för flytten →")}</Link></p>
     </header>
   </>;
 }

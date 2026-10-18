@@ -21,6 +21,9 @@ export function MoveSeo() {
     <h2>{t("Built for the people carrying the boxes", "Byggt för de som bär kartongerna")}</h2>
     <p>{t("Helpers see the room colour and a big box number from across the room. Scanning shows everything inside, so nobody opens boxes to sort them, and fragile ones are flagged before they are lifted.", "Hjälparna ser rumsfärg och ett stort kartongnummer på avstånd. En skanning visar allt som finns i kartongen, så ingen öppnar kartonger för att sortera, och ömtåliga syns innan de lyfts.")}</p>
 
+    <h2>{t("Plan the move before packing", "Planera flytten innan du packar")}</h2>
+    <p>{t("Use our free moving house checklist to plan transport, utilities, packing, moving day and settling in. Set your move date, tick off tasks and add your own.", "Använd vår gratis flyttchecklista för transport, avtal, packning, flyttdagen och tiden efteråt. Välj flyttdatum, bocka av och lägg till egna punkter.")} <Link href="/moving-house-checklist">{t("Open the moving checklist →", "Öppna flyttchecklistan →")}</Link></p>
+
     <h2>{t("Price", "Pris")}</h2>
     <p>{t("Label and print 3 boxes free, including the scan page. A Move Pass is SEK 79 once (about $8 / €7, shown in your currency at checkout) and unlocks unlimited boxes and the full box index for your move. No subscription, no account.", "Märk och skriv ut 3 kartonger gratis, med skanningssidan. Ett Move Pass kostar 79 kr en gång och låser upp obegränsat antal kartonger och hela kartonglistan för flytten. Ingen prenumeration, inget konto.")}</p>
 

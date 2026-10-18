@@ -3,7 +3,7 @@ const host = "staytag.nyttolabs.com";
 const key = "61d4a9fe5b3078c2e146f9a73bc580d1";
 const keyLocation = `${siteUrl}/${key}.txt`;
 const sitemapUrl = `${siteUrl}/sitemap.xml`;
-const expectedRoutes = ["/reorder-label/printer-toner-qr-label", "/guides/qr-moving-box-labels", "/guides/qr-maintenance-labels"];
+const expectedRoutes = ["/moving-house-checklist", "/reorder-label/printer-toner-qr-label", "/guides/qr-moving-box-labels", "/guides/qr-maintenance-labels"];
 
 function wait(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
