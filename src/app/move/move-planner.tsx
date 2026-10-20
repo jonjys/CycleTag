@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type FormEv
 import { movePassUrl } from "@/lib/commerce";
 import { useLocale } from "@/lib/locale";
 import { measure } from "@/lib/measure-client";
+import { triggerDownload } from "@/lib/download";
 import { siteHost, siteUrl } from "@/lib/site";
 import {
   FREE_BOXES, MAX_ITEMS, boxLabel, buildBoxUrl, canAddBox, getMoveSnapshot, getPassSnapshot, getServerSnapshot, hasPass, moveStats, nextBoxNumber,
@@ -84,6 +85,14 @@ export function MovePlanner() {
     return true;
   }
 
+  async function restorePass(session: string): Promise<string | undefined> {
+          if (!validSessionId(session)) return t("Paste the full link you landed on after paying (it contains cs_live_…).", "Klistra in hela länken du kom till efter betalningen (den innehåller cs_live_…).");
+          const outcome = await confirmPass(session);
+          if (outcome === "unavailable") return t("We could not confirm and save your pass yet. Retry in a moment or email billing@nyttolabs.com. You do not need to pay again.", "Vi kunde inte bekräfta och spara passet ännu. Försök igen om en stund eller mejla billing@nyttolabs.com. Du behöver inte betala igen.");
+          if (outcome === "rejected") return t("That link is not a completed Move Pass payment.", "Länken är ingen genomförd Move Pass-betalning.");
+          measure("move_pass_unlocked", "move"); setPaywall(false); setNotice({ tone: "ok", text: t("Move Pass restored on this device.", "Move Pass återställt på enheten.") });
+  }
+
   async function print(mode: "labels" | "index", boxes: Box[]) {
     if (!boxes.length) return;
     try {
@@ -122,14 +131,18 @@ export function MovePlanner() {
               }
             } catch (error) { setNotice({ tone: "error", text: error instanceof Error ? error.message : "Error" }); }
           }} />
-        {(paywall || locked) && !pass && <Paywall t={t} onRestore={async session => {
-          if (!validSessionId(session)) return t("Paste the full link you landed on after paying (it contains cs_live_…).", "Klistra in hela länken du kom till efter betalningen (den innehåller cs_live_…).");
-          const outcome = await confirmPass(session);
-          if (outcome === "unavailable") return t("We could not confirm and save your pass yet. Retry in a moment or email billing@nyttolabs.com. You do not need to pay again.", "Vi kunde inte bekräfta och spara passet ännu. Försök igen om en stund eller mejla billing@nyttolabs.com. Du behöver inte betala igen.");
-          if (outcome === "rejected") return t("That link is not a completed Move Pass payment.", "Länken är ingen genomförd Move Pass-betalning.");
-          measure("move_pass_unlocked", "move"); setPaywall(false); setNotice({ tone: "ok", text: t("Move Pass restored on this device.", "Move Pass återställt på enheten.") });
-        }} />}
-        {pass && <p className="mv-pass-active"><ShieldCheck size={16} aria-hidden="true" /> {t("Move Pass active: unlimited boxes on this device.", "Move Pass aktivt: obegränsat antal kartonger på enheten.")}</p>}
+        {(paywall || locked) && !pass && <Paywall t={t} onRestore={restorePass} />}
+        {!pass && !locked && !paywall && <Paywall t={t} onRestore={restorePass} recoveryOnly />}
+        {pass && <><p className="mv-pass-active"><ShieldCheck size={16} aria-hidden="true" /> {t("Move Pass active: unlimited boxes on this device.", "Move Pass aktivt: obegränsat antal kartonger på enheten.")}</p>
+          <button type="button" className="secondary-button" onClick={() => {
+            const saved = readPass(passRaw);
+            if (!saved) return;
+            const text = `StayTag Move Pass\n${siteUrl}/move?pass=${saved.session}\n\nKeep this link private. It restores your pass on another browser, not your box list.\nHelp: billing@nyttolabs.com\n`;
+            const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
+            triggerDownload(url, "StayTag-Move-Pass.txt");
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+          }}>{t("Save my recovery link", "Spara min återställningslänk")}</button>
+          <p className="mv-fine">{t("Keep the recovery link private. Your box list stays in this browser; the pass does not sync it.", "Förvara återställningslänken privat. Kartonglistan stannar i den här webbläsaren; passet synkar inte den.")}</p></>}
       </section>
 
       <section className="mv-boxes" aria-labelledby="mv-boxes-title">
@@ -229,12 +242,12 @@ function BoxForm({ t, locale, move, editing, locked, onSave, onCancel, onLocked 
   </form>;
 }
 
-function Paywall({ t, onRestore }: { t: T; onRestore: (session: string) => Promise<string | undefined> }) {
+function Paywall({ t, onRestore, recoveryOnly = false }: { t: T; onRestore: (session: string) => Promise<string | undefined>; recoveryOnly?: boolean }) {
   const [receipt, setReceipt] = useState("");
   const [restoreError, setRestoreError] = useState("");
   const [restoring, setRestoring] = useState(false);
-  return <aside className="mv-paywall" aria-labelledby="mv-paywall-title">
-    <div className="section-kicker">MOVE PASS</div>
+  return <aside className="mv-paywall" aria-labelledby={recoveryOnly ? undefined : "mv-paywall-title"} aria-label={recoveryOnly ? t("Restore Move Pass", "Återställ Move Pass") : undefined}>
+    {!recoveryOnly && <><div className="section-kicker">MOVE PASS</div>
     <h3 id="mv-paywall-title">{t(`You've labelled ${FREE_BOXES} boxes. Keep going?`, `Du har märkt ${FREE_BOXES} kartonger. Fortsätta?`)}</h3>
     <p>{t("Your boxes are saved. One payment of 79 kr (≈ $8 / €7) unlocks the rest of this move. Stripe shows the price in your currency at checkout.", "Dina kartonger är sparade. En betalning på 79 kr låser upp resten av flytten.")}</p>
     <ul className="mv-gets" aria-label={t("What you get right after paying", "Det här får du direkt efter betalningen")}>
@@ -245,6 +258,7 @@ function Paywall({ t, onRestore }: { t: T; onRestore: (session: string) => Promi
     </ul>
     <a className="primary-button mv-buy" href={movePassUrl} data-move-checkout="true" rel="noopener">{t("Unlock all boxes · 79 kr (≈ $8 / €7)", "Lås upp alla kartonger · 79 kr")}</a>
     <p className="mv-fine">{t("Secure card payment by Stripe (Apple Pay / Google Pay where available). Your box list stays on this device and is never sent to us or to Stripe.", "Säker kortbetalning via Stripe (Apple Pay / Google Pay där det finns). Kartonglistan stannar på enheten och skickas aldrig till oss eller till Stripe.")}</p>
+    </>}
     <details className="mv-restore"><summary>{t("Already paid on another device?", "Redan betalt på en annan enhet?")}</summary>
       <label htmlFor="mv-receipt">{t("Paste the link you landed on after paying", "Klistra in länken du kom till efter betalningen")}</label>
       <div><input id="mv-receipt" value={receipt} onChange={e => setReceipt(e.target.value)} placeholder="https://staytag.nyttolabs.com/move?pass=cs_live_…" autoCapitalize="off" spellCheck={false} />

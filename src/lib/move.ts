@@ -265,7 +265,7 @@ export async function confirmPass(session: string, fetchImpl: typeof fetch = fet
     const response = await fetchImpl("/api/move/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ session }), credentials: "omit", cache: "no-store" });
     const data = await response.json().catch(() => ({}));
     if (response.ok && data?.status === "paid") return savePass(session, undefined, new Date(), true) ? "paid" : "unavailable";
-    if (data?.status === "unavailable" || response.status === 429 || response.status >= 500) { savePass(session); return "unavailable"; }
+    if (data?.status === "unpaid" || data?.status === "unavailable" || response.status === 429 || response.status >= 500) { savePass(session); return "unavailable"; }
     return "rejected";
   } catch { savePass(session); return "unavailable"; }
 }

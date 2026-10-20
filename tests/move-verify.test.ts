@@ -73,7 +73,8 @@ describe("Move Pass server verification", () => {
     expect(await confirmPass(SESSION, stripe({ status: "unavailable" }, 503))).toBe("unavailable");
     expect(await confirmPass(SESSION, vi.fn(async () => { throw new Error("offline"); }))).toBe("unavailable");
     expect(store.getItem(PASS_KEY)).toBe(verified);
-    expect(await confirmPass(SESSION, stripe({ status: "unpaid" }, 402))).toBe("rejected");
+    expect(await confirmPass(SESSION, stripe({ status: "unpaid" }, 402))).toBe("unavailable");
+    expect(readPass(store.getItem(PASS_KEY))?.session).toBe(SESSION);
     expect(await confirmPass("forged", stripe({ status: "paid" }))).toBe("rejected");
   });
 

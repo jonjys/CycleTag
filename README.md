@@ -28,13 +28,15 @@ The expandable moving-house checklist includes 16 tasks across four phases, an o
 
 `/moving-house-checklist` is a dedicated, server-rendered free entry page with canonical/share metadata, homepage links, sitemap discovery and IndexNow submission. It shares the same saved checklist and links directly to the box planner. Search submission does not guarantee indexing, rankings or visitors.
 
-Create and print eight moving-box labels free. Move Pass costs SEK 79 once; foreign-currency amounts in the UI are estimates and Stripe shows the checkout total. The active Payment Link sells StayTag Move Pass, never a Care Sheet or voluntary support.
+Create and print three moving-box labels free. Move Pass costs SEK 79 once; foreign-currency amounts in the UI are estimates and Stripe shows the checkout total. The active Payment Link sells StayTag Move Pass, never a Care Sheet or voluntary support.
 
 New passes unlock only after the server confirms a completed, **paid** Stripe Checkout Session from the Move Pass link. Unpaid, wrong-product and `no_payment_required` sessions do not unlock. During an outage an existing verified pass stays usable; an unverified reference remains pending and is retried on the next visit. Existing move data and printable QR labels remain intact. A restricted Stripe key with Checkout Sessions: Read is recommended.
 
 The verification route stream-limits bodies to 512 bytes and uses a bounded per-instance rate limit without retaining raw IP addresses or session IDs. Distributed abuse protection still needs Vercel Firewall configuration. Local storage is device-local convenience, not tamper-proof DRM or a cross-device entitlement system.
 
-Required follow-up for reliable payment fulfillment: signed Stripe webhook handling for `checkout.session.completed` and `checkout.session.async_payment_succeeded`, gated on paid status, plus a recovery/entitlement design. Current on-demand Stripe checks reject pending payments and allow a later retry; they do not provide durable event-driven fulfillment if a buyer never returns. Do not describe that integration as complete or enable new asynchronous fulfillment until this is implemented.
+Signed `/api/stripe/webhook` handles `checkout.session.completed` and `checkout.session.async_payment_succeeded`, re-fetches the session from Stripe, requires a completed paid session from the Move Pass Payment Link, and persists an entitlement/recovery URL in that Stripe session’s metadata. It also adds recovery instructions to the existing Stripe invoice. Stable idempotency keys make retries/concurrent deliveries safe; failures return 503 for Stripe retry. It does not create invoices or send extra emails. On-page checks remain for immediate access. A “Save my recovery link” download backs up the pass, not the box list. Stripe is the durable payment/entitlement store; no new customer database is added.
+
+Set server-only `STRIPE_MOVE_WEBHOOK_SECRET` to the signing secret for this project’s endpoint. The Stripe server key needs Checkout Sessions read/write and Invoices write for fulfillment; keep it restricted to the required permissions. Never log webhook bodies or recovery URLs. Deployment of the code alone does not register the Stripe endpoint: verify endpoint configuration and delivery separately before describing fulfillment as operational.
 
 The sections below document the original reorder tools and infrastructure, which remain available for compatibility.
 
