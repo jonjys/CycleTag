@@ -246,7 +246,7 @@ function Paywall({ t, onRestore, recoveryOnly = false }: { t: T; onRestore: (ses
   const [receipt, setReceipt] = useState("");
   const [restoreError, setRestoreError] = useState("");
   const [restoring, setRestoring] = useState(false);
-  return <aside className="mv-paywall" aria-labelledby="mv-paywall-title">
+  return <aside className="mv-paywall" aria-labelledby={recoveryOnly ? undefined : "mv-paywall-title"} aria-label={recoveryOnly ? t("Restore Move Pass", "Återställ Move Pass") : undefined}>
     {!recoveryOnly && <><div className="section-kicker">MOVE PASS</div>
     <h3 id="mv-paywall-title">{t(`You've labelled ${FREE_BOXES} boxes. Keep going?`, `Du har märkt ${FREE_BOXES} kartonger. Fortsätta?`)}</h3>
     <p>{t("Your boxes are saved. One payment of 79 kr (≈ $8 / €7) unlocks the rest of this move. Stripe shows the price in your currency at checkout.", "Dina kartonger är sparade. En betalning på 79 kr låser upp resten av flytten.")}</p>
