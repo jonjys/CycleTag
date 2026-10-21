@@ -8,8 +8,8 @@ export function MoversOffer() {
   const { t, locale } = useLocale();
   const [copied, setCopied] = useState(false);
   const snippet = locale === "sv"
-    ? "Tips inför flytten: märk kartongerna med QR-etiketter så hittar du allt direkt. Skanna en kartong och se vad som finns i den, eller sök \"laddare\" i mobilen. Gratis för 3 kartonger, ingen app: https://staytag.nyttolabs.com/move?lang=sv"
-    : "Moving tip: label your boxes with QR codes and find anything in seconds. Scan a box to see what's inside, or search your phone for \"charger\". Free for 3 boxes, no app: https://staytag.nyttolabs.com/move";
+    ? "Tips inför flytten: märk kartongerna och dela flyttdagen med bärhjälpen. Pricka av lastat och levererat och se vilka nummer som saknas. Gratis för 3 kartonger, ingen app: https://staytag.nyttolabs.com/move?lang=sv"
+    : "Moving tip: label your boxes and share moving day with your helpers. Check boxes as loaded and delivered, and see the numbers still missing. Free for 3 boxes, no app: https://staytag.nyttolabs.com/move";
   const copy = async () => { try { await navigator.clipboard.writeText(snippet); setCopied(true); setTimeout(() => setCopied(false), 2500); } catch { setCopied(false); } };
   return <>
     <section className="mvp-hero">
