@@ -13,14 +13,14 @@ import "./launch.css";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: "StayTag · Nytto Labs", template: "%s · StayTag" },
-  description: "Print a QR label that remembers the exact part, last replacement and next due date. Search for a manual. No app. No account.",
+  description: "QR moving-box labels and shared moving-day checks. Know what's loaded, what's arrived and which box numbers are missing. No app. No account.",
   applicationName: "StayTag",
-  keywords: ["QR maintenance label", "filter replacement reminder", "return QR wallet", "refill list", "maintenance tag"],
+  keywords: ["QR moving box labels", "moving box inventory", "shared moving checklist", "moving day checks"],
   openGraph: {
     type: "website",
     url: siteUrl,
     title: "StayTag · Nytto Labs",
-    description: "Never search for the same replacement part twice. Scan the sticker on the machine.",
+    description: "Every box. Home. QR labels and one shared moving-day check for your helpers.",
     siteName: "StayTag",
     images: [
       {
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "StayTag · Nytto Labs",
-    description: "The QR that remembers the part and your care dates.",
+    description: "Every box. Home. Label, share and check every moving box.",
     images: ["/opengraph-image"]
   }
 };

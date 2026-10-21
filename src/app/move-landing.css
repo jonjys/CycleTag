@@ -97,10 +97,13 @@ html[lang=sv] .ml-copy h1 { font-size: clamp(54px, 6.4vw, 88px); }
 }
 @media (max-width: 740px) {
   .site-header.ml-site-header { height: 74px; min-height: 74px; }
+  .ml-site-header .header-nav { gap: 12px; }
+  .ml-site-header .brand { font-size: 22px; gap: 8px; }
+  .ml-open-app { min-height: 44px; }
   .ml-hero { grid-template-columns: 1fr; gap: 32px; padding: 28px 0 34px; min-height: 0; }
   .ml-copy { padding: 0; }
-  .ml-copy h1 { margin: 20px 0; font-size: clamp(64px, 13.7vw, 94px); }
-  html[lang=sv] .ml-copy h1 { font-size: clamp(54px, 11.7vw, 82px); }
+  .ml-copy h1 { margin: 20px 0; font-size: clamp(62px, 14.8vw, 94px); }
+  html[lang=sv] .ml-copy h1 { font-size: clamp(48px, 13.7vw, 82px); }
   .ml-description { max-width: 300px; font-size: 17px; margin-bottom: 22px; }
   .ml-cta { font-size: 15px; padding: 17px 23px; }
   .ml-scroll-note { display: none; }
