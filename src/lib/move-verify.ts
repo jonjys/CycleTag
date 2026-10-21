@@ -5,7 +5,7 @@
  */
 import { validSessionId } from "./move";
 
-export const MOVE_PAYMENT_LINK = "plink_1ULnTSBEo0Yzuylwi1M59J00";
+export const MOVE_PAYMENT_LINK = process.env.STRIPE_MOVE_PAYMENT_LINK_ID || "plink_1ULnTSBEo0Yzuylwi1M59J00";
 
 export type VerifyResult =
   | { status: "paid" }
@@ -16,7 +16,7 @@ type Fetch = (input: string, init?: RequestInit) => Promise<Response>;
 
 export async function verifyPassSession(session: unknown, key: string | undefined, fetchImpl: Fetch = fetch): Promise<VerifyResult> {
   if (typeof session !== "string" || !validSessionId(session)) return { status: "invalid" };
-  if (!key || !/^(rk|sk)_(live|test)_[A-Za-z0-9]+$/.test(key)) return { status: "unavailable" };
+  if (!key || !/^(?:(rk|sk)_(live|test)|rkcs_test)_[A-Za-z0-9]+$/.test(key)) return { status: "unavailable" };
   let response: Response;
   try {
     response = await fetchImpl(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(session)}`, {
