@@ -1,0 +1,3 @@
+[functions.staytag-shared-move]
+# Authenticated with a dedicated, hashed service key in the function body.
+verify_jwt = false

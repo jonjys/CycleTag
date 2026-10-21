@@ -10,7 +10,8 @@ describe("old home-page hash links", () => {
     expect(forwardTarget("#create")).toBe("/labels#create");
     expect(forwardTarget("#tags")).toBe("/labels#tags");
   });
-  it("leave the moving home page alone", () => {
-    for (const hash of ["", "#how", "#start"]) expect(forwardTarget(hash)).toBeNull();
+  it("keeps landing anchors and forwards the old start link to the packing app", () => {
+    for (const hash of ["", "#how"]) expect(forwardTarget(hash)).toBeNull();
+    expect(forwardTarget("#start")).toBe("/move#start");
   });
 });

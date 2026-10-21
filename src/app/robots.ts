@@ -3,5 +3,5 @@ import { siteUrl } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   if (process.env.STAYTAG_SANDBOX === "1") return { rules: [{ userAgent: "*", disallow: "/" }] };
-  return { rules: [{ userAgent: "*", allow: "/", disallow: ["/tag", "/api/"] }], sitemap: `${siteUrl}/sitemap.xml`, host: siteUrl };
+  return { rules: [{ userAgent: "*", allow: "/", disallow: ["/tag", "/api/", "/move/day"] }], sitemap: `${siteUrl}/sitemap.xml`, host: siteUrl };
 }
