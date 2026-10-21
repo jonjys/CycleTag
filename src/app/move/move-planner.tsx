@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { MoveChecklist } from "./move-checklist";
+import { ShareLauncher } from "./share-launcher";
 import QRCode from "qrcode";
 import { Camera, Check, Lock, PackageOpen, Pencil, Plus, Printer, Search, ShieldCheck, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type FormEvent } from "react";
@@ -110,6 +111,8 @@ export function MovePlanner() {
 
     {notice && <p className={`mv-notice ${notice.tone} no-print`} role={notice.tone === "error" ? "alert" : "status"}>{notice.text}<button type="button" onClick={() => setNotice(null)} aria-label={t("Dismiss", "Stäng")}><X size={16} aria-hidden="true" /></button></p>}
     {parsed.damaged && <p className="mv-notice error no-print" role="alert">{t("Your saved move could not be read. Adding a box will start a new list.", "Den sparade flytten kunde inte läsas. Lägger du till en kartong startar en ny lista.")}</p>}
+
+    <ShareLauncher move={move} passRaw={passRaw} />
 
     <details className="mv-checklist-disclosure no-print"><summary>{t("Moving house checklist — plan before you pack", "Checklista för flytten — planera innan du packar")}</summary><MoveChecklist /></details>
 
@@ -312,9 +315,9 @@ function PrintSheet({ t, locale, move, mode, rows }: { t: T; locale: string; mov
 function MoveHero({ t }: { t: T }) {
   return <>
     <header className="mv-hero no-print">
-      <div className="section-kicker">{t("QR MOVING BOX LABELS", "QR-ETIKETTER FÖR FLYTTKARTONGER")}</div>
-      <h1>{t("Moving? Never open the wrong box again.", "Flyttar du? Öppna aldrig fel kartong igen.")}</h1>
-      <p>{t("A QR label on every box. Scan any box to see everything inside — you, your partner or the friend carrying it. No app, no account.", "En QR-etikett på varje kartong. Skanna valfri kartong och se allt som finns i den — du, din partner eller kompisen som bär. Ingen app, inget konto.")}</p>
+      <div className="section-kicker">{t("PACK. SHARE. CHECK EVERY BOX.", "PACKA. DELA. PRICKA AV VARJE KARTONG.")}</div>
+      <h1>{t("Don't leave a box behind.", "Lämna ingen kartong kvar.")}</h1>
+      <p>{t("Know what's in each box — and whether it made it onto the van and into your new home. Print QR labels, share moving day with your helpers and see which numbers still need checking. No app, no account.", "Vet vad som finns i varje kartong — och om den kom med i bilen och in i nya hemmet. Skriv ut QR-etiketter, dela flyttdagen med bärhjälpen och se vilka nummer som återstår. Ingen app, inget konto.")}</p>
       <div className="mv-chips"><span>{t(`${FREE_BOXES} boxes free`, `${FREE_BOXES} kartonger gratis`)}</span><span>{t("Move Pass: unlimited, 79 kr once (≈ $8 / €7)", "Move Pass: obegränsat, 79 kr en gång")}</span><span>{t("Prints on plain A4 or US Letter", "Skrivs ut på vanligt A4")}</span></div>
       <p className="mv-fine"><Link href="/moving-house-checklist">{t("Start with a free moving house checklist →", "Börja med en gratis checklista för flytten →")}</Link></p>
     </header>
@@ -324,12 +327,12 @@ function MoveHero({ t }: { t: T }) {
 function MoveHow({ t }: { t: T }) {
   return <>
     <section className="mv-how no-print" aria-labelledby="mv-how-title">
-      <h2 id="mv-how-title">{t("Why it beats a marker pen", "Varför det slår en tuschpenna")}</h2>
+      <h2 id="mv-how-title">{t("From the first label to the last box in", "Från första etiketten till sista kartongen inne")}</h2>
       <div className="mv-how-grid">
         <article><h3>{t("“KITCHEN” isn't enough", "”KÖK” räcker inte")}</h3><p>{t("The label lists every item. Scan to see all of it without cutting the tape.", "Etiketten listar allt. Skanna och se innehållet utan att skära upp tejpen.")}</p></article>
         <article><h3>{t("Find anything in seconds", "Hitta vad som helst på sekunder")}</h3><p>{t("Search “charger” on your phone and get the box number.", "Sök ”laddare” i telefonen och få kartongnumret.")}</p></article>
-        <article><h3>{t("Helpers know where it goes", "Hjälparna vet vart det ska")}</h3><p>{t("A colour band per room. Big numbers. Fragile and heavy flags.", "Ett färgband per rum. Stora nummer. Ömtåligt och tungt syns direkt.")}</p></article>
-        <article><h3>{t("Private, no account", "Privat, inget konto")}</h3><p>{t("Your list stays on this device. Each QR holds only that box's contents — no name, no address.", "Listan stannar på enheten. Varje QR innehåller bara den kartongens innehåll — inget namn, ingen adress.")}</p></article>
+        <article><h3>{t("One moving-day list", "En gemensam flyttdag")}</h3><p>{t("Share a helper link. Everyone checks boxes as loaded and delivered, and sees the remaining numbers.", "Dela en hjälparlänk. Alla prickar av lastat och levererat och ser vilka nummer som återstår.")}</p></article>
+        <article><h3>{t("Share only what helpers need", "Dela det hjälparna behöver")}</h3><p>{t("Your packing list stays on this device. Choose to share box numbers, rooms and flags for 30 days. Revoke the helper link or delete the shared copy whenever you want.", "Packlistan stannar på enheten. Välj att dela kartongnummer, rum och markeringar i 30 dagar. Stäng hjälparlänken eller radera den delade kopian när du vill.")}</p></article>
       </div>
       <p className="mv-fine">{t("Tip: print on plain A4 or US Letter, two labels per page, and tape one to the top and one to the side. Moving company or relocation service? ", "Tips: skriv ut på vanligt A4, två etiketter per sida, och tejpa en på locket och en på sidan. Flyttfirma? ")}<Link href="/movers">{t("Free for your customers: see how.", "Gratis för era kunder: så funkar det.")}</Link> <Link href="/labels">{t("Labels for filters and machines →", "Etiketter för filter och maskiner →")}</Link></p>
     </section>

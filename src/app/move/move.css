@@ -1,4 +1,20 @@
 .mv-page { max-width: 1180px; margin: 0 auto; padding: 28px 16px calc(64px + env(safe-area-inset-bottom)); }
+.md-launch { display: flex; gap: 18px; margin: 0 0 24px; padding: 24px; background: #e3f0d0; border: 1px solid #a6c785; border-radius: 18px; }
+.md-launch-icon { flex: none; display: grid; place-items: center; width: 52px; height: 52px; background: var(--ink); color: var(--white); border-radius: 13px; }
+.md-launch-body { min-width: 0; }
+.md-launch h2 { margin: 8px 0; font-size: clamp(23px, 4vw, 30px); letter-spacing: -.035em; }
+.md-launch-body > p { max-width: 700px; margin: 0 0 16px; line-height: 1.55; }
+.md-launch .primary-button { gap: 8px; border-radius: 12px; }
+.md-launch .primary-button:disabled { opacity: .45; cursor: not-allowed; }
+.md-launch small { display: block; margin-top: 10px; color: #4f5448; font-size: 13px; }
+.md-launch .mv-fine { margin: 12px 0 0; font-size: 13px; }
+.md-share-form { margin-top: 20px; padding-top: 18px; border-top: 1px solid #a6c785; display: grid; gap: 10px; max-width: 650px; }
+.md-share-form > label { font-size: 14px; font-weight: 700; }
+.md-share-form p { margin: 0; font-size: 14px; line-height: 1.6; }
+.md-consent { display: flex; align-items: flex-start; gap: 10px; padding: 12px 0; cursor: pointer; }
+.md-consent input { width: 22px; height: 22px; flex: none; accent-color: var(--green); }
+.md-error { color: #862b16; font-weight: 700; margin-top: 12px !important; }
+@media (max-width: 540px) { .md-launch { padding: 18px; } .md-launch-icon { display: none; } }
 .mv-checklist-disclosure { margin: 0 0 24px; border: 1px solid var(--line); border-radius: 16px; background: var(--white); }
 .mv-checklist-disclosure > summary { padding: 18px; min-height: 48px; cursor: pointer; font-weight: 800; }
 .mv-checklist-disclosure > summary:focus-visible { outline: 3px solid var(--orange); border-radius: 16px; }

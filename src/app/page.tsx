@@ -1,20 +1,16 @@
 import { applicationSchema, jsonLd, publicPageMetadata, websiteSchema } from "@/lib/seo";
-import { moveFaq } from "@/lib/move-faq";
-import { MovePlanner } from "./move/move-planner";
-import { MoveSeo } from "./move/move-seo";
 import { HashForward } from "./hash-forward";
-import "./move/move.css";
+import { MoveLanding } from "./move-landing";
+import "./move-landing.css";
 
-export const metadata = publicPageMetadata("/", "QR moving box labels – print, scan & find anything", "Printable QR labels for moving boxes: list the contents, colour-code rooms and scan any box to see what's inside. Search your phone for any item. 3 boxes free, no app or account.", "/move/opengraph-image");
+export const metadata = publicPageMetadata("/", "Every box. Home. — QR labels & shared moving-day checks", "Print QR moving box labels. Share one link with your helpers. Check what's loaded, what's arrived and which box numbers are missing. 3 boxes free. No app or account.", "/move/opengraph-image");
 
-const faqSchema = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: moveFaq.map(f => ({ "@type": "Question", name: f.q[0], acceptedAnswer: { "@type": "Answer", text: f.a[0] } })) };
-const app = applicationSchema("/", "StayTag Move", "Printable QR moving box labels and a searchable box inventory. Three boxes free; Move Pass costs SEK 79 once.", ["QR box contents readable by any phone", "Colour-coded rooms", "Searchable box inventory", "A4 or Letter labels and packing index"]);
+const app = applicationSchema("/", "StayTag Move", "QR moving box labels and optional shared moving-day checks. Three boxes free; Move Pass costs SEK 79 once.", ["Printable QR moving box labels", "Shared loaded and delivered checks", "Missing box numbers", "Printable moving-day status report"]);
 
 export default function Home() {
-  return <main className="mv-page">
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd([websiteSchema, app, faqSchema]) }} />
+  return <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd([websiteSchema, app]) }} />
     <HashForward />
-    <MovePlanner />
-    <MoveSeo />
-  </main>;
+    <MoveLanding />
+  </>;
 }

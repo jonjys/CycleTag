@@ -2,7 +2,19 @@
 
 **Live: https://staytag.nyttolabs.com** — `cycletag.eu` permanently 308-redirects there, keeping path, query and `#fragment`, so every printed QR keeps working. `www.cycletag.eu` currently takes a 307 hop via the former apex first. Keep `cycletag.eu` registered indefinitely. `/api/*` is still served on the legacy host.
 
-**Put memory where the thing is.** Care labels for machines, a refill list, Spaces and a private Return Wallet — no account, no app, no tag database.
+**Every box. Home.** QR moving-box labels and optional shared moving-day checks. No app or account. The short interactive landing is at `/`; packing is at `/move`. Other label tools remain available under `/labels`.
+
+## Shared moving day (`/move/day`)
+
+Create a shared, 30-day snapshot after packing. Helpers see box numbers, rooms and fragile/heavy flags, never contents or private packing notes. Everyone can check loaded/delivered, undo a mistake and add a problem note. Loading/delivery views list the exact numbers still outstanding. The print dialog saves a status report as PDF. This is self-reported checking, not verified delivery proof.
+
+Separate 256-bit owner/helper capability links use URL fragments. The owner can rotate helper access or delete the shared copy. Only SHA-256 key hashes are stored. The server never logs keys or request bodies. A saved organiser link is the recovery mechanism; there is no account or emailed recovery. A lost create response is retried with the same locally persisted ID/key. Existing QR labels remain stateless and compatible.
+
+The Next API validates and strips the manifest, enforces same-origin requests and streamed body limits, and verifies Stripe payment before creating a list over 3 boxes. It calls the dedicated Supabase function using `STAYTAG_SHARE_SERVICE_KEY`, a function-scoped credential with no Data API privileges. The function authenticates that key against a hash and chooses its production/sandbox scope, then invokes a service-role-only SECURITY INVOKER RPC. Direct anonymous/authenticated table/RPC access is revoked and RLS enabled. Authorisation, revocation and writes share a row lock. Box revisions reject stale/concurrent updates instead of losing them. Browser polling is every 8 seconds while visible; writes are never queued offline.
+
+Infrastructure reuses the existing EU Supabase project with exclusively `staytag_*` tables, a dedicated function and an isolated retention job; it does not read/write other applications' tables. Production and sandbox credentials select separate environments. Creation is limited to 6 per hashed network address per hour and 1,000 active shares per environment; request rates also have a bounded per-instance limiter. These are anti-abuse caps, not a distributed request firewall. No new paid project or AI calls are needed. Hourly cleanup removes expired shares and cascades box deletion; limit rows expire after two days.
+
+Deployment: apply `supabase/migrations/*shared_moving_day.sql` once, deploy `supabase/functions/staytag-shared-move` with its explicit service-key authentication, generate different 32-byte base64url keys for production/sandbox, insert their SHA-256 hashes into `staytag_share_services`, and put the raw key in the corresponding Vercel project's sensitive server-only `STAYTAG_SHARE_SERVICE_KEY`. Set `STAYTAG_SHARE_API_URL` to that function's HTTPS endpoint. Never use a Supabase database service key in Vercel or commit capabilities/secrets. A deployment without these two variables returns unavailable and cannot create a share.
 
 ## Return Wallet (`/returns`)
 
@@ -117,14 +129,15 @@ curl http://localhost:3000/api/health
 Expected response:
 
 ```json
-{"status":"ok","service":"cycletag","storage":"none","secrets":"none"}
+{"status":"ok","service":"staytag","storage":"optional-shared-moves"}
 ```
 
 ## Routes
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Generator, presets, printable label and calendar download |
+| `/` | Focused moving landing with an interactive local demo |
+| `/labels` | Original care-label generator |
 | `/#tags` | Local list of tags created on this device |
 | `/#print=…` | Regenerates a saved label for printing |
 | `/reorder-label/[slug]` | Twelve indexable, prefilled QR tools for high-intent replacement searches |
@@ -132,6 +145,8 @@ Expected response:
 | `/#edit=…` | Prefills the homepage builder to re-issue a corrected label; `/#clone=…` remains an alias |
 | `/returns` | Return Wallet (local-only) |
 | `/move`, `/box#d=…` | Local moving-box planner and stateless box labels |
+| `/move/day#id=…&key=…` | Private, unindexed shared moving-day checks |
+| `/api/move/shared` | Same-origin sharing gateway; POST bodies only for capabilities |
 | `/api/move/verify` | Same-origin, uncached Stripe payment verification |
 | `/relay` | Refill Relay shopping list |
 | `/spaces`, `/space#d=…` | One QR for a room |
