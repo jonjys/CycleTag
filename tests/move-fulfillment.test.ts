@@ -12,10 +12,10 @@ function fake(session: unknown = paid) {
 }
 afterEach(() => vi.restoreAllMocks());
 describe("durable Move Pass fulfillment", () => {
-  it("adds recovery to the existing invoice and records the entitlement in Stripe", async () => {
+  it("keeps finalized receipt fields immutable and records recovery metadata in Stripe", async () => {
     const f = fake();
     expect(await fulfillMovePass(f.client, paid.id)).toBe("fulfilled");
-    expect(f.updateInvoice).toHaveBeenCalledWith("in_receipt", { footer: expect.stringContaining(`/move?pass=${paid.id}`) }, { idempotencyKey: `staytag-move-invoice-v1-${paid.id}` });
+    expect(f.updateInvoice).toHaveBeenCalledWith("in_receipt", { metadata: { staytag_restore_url: expect.stringContaining(`/move?pass=${paid.id}`), staytag_checkout_session: paid.id } }, { idempotencyKey: `staytag-move-invoice-v2-${paid.id}` });
     expect(f.updateSession).toHaveBeenCalledWith(paid.id, { metadata: { staytag_fulfilled: "v1", staytag_restore_url: expect.stringContaining(paid.id) } }, { idempotencyKey: `staytag-move-entitlement-v1-${paid.id}` });
   });
   it.each([
