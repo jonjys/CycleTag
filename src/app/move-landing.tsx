@@ -20,7 +20,7 @@ export function MoveLanding() {
     <section className="ml-hero" aria-labelledby="ml-title"><div className="ml-copy">
       <p className="ml-eyebrow"><span />{t("A LITTLE LESS MOVING CHAOS", "LITE MINDRE FLYTTKAOS")}</p>
       <h1 id="ml-title">{t("Every box.", "Varje kartong.")}<br /><em>{t("Home.", "Hemma.")}</em></h1>
-      <p className="ml-description">{t("Know what's inside. Share the carrying. See every box arrive.", "Vet vad som är i. Dela på bärandet. Se varje kartong komma fram.")}</p>
+      <p className="ml-description">{t("Snap the open box and AI lists what's inside. Print the QR label. Share the carrying and see every box arrive.", "Fota kartongen så listar AI innehållet. Skriv ut QR-etiketten. Dela på bärandet och se varje kartong komma fram.")}</p>
       <Link className="ml-cta" href="/move">{start}<ArrowUpRight size={23} aria-hidden="true" /></Link>
       <p className="ml-micro">{t("3 boxes free. No app. No account.", "3 kartonger gratis. Ingen app. Inget konto.")}</p>
       <p className="ml-scroll-note">{t("THE LAST BOX FEELS GOOD.", "SISTA KARTONGEN KÄNNS BRA.")}</p>
@@ -39,7 +39,7 @@ export function MoveLanding() {
       <div className="ml-scene-bottom"><span>{t("A SHARED CHECK. NOT A GUESS.", "GEMENSAM KOLL. INGA GISSNINGAR.")}</span><button type="button" onClick={() => setArrived([1])} aria-label={t("Reset interactive demo", "Återställ interaktiv demo")}><RotateCcw size={15} aria-hidden="true" /></button></div><span className="ml-sticker" aria-hidden="true">{complete ? "✓" : "↗"}</span>
     </div></section>
     <section className="ml-process" id="how" aria-label={t("How StayTag works", "Så fungerar StayTag")}>
-      <div><span>01</span><p><strong>{t("Pack & label.", "Packa & märk.")}</strong><small>{t("Print QR labels. Find what's inside.", "Skriv ut QR-etiketter. Hitta innehållet.")}</small></p></div><ArrowRight className="ml-step-arrow" size={21} aria-hidden="true" />
+      <div><span>01</span><p><strong>{t("Snap & label.", "Fota & märk.")}</strong><small>{t("AI lists the box from one photo. Print the QR, search \"keys\" later.", "AI listar kartongen från ett foto. Skriv ut QR-koden, sök \"nycklar\" sen.")}</small></p></div><ArrowRight className="ml-step-arrow" size={21} aria-hidden="true" />
       <div><span>02</span><p><strong>{t("Share the move.", "Dela flytten.")}</strong><small>{t("One helper link. The same box checks.", "En hjälparlänk. Samma avprickningar.")}</small></p></div><ArrowRight className="ml-step-arrow" size={21} aria-hidden="true" />
       <div><span>03</span><p><strong>{t("Leave nothing behind.", "Lämna inget kvar.")}</strong><small>{t("See what's loaded and what's arrived.", "Se vad som lastats och kommit fram.")}</small></p></div>
     </section>
